@@ -116,14 +116,6 @@ export const categories: Category[] = [
 		],
 	},
 	{
-		icon: Icons.art,
-		title: 'Graphic Art',
-		description:
-			'Illustrations that show the soul of the creator, visualised with every stroke.',
-		slug: 'graphic-art',
-		subCategories: ['painting', 'drawing', 'digital art', 'traditional art'],
-	},
-	{
 		icon: Icons.drill,
 		title: 'Crafts',
 		description:
@@ -136,6 +128,14 @@ export const categories: Category[] = [
 			'jewelry',
 			'electronics',
 		],
+	},
+	{
+		icon: Icons.art,
+		title: 'Graphic Art',
+		description:
+			'Illustrations that show the soul of the creator, visualised with every stroke.',
+		slug: 'graphic-art',
+		subCategories: ['painting', 'drawing', 'digital art', 'traditional art'],
 	},
 	{
 		title: 'Fiber Arts',
@@ -209,7 +209,7 @@ export const categories: Category[] = [
 		icon: Icons.shell,
 		title: 'Content Creation',
 		description:
-			'Love podcasts, history videos, documentaries, educational, science, entertainment? That is a place for You.',
+			'Do You love podcasts, history videos, documentaries, educational, science, entertainment? Then it might be a place for You.',
 		slug: 'content-creation',
 		subCategories: [
 			'podcasts',
@@ -220,6 +220,14 @@ export const categories: Category[] = [
 			'entertainment',
 			'games',
 		],
+	},
+	{
+		icon: Icons.sparkles,
+		title: 'Other',
+		description:
+			'Things so unique, they do not fit in any of the categories. Who knows what You will find here.',
+		slug: 'other',
+		subCategories: [],
 	},
 	{
 		icon: Icons.sparkles,

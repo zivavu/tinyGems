@@ -13,18 +13,23 @@ export default function Home() {
 					</div>
 
 					<Typography variant="h1" className="mb-6">
-						Tiny Art, Big Stories
+						tiny Art, For tiny People
 					</Typography>
 
-					<Typography variant="p" className="mb-8 text-lg">
-						Find tiny masterpieces from artists around the world.
+					<Typography variant="p" className="px-28 mb-8 text-lg">
+						Welcome to tinyGems, a cozy corner of the internet created for
+						basement, underground artists that value expression and passion over
+						money.
+						<br />
+						It's hard to find You, but the things You create are one of the most
+						precious gems in this tiny world.
 					</Typography>
 
 					<div className="flex gap-4 justify-center">
 						<Link
 							href="/explore"
 							className="px-6 py-3 text-white bg-rose-500 rounded-full shadow-sm transition-transform hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-500 hover:scale-105 hover:shadow-md">
-							Seek For Tiny Gems
+							Seek For tinyGems
 						</Link>
 						<Link
 							href="/create"

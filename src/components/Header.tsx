@@ -1,11 +1,11 @@
 'use client';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { Icons } from '@/lib/Icons';
 import { Button, Menu, MenuItems } from '@headlessui/react';
 import NextLink from 'next/link';
 import { Link } from './ui/Link';
 import { Typography } from './ui/Typography';
-import { Icons } from '@/lib/Icons';
 
 export function Header() {
 	// This will be replaced with real auth state later
@@ -19,7 +19,7 @@ export function Header() {
 						href="/"
 						className="flex gap-2 items-center font-medium text-gray-900">
 						<Icons.sparkles className="w-5 h-5 text-rose-500" />
-						<Typography variant="h2">tinygems</Typography>
+						<Typography variant="h2">tinyGems</Typography>
 					</NextLink>
 
 					{/* Main Navigation */}
