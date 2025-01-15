@@ -1,11 +1,11 @@
 'use client';
 
-import { Icons } from '@/components/Icons';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button, Menu, MenuItems } from '@headlessui/react';
 import NextLink from 'next/link';
 import { Link } from './ui/Link';
 import { Typography } from './ui/Typography';
+import { Icons } from '@/lib/Icons';
 
 export function Header() {
 	// This will be replaced with real auth state later

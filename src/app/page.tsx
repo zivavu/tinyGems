@@ -1,12 +1,12 @@
-import { Icons } from '@/components/Icons';
 import { Typography } from '@/components/ui/Typography';
 import { categories } from '@/lib/categories';
+import { Icons } from '@/lib/Icons';
 import Link from 'next/link';
 
 export default function Home() {
 	return (
 		<div className="min-h-screen bg-rose-50 dark:bg-gray-950">
-			<main className="container px-4 pt-20 pb-32 mx-auto my-auto">
+			<main className="container px-8 pt-20 pb-32 mx-auto my-auto">
 				<div className="mx-auto text-center">
 					<div className="flex justify-center mb-6">
 						<Icons.sparkles className="w-12 h-12 text-rose-500 animate-pulse dark:text-rose-400" />
@@ -34,7 +34,7 @@ export default function Home() {
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 gap-8 mx-auto mt-16 max-w-6xl md:grid-cols-4">
+				<div className="grid grid-cols-1 gap-8 mx-auto mt-16 max-w-6xl lg:grid-cols-3 md:grid-cols-2">
 					{categories.map((category) => (
 						<div
 							key={category.slug}
