@@ -17,66 +17,88 @@ export const categorySchema = z.object({
 	slug: z.string().min(1).max(50),
 });
 
-// Mock categories data
 export const categories: Category[] = [
 	{
 		icon: Icons.music,
 		title: 'Music',
-		description: 'Discover hidden musical gems from underground artists',
+		description:
+			'Music that makes you feel something. Made by Someone, and not a team of analysts.',
 		slug: 'music',
 	},
 	{
 		icon: Icons.art,
-		title: 'Drawings',
-		description: 'Explore unique sketches and illustrations',
+		title: 'Graphic art',
+		description:
+			'Illustrations that show the soul of the creator, visualised with every stroke.',
 		slug: 'drawings',
 	},
 	{
-		icon: Icons.anvil,
+		icon: Icons.drill,
 		title: 'Crafts',
-		description: 'Find one-of-a-kind handmade treasures',
+		description: 'Handmade with passion to bring something new into existance.',
 		slug: 'handcraft',
+	},
+	{
+		title: 'Fiber Arts',
+		icon: Icons.shirt,
+		description:
+			'Textile creations that blend art and functionality, woven with care.',
+		slug: 'fiber-arts',
 	},
 	{
 		icon: Icons.camera,
 		title: 'Photography',
-		description: 'Experience moments captured by passionate photographers',
+		description:
+			'Capturing moments that tell a story, convey feelings, and evoke memories.',
 		slug: 'photography',
 	},
 	{
 		icon: Icons.pen,
-		title: 'Writing',
-		description: 'Read short stories and poetry from rising writers',
+		title: 'Words',
+		description:
+			'Words that weave worlds, crafted by storytellers who pour their hearts onto the page.',
 		slug: 'writing',
 	},
 	{
 		icon: Icons.film,
 		title: 'Animation',
-		description: 'Watch creative short animations and motion art',
+		description:
+			'Crafted frame by frame, bringing imagination to life through tireless dedication.',
 		slug: 'animation',
 	},
 	{
 		icon: Icons.gamepad,
-		title: 'Indie Games',
-		description: 'Play unique games from solo developers and small teams',
+		title: 'Games',
+		description:
+			'Countless hours of passionate work, transfered into interactive experiences.',
 		slug: 'indie-games',
 	},
 	{
 		icon: Icons.code,
 		title: 'Digital Art',
-		description: 'Explore generative art and digital creations',
+		description:
+			"Working with colaboration, with powerfull GPU's, to create stunning visuals.",
 		slug: 'digital-art',
 	},
 	{
 		icon: Icons.film,
 		title: 'Movies',
-		description: 'Watch independent films and creative storytelling',
-		slug: 'short-films',
+		description:
+			'Dialogues, emotions, stories, angles, lighting, and more. All combined to create something truly unique and beautiful.',
+		slug: 'movies',
 	},
 	{
 		icon: Icons.mic,
 		title: 'Podcasts',
-		description: 'Listen to unique voices and independent shows',
+		description:
+			'Conversations, ideas, thoughts. All shared through the power of voice.',
 		slug: 'podcasts',
+	},
+	{
+		icon: Icons.glasses,
+		title: 'Mixed media',
+		description:
+			'Combines multiple mediums, creating a rich and layered experience that defies traditional categorization.',
+		slug: 'mixed-media',
 	},
 ];

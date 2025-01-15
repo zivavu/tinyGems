@@ -24,7 +24,7 @@ export default function Home() {
 						<Link
 							href="/explore"
 							className="px-6 py-3 text-white bg-rose-500 rounded-full shadow-sm transition-transform hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-500 hover:scale-105 hover:shadow-md">
-							Seek Tiny Gems
+							Seek For Tiny Gems
 						</Link>
 						<Link
 							href="/create"
