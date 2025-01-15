@@ -1,7 +1,11 @@
 import {
+	Anvil,
 	Camera,
+	Code,
 	Film,
+	Gamepad,
 	Menu,
+	Mic,
 	Music,
 	Paintbrush,
 	Pencil,
@@ -23,4 +27,8 @@ export const Icons = {
 	camera: Camera,
 	pen: PenTool,
 	film: Film,
+	gamepad: Gamepad,
+	code: Code,
+	mic: Mic,
+	anvil: Anvil,
 } as const satisfies Record<string, LucideIcon>;

@@ -32,8 +32,8 @@ export const categories: Category[] = [
 		slug: 'drawings',
 	},
 	{
-		icon: Icons.pencil,
-		title: 'Handcraft',
+		icon: Icons.anvil,
+		title: 'Crafts',
 		description: 'Find one-of-a-kind handmade treasures',
 		slug: 'handcraft',
 	},
@@ -54,5 +54,29 @@ export const categories: Category[] = [
 		title: 'Animation',
 		description: 'Watch creative short animations and motion art',
 		slug: 'animation',
+	},
+	{
+		icon: Icons.gamepad,
+		title: 'Indie Games',
+		description: 'Play unique games from solo developers and small teams',
+		slug: 'indie-games',
+	},
+	{
+		icon: Icons.code,
+		title: 'Digital Art',
+		description: 'Explore generative art and digital creations',
+		slug: 'digital-art',
+	},
+	{
+		icon: Icons.film,
+		title: 'Movies',
+		description: 'Watch independent films and creative storytelling',
+		slug: 'short-films',
+	},
+	{
+		icon: Icons.mic,
+		title: 'Podcasts',
+		description: 'Listen to unique voices and independent shows',
+		slug: 'podcasts',
 	},
 ];

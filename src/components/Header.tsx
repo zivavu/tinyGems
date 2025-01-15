@@ -3,55 +3,57 @@
 import { Icons } from '@/components/Icons';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button, Menu, MenuItems } from '@headlessui/react';
-import Link from 'next/link';
+import NextLink from 'next/link';
+import { Link } from './ui/Link';
+import { Typography } from './ui/Typography';
 
 export function Header() {
 	// This will be replaced with real auth state later
 	const isAuthenticated = false;
 
 	return (
-		<header className="sticky top-0 z-50 w-full border-b border-rose-100 dark:border-rose-900 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm">
-			<div className="container mx-auto px-4">
-				<div className="flex h-16 items-center justify-between">
-					<Link
+		<header className="sticky top-0 z-50 w-full border-b border-rose-100 backdrop-blur-sm dark:border-rose-900 bg-white/80 dark:bg-gray-950/80">
+			<div className="container px-4 mx-auto">
+				<div className="flex justify-between items-center h-16">
+					<NextLink
 						href="/"
-						className="flex items-center gap-2 font-medium text-gray-900">
-						<Icons.sparkles className="h-5 w-5 text-rose-500" />
-						<span>tinygems</span>
-					</Link>
+						className="flex gap-2 items-center font-medium text-gray-900">
+						<Icons.sparkles className="w-5 h-5 text-rose-500" />
+						<Typography variant="h2">tinygems</Typography>
+					</NextLink>
 
 					{/* Main Navigation */}
-					<nav className="hidden md:flex items-center gap-6">
+					<nav className="hidden gap-6 items-center md:flex">
 						<Link
 							href="/explore"
-							className="text-gray-600 hover:text-rose-500 transition-colors">
+							className="text-gray-600 transition-colors hover:text-rose-500">
 							Explore
 						</Link>
 						<Link
 							href="/artists"
-							className="text-gray-600 hover:text-rose-500 transition-colors">
+							className="text-gray-600 transition-colors hover:text-rose-500">
 							Artists
 						</Link>
 						<Link
 							href="/about"
-							className="text-gray-600 hover:text-rose-500 transition-colors">
+							className="text-gray-600 transition-colors hover:text-rose-500">
 							About
 						</Link>
 					</nav>
 
-					<div className="flex items-center gap-4">
+					<div className="flex gap-4 items-center">
 						<ThemeToggle />
 						{isAuthenticated ? (
 							<Menu as="div" className="relative">
-								<Button className="flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 hover:bg-rose-100 transition-colors">
-									<Icons.user className="h-4 w-4" />
+								<Button className="flex gap-2 items-center px-4 py-2 bg-rose-50 rounded-full transition-colors hover:bg-rose-100">
+									<Icons.user className="w-4 h-4" />
 									<span>Profile</span>
 								</Button>
-								<MenuItems className="absolute right-0 mt-2 w-48 rounded-xl bg-white py-2 shadow-lg border border-rose-100">
+								<MenuItems className="absolute right-0 py-2 mt-2 w-48 bg-white rounded-xl border border-rose-100 shadow-lg">
 									{({ open }) => (
 										<>
 											<Button
-												as={Link}
+												as={NextLink}
 												href="/dashboard"
 												className={({ active }) =>
 													`${
@@ -63,7 +65,7 @@ export function Header() {
 												Dashboard
 											</Button>
 											<Button
-												as={Link}
+												as={NextLink}
 												href="/settings"
 												className={({ active }) =>
 													`${
@@ -97,12 +99,12 @@ export function Header() {
 							<>
 								<Link
 									href="/login"
-									className="text-gray-600 hover:text-rose-500 transition-colors">
+									className="text-gray-600 transition-colors hover:text-rose-500">
 									Sign in
 								</Link>
 								<Link
 									href="/register"
-									className="rounded-full bg-rose-500 px-4 py-2 text-white hover:bg-rose-600 transition-colors">
+									className="px-4 py-2 text-white bg-rose-500 rounded-full transition-colors hover:bg-rose-600">
 									Get Started
 								</Link>
 							</>
@@ -110,8 +112,8 @@ export function Header() {
 					</div>
 
 					{/* Mobile Menu Button - Only shows on small screens */}
-					<button className="md:hidden rounded-lg p-2 hover:bg-rose-50">
-						<Icons.menu className="h-6 w-6" />
+					<button className="p-2 rounded-lg md:hidden hover:bg-rose-50">
+						<Icons.menu className="w-6 h-6" />
 					</button>
 				</div>
 			</div>
