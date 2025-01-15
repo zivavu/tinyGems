@@ -2,7 +2,7 @@
 
 import { Icons } from '@/components/Icons';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { Menu as HeadlessMenu } from '@headlessui/react';
+import { Button, Menu, MenuItems } from '@headlessui/react';
 import Link from 'next/link';
 
 export function Header() {
@@ -39,19 +39,18 @@ export function Header() {
 						</Link>
 					</nav>
 
-					{/* Auth/Profile Section */}
 					<div className="flex items-center gap-4">
 						<ThemeToggle />
 						{isAuthenticated ? (
-							<HeadlessMenu as="div" className="relative">
-								<HeadlessMenu.Button className="flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 hover:bg-rose-100 transition-colors">
+							<Menu as="div" className="relative">
+								<Button className="flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 hover:bg-rose-100 transition-colors">
 									<Icons.user className="h-4 w-4" />
 									<span>Profile</span>
-								</HeadlessMenu.Button>
-								<HeadlessMenu.Items className="absolute right-0 mt-2 w-48 rounded-xl bg-white py-2 shadow-lg border border-rose-100">
+								</Button>
+								<MenuItems className="absolute right-0 mt-2 w-48 rounded-xl bg-white py-2 shadow-lg border border-rose-100">
 									{({ open }) => (
 										<>
-											<HeadlessMenu.Button
+											<Button
 												as={Link}
 												href="/dashboard"
 												className={({ active }) =>
@@ -62,8 +61,8 @@ export function Header() {
 													} flex items-center px-4 py-2 text-sm`
 												}>
 												Dashboard
-											</HeadlessMenu.Button>
-											<HeadlessMenu.Button
+											</Button>
+											<Button
 												as={Link}
 												href="/settings"
 												className={({ active }) =>
@@ -74,8 +73,8 @@ export function Header() {
 													} flex items-center px-4 py-2 text-sm`
 												}>
 												Settings
-											</HeadlessMenu.Button>
-											<HeadlessMenu.Button
+											</Button>
+											<Button
 												as="button"
 												className={({ active }) =>
 													`${
@@ -89,11 +88,11 @@ export function Header() {
 													/* Add logout handler */
 												}}>
 												Sign out
-											</HeadlessMenu.Button>
+											</Button>
 										</>
 									)}
-								</HeadlessMenu.Items>
-							</HeadlessMenu>
+								</MenuItems>
+							</Menu>
 						) : (
 							<>
 								<Link
