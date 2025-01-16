@@ -7,7 +7,7 @@ export const categorySchema = z.object({
   title: z.string().min(1).max(50),
   description: z.string().min(1).max(200),
   slug: z.string().min(1).max(50),
-  subCategories: z.array(z.string()).optional(),
+  options: z.array(z.string()).optional(),
 });
 
 export type Category = z.infer<typeof categorySchema>;
@@ -18,7 +18,7 @@ export const categories: Category[] = [
     title: 'Music',
     description: 'Music that makes you feel something. Made by Someone, and not a team of analysts.',
     slug: 'music',
-    subCategories: [
+    options: [
       'rock',
       'jazz',
       'classical',
@@ -118,56 +118,56 @@ export const categories: Category[] = [
     title: 'Crafts',
     description: 'People that bring something new and unique into the world. Handmade, and special.',
     slug: 'crafts',
-    subCategories: ['woodwork', 'metalwork', 'ceramics', 'jewelry', 'electronics'],
+    options: ['woodwork', 'metalwork', 'ceramics', 'jewelry', 'electronics'],
   },
   {
     icon: 'paintbrush',
     title: 'Graphic Art',
     description: 'Illustrations that show the soul of the creator, visualised with every stroke.',
     slug: 'graphic-art',
-    subCategories: ['painting', 'drawing', 'digital art', 'traditional art'],
+    options: ['painting', 'drawing', 'digital art', 'traditional art'],
   },
   {
     icon: 'shirt',
     title: 'Fiber Arts',
     description: 'Textile creations that blend art and functionality, woven with care.',
     slug: 'fiber-arts',
-    subCategories: ['knitting', 'weaving', 'quilting', 'dyeing', 'embroidery'],
+    options: ['knitting', 'weaving', 'quilting', 'dyeing', 'embroidery'],
   },
   {
     icon: 'camera',
     title: 'Photography',
     description: 'Capturing moments that tell a story, convey feelings, and evoke memories.',
     slug: 'photography',
-    subCategories: ['portrait', 'landscape', 'wildlife', 'macro', 'street'],
+    options: ['portrait', 'landscape', 'wildlife', 'macro', 'street'],
   },
   {
     icon: 'pencil',
     title: 'Words',
     description: 'Words that weave worlds. Written by people who pour their hearts onto the page.',
     slug: 'words',
-    subCategories: ['poetry', 'prose', 'essays', 'novels', 'short stories', 'thoughts', 'fiction'],
+    options: ['poetry', 'prose', 'essays', 'novels', 'short stories', 'thoughts', 'fiction'],
   },
   {
     icon: 'clapperboard',
     title: 'Movies',
     description: 'Dialogues, emotions, stories, angles, lighting, and more. All combined to create something truly unique and beautiful.',
     slug: 'movies',
-    subCategories: ['documentary', 'indie', 'animation', 'short film', 'feature'],
+    options: ['documentary', 'indie', 'animation', 'short film', 'feature'],
   },
   {
     icon: 'code',
     title: 'Digital Art',
     description: "Working with collaboration, with powerful GPU's, to create stunning experiences.",
     slug: 'digital-art',
-    subCategories: ['3D modeling', 'animation', 'concept art', 'digital painting', 'digital sculpture'],
+    options: ['3D modeling', 'animation', 'concept art', 'digital painting', 'digital sculpture'],
   },
   {
     icon: 'glasses',
     title: 'Mixed Media',
     description: 'Combines multiple mediums, creating a rich and layered experience that defies traditional categorization.',
     slug: 'mixed-media',
-    subCategories: ['collage', 'assemblage', 'installation', 'performance'],
+    options: ['collage', 'assemblage', 'installation', 'performance'],
   },
   {
     icon: 'shell',
@@ -175,20 +175,20 @@ export const categories: Category[] = [
     description:
       'Do You love podcasts, history videos, documentaries, educational, science, entertainment? Then it might be a place for You.',
     slug: 'content-creation',
-    subCategories: ['podcasts', 'vlogs', 'tutorials', 'history', 'science', 'entertainment', 'games'],
+    options: ['podcasts', 'vlogs', 'tutorials', 'history', 'science', 'entertainment', 'games'],
   },
   {
     icon: 'sparkles',
     title: 'Other',
     description: 'Things so unique, they do not fit in any of the categories. Who knows what You will find here.',
     slug: 'other',
-    subCategories: [],
+    options: [],
   },
   {
     icon: 'sparkles',
     title: 'All Categories',
     description: 'Look for everything. No matter the size nor the category. We have it all.',
     slug: 'all-categories',
-    subCategories: [],
+    options: [],
   },
 ];

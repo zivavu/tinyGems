@@ -1,18 +1,17 @@
 'use client';
 
-import { Icons } from '@/lib/Icons';
 import { categories, Category } from '@/lib/categories';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FilterButton } from '../ui/Buttons/FilterButton';
+import { FilterButton } from '../ui/buttons/FilterButton';
 
 interface CategorySelectorProps {
   selectedCategory: Category;
 }
 
-export function CategorySelector({ selectedCategory }: CategorySelectorProps) {
+export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 

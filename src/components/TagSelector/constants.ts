@@ -65,37 +65,37 @@ export const languageFlags = {
 } as const;
 
 export const languages = [
-  { code: 'en', name: 'English', Flag: languageFlags.en },
-  { code: 'es', name: 'Español', Flag: languageFlags.es },
-  { code: 'ja', name: '日本語', Flag: languageFlags.ja },
-  { code: 'ko', name: '한국어', Flag: languageFlags.ko },
-  { code: 'fr', name: 'Français', Flag: languageFlags.fr },
-  { code: 'de', name: 'Deutsch', Flag: languageFlags.de },
-  { code: 'it', name: 'Italiano', Flag: languageFlags.it },
-  { code: 'pt', name: 'Português', Flag: languageFlags.pt },
-  { code: 'pt-br', name: 'Português (Brasil)', Flag: languageFlags['pt-br'] },
-  { code: 'zh', name: '中文', Flag: languageFlags.zh },
-  { code: 'ru', name: 'Русский', Flag: languageFlags.ru },
-  { code: 'hi', name: 'हिन्दी', Flag: languageFlags.hi },
-  { code: 'ar', name: 'العربية', Flag: languageFlags.ar },
-  { code: 'th', name: 'ไทย', Flag: languageFlags.th },
-  { code: 'vi', name: 'Tiếng Việt', Flag: languageFlags.vi },
-  { code: 'id', name: 'Bahasa Indonesia', Flag: languageFlags.id },
-  { code: 'tl', name: 'Tagalog', Flag: languageFlags.tl },
-  { code: 'tr', name: 'Türkçe', Flag: languageFlags.tr },
-  { code: 'pl', name: 'Polski', Flag: languageFlags.pl },
-  { code: 'uk', name: 'Українська', Flag: languageFlags.uk },
-  { code: 'nl', name: 'Nederlands', Flag: languageFlags.nl },
-  { code: 'es-mx', name: 'Español (México)', Flag: languageFlags['es-mx'] },
-  { code: 'en-ca', name: 'English (Canada)', Flag: languageFlags['en-ca'] },
-  { code: 'en-au', name: 'English (Australia)', Flag: languageFlags['en-au'] },
-  { code: 'sv', name: 'Svenska', Flag: languageFlags.sv },
-  { code: 'no', name: 'Norsk', Flag: languageFlags.no },
-  { code: 'da', name: 'Dansk', Flag: languageFlags.da },
-  { code: 'fi', name: 'Suomi', Flag: languageFlags.fi },
-  { code: 'el', name: 'Ελληνικά', Flag: languageFlags.el },
-  { code: 'he', name: 'עברית', Flag: languageFlags.he },
-].sort((a, b) => a.name.localeCompare(b.name));
+  { id: 'en', label: 'English', Icon: languageFlags.en },
+  { id: 'es', label: 'Español', Icon: languageFlags.es },
+  { id: 'ja', label: '日本語', Icon: languageFlags.ja },
+  { id: 'ko', label: '한국어', Icon: languageFlags.ko },
+  { id: 'fr', label: 'Français', Icon: languageFlags.fr },
+  { id: 'de', label: 'Deutsch', Icon: languageFlags.de },
+  { id: 'it', label: 'Italiano', Icon: languageFlags.it },
+  { id: 'pt', label: 'Português', Icon: languageFlags.pt },
+  { id: 'pt-br', label: 'Português (Brasil)', Icon: languageFlags['pt-br'] },
+  { id: 'zh', label: '中文', Icon: languageFlags.zh },
+  { id: 'ru', label: 'Русский', Icon: languageFlags.ru },
+  { id: 'hi', label: 'हिन्दी', Icon: languageFlags.hi },
+  { id: 'ar', label: 'العربية', Icon: languageFlags.ar },
+  { id: 'th', label: 'ไทย', Icon: languageFlags.th },
+  { id: 'vi', label: 'Tiếng Việt', Icon: languageFlags.vi },
+  { id: 'id', label: 'Bahasa Indonesia', Icon: languageFlags.id },
+  { id: 'tl', label: 'Tagalog', Icon: languageFlags.tl },
+  { id: 'tr', label: 'Türkçe', Icon: languageFlags.tr },
+  { id: 'pl', label: 'Polski', Icon: languageFlags.pl },
+  { id: 'uk', label: 'Українська', Icon: languageFlags.uk },
+  { id: 'nl', label: 'Nederlands', Icon: languageFlags.nl },
+  { id: 'es-mx', label: 'Español (México)', Icon: languageFlags['es-mx'] },
+  { id: 'en-ca', label: 'English (Canada)', Icon: languageFlags['en-ca'] },
+  { id: 'en-au', label: 'English (Australia)', Icon: languageFlags['en-au'] },
+  { id: 'sv', label: 'Svenska', Icon: languageFlags.sv },
+  { id: 'no', label: 'Norsk', Icon: languageFlags.no },
+  { id: 'da', label: 'Dansk', Icon: languageFlags.da },
+  { id: 'fi', label: 'Suomi', Icon: languageFlags.fi },
+  { id: 'el', label: 'Ελληνικά', Icon: languageFlags.el },
+  { id: 'he', label: 'עברית', Icon: languageFlags.he },
+].sort((a, b) => a.label.localeCompare(b.label));
 
 export type FilterOption = {
   id: string;
@@ -159,14 +159,16 @@ export type MusicGenre = FilterOption & {
 };
 
 export type GenreCategory = {
+  id: string;
   name: string;
-  genres: MusicGenre[];
+  options: MusicGenre[];
 };
 
 export const musicGenres: GenreCategory[] = [
   {
     name: 'Electronic',
-    genres: [
+    id: 'electronic',
+    options: [
       {
         id: 'electronic',
         label: 'Electronic',
@@ -213,7 +215,8 @@ export const musicGenres: GenreCategory[] = [
   },
   {
     name: 'Hip-Hop & Rap',
-    genres: [
+    id: 'hip-hop-and-rap',
+    options: [
       { id: 'rap', label: 'Rap', description: 'Rhythmic poetry' },
       {
         id: 'underground-hip-hop',
@@ -244,7 +247,8 @@ export const musicGenres: GenreCategory[] = [
   },
   {
     name: 'Rock & Metal',
-    genres: [
+    id: 'rock-and-metal',
+    options: [
       {
         id: 'indie-rock',
         label: 'Indie Rock',
@@ -276,7 +280,8 @@ export const musicGenres: GenreCategory[] = [
   },
   {
     name: 'Folk & Acoustic',
-    genres: [
+    id: 'folk-and-acoustic',
+    options: [
       { id: 'indie-folk', label: 'Indie Folk', description: 'Modern folk' },
       {
         id: 'contemporary-folk',
@@ -295,7 +300,8 @@ export const musicGenres: GenreCategory[] = [
   },
   {
     name: 'Jazz & Classical',
-    genres: [
+    id: 'jazz-and-classical',
+    options: [
       { id: 'nu-jazz', label: 'Nu Jazz', description: 'Modern jazz' },
       { id: 'free-jazz', label: 'Free Jazz', description: 'Experimental jazz' },
       { id: 'jazz-fusion', label: 'Jazz Fusion', description: 'Mixed jazz' },
@@ -319,7 +325,8 @@ export const musicGenres: GenreCategory[] = [
   },
   {
     name: 'Pop & R&B',
-    genres: [
+    id: 'pop-and-rb',
+    options: [
       { id: 'indie-pop', label: 'Indie Pop', description: 'Independent pop' },
       { id: 'dream-pop', label: 'Dream Pop', description: 'Ethereal pop' },
       { id: 'bedroom-pop', label: 'Bedroom Pop', description: 'DIY pop' },
@@ -335,7 +342,8 @@ export const musicGenres: GenreCategory[] = [
   },
   {
     name: 'Other',
-    genres: [
+    id: 'other',
+    options: [
       { id: 'glitch', label: 'Glitch', description: 'Error music' },
       { id: 'idm', label: 'IDM', description: 'Intelligent Dance Music' },
       { id: 'breakcore', label: 'Breakcore', description: 'Chaotic breaks' },
@@ -355,7 +363,7 @@ export const musicGenres: GenreCategory[] = [
 ] as const;
 
 // Helper function to get all genres flattened
-export const getAllGenres = () => musicGenres.flatMap((category) => category.genres);
+export const getAllGenres = () => musicGenres.flatMap((category) => category.options);
 
 export const productionStyles = [
   {

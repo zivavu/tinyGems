@@ -3,7 +3,7 @@
 import { Icons } from '@/lib/Icons';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
-import { FilterButton } from './Buttons/FilterButton';
+import { FilterButton } from './buttons/FilterButton';
 import { Typography } from './Typography';
 
 interface SelectProps {
