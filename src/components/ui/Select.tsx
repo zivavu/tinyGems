@@ -15,7 +15,7 @@ interface SelectProps {
   children: React.ReactNode;
 }
 
-export function Select({ title, open, selected, count, icon: IconName, children }: SelectProps) {
+export function Select({ title, selected, count, icon: IconName, children }: SelectProps) {
   const Icon = IconName ? Icons[IconName] : null;
 
   return (
