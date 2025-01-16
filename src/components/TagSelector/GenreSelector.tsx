@@ -5,24 +5,33 @@ import { cn } from '@/lib/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { musicGenres } from './constants';
-
+import { FilterButton } from '../ui/Buttons/FilterButton';
+import { getAllGenres, musicGenres } from './constants';
 export function GenreSelector() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState('');
 
+  const allGenres = getAllGenres();
+
   const selectedGenres = (() => {
     const genreParam = searchParams.get('genres');
     if (!genreParam) return [];
     const genreIds = genreParam.split(',');
-    return musicGenres.filter((genre) => genreIds.includes(genre.id));
+    return allGenres.filter((genre) => genreIds.includes(genre.id));
   })();
 
-  const filteredGenres = musicGenres.filter(
-    (genre) =>
-      genre.label.toLowerCase().includes(query.toLowerCase()) || genre.description.toLowerCase().includes(query.toLowerCase()) || !query,
-  );
+  const filteredCategories = musicGenres
+    .map((category) => ({
+      ...category,
+      genres: category.genres.filter(
+        (genre) =>
+          genre.label.toLowerCase().includes(query.toLowerCase()) ||
+          genre.description.toLowerCase().includes(query.toLowerCase()) ||
+          !query,
+      ),
+    }))
+    .filter((category) => category.genres.length > 0);
 
   const toggleGenre = (genreId: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -39,43 +48,11 @@ export function GenreSelector() {
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
-  // Group genres by category
-  const genresByCategory = filteredGenres.reduce(
-    (acc, genre) => {
-      const category = genre.id.includes('electronic')
-        ? 'Electronic'
-        : genre.id.includes('rock') || genre.id.includes('metal')
-          ? 'Rock & Metal'
-          : genre.id.includes('hip-hop') || genre.id.includes('rap')
-            ? 'Hip-Hop & Rap'
-            : genre.id.includes('folk')
-              ? 'Folk & Acoustic'
-              : genre.id.includes('jazz') || genre.id.includes('classical')
-                ? 'Jazz & Classical'
-                : genre.id.includes('pop') || genre.id.includes('r&b')
-                  ? 'Pop & R&B'
-                  : 'Other';
-
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(genre);
-      return acc;
-    },
-    {} as Record<string, typeof musicGenres>,
-  );
-
   return (
     <Popover className="relative">
       {({ open }) => (
         <>
-          <PopoverButton
-            className={cn(
-              'flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors',
-              'border dark:border-gray-800',
-              open || selectedGenres.length > 0
-                ? 'bg-rose-50 border-rose-200 text-rose-500 dark:bg-rose-500/10 dark:border-rose-500/20 dark:text-rose-400'
-                : 'bg-gray-50 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700',
-            )}
-          >
+          <PopoverButton as={FilterButton}>
             <div className="flex gap-2 items-center">
               {selectedGenres.length > 0 ? (
                 <>
@@ -89,7 +66,6 @@ export function GenreSelector() {
                 'Genres'
               )}
             </div>
-            <Icons.ChevronDown className={cn('w-4 h-4 transition-transform', open && 'rotate-180')} />
           </PopoverButton>
 
           <PopoverPanel className="absolute z-10 mt-2 w-80 bg-white rounded-lg border shadow-lg dark:bg-gray-800 dark:border-gray-700">
@@ -123,11 +99,13 @@ export function GenreSelector() {
               </div>
 
               <div className="overflow-auto mt-2 max-h-[400px] space-y-2">
-                {Object.entries(genresByCategory).map(([category, genres]) => (
-                  <div key={category} className="space-y-1">
-                    <div className="px-2 text-xs font-medium text-gray-500 dark:text-gray-400">{category}</div>
+                {filteredCategories.map((category) => (
+                  <div key={category.name} className="space-y-1">
+                    <div className="sticky top-0 px-2 py-1 text-xs font-semibold text-gray-500 backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 dark:text-gray-400">
+                      {category.name}
+                    </div>
                     <div className="space-y-0.5">
-                      {genres.map((genre) => (
+                      {category.genres.map((genre) => (
                         <button
                           key={genre.id}
                           onClick={() => toggleGenre(genre.id)}
@@ -141,7 +119,16 @@ export function GenreSelector() {
                           <span className="flex justify-between items-center">
                             <span>{genre.label}</span>
                           </span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">{genre.description}</span>
+                          <span
+                            className={cn(
+                              'text-xs',
+                              selectedGenres.some((g) => g.id === genre.id)
+                                ? 'text-rose-400/70 dark:text-rose-400/50'
+                                : 'text-gray-500 dark:text-gray-400',
+                            )}
+                          >
+                            {genre.description}
+                          </span>
                         </button>
                       ))}
                     </div>

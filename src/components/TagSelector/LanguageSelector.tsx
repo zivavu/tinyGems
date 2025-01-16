@@ -6,6 +6,7 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { languages } from './constants';
+import { FilterButton } from '../ui/Buttons/FilterButton';
 
 export function LanguageSelector() {
   const router = useRouter();
@@ -45,15 +46,7 @@ export function LanguageSelector() {
     <Popover className="flex relative">
       {({ open }) => (
         <>
-          <PopoverButton
-            className={cn(
-              'flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors',
-              'border dark:border-gray-800',
-              open || selectedLanguages.length > 0
-                ? 'bg-rose-50 border-rose-200 text-rose-500 dark:bg-rose-500/10 dark:border-rose-500/20 dark:text-rose-400'
-                : 'bg-gray-50 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700',
-            )}
-          >
+          <PopoverButton as={FilterButton}>
             <div className="flex gap-2 items-center">
               {selectedLanguages.length > 0 ? (
                 <>
@@ -71,7 +64,6 @@ export function LanguageSelector() {
                 'Languages'
               )}
             </div>
-            <Icons.ChevronDown className={cn('w-4 h-4 transition-transform', open && 'rotate-180')} />
           </PopoverButton>
 
           <PopoverPanel className="absolute z-10 mt-2 w-72 bg-white rounded-lg border shadow-lg dark:bg-gray-800 dark:border-gray-700">

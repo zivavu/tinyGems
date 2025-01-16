@@ -389,21 +389,26 @@ export const releaseFrequency = [
   {
     id: 'prolific',
     label: 'Prolific',
-    description: 'Multiple releases per year',
+    description: 'Life is a constant creation',
   },
   {
-    id: 'regular',
-    label: 'Regular',
-    description: 'Annual releases',
+    id: 'consistent',
+    label: 'Consistent',
+    description: 'Regular creative output',
   },
   {
-    id: 'occasional',
-    label: 'Occasional',
-    description: 'Every few years',
+    id: 'measured',
+    label: 'Measured',
+    description: 'Takes time to perfect work',
   },
   {
-    id: 'rare',
-    label: 'Rare',
-    description: 'Infrequent releases',
+    id: 'patient',
+    label: 'Patient',
+    description: 'Quality over quantity',
+  },
+  {
+    id: 'elusive',
+    label: 'Elusive',
+    description: 'Rare but special releases',
   },
 ] as FilterOption[];

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { artistSizes, artistStatus, genreStyles, productionStyles, releaseFrequency } from './constants';
+import { artistSizes, genreStyles, productionStyles, releaseFrequency } from './constants';
 import { FilterInput } from './FilterInput';
 import { GenreSelector } from './GenreSelector';
 
@@ -33,12 +33,6 @@ export function MusicFilters() {
         options={artistSizes}
         selected={getActiveFilters('sizes')}
         setSelected={(values) => handleFilterChange('sizes', values)}
-      />
-      <FilterInput
-        title="Status"
-        options={artistStatus}
-        selected={getActiveFilters('status')}
-        setSelected={(values) => handleFilterChange('status', values)}
       />
       <FilterInput
         title="Style"

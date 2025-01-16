@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { FilterButton } from '../ui/Buttons/FilterButton';
 
 interface CategorySelectorProps {
   selectedCategory: Category;
@@ -25,15 +26,7 @@ export function CategorySelector({ selectedCategory }: CategorySelectorProps) {
     <Popover className="relative">
       {({ open }) => (
         <>
-          <PopoverButton
-            className={cn(
-              'flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg transition-all',
-              'border-2 shadow-sm',
-              open
-                ? 'border-rose-500 text-rose-500 bg-rose-50 dark:bg-rose-950/20 shadow-rose-100 dark:shadow-rose-950/10'
-                : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600',
-            )}
-          >
+          <PopoverButton as={FilterButton}>
             <div className="flex gap-2 items-center">
               <div
                 className={cn(
@@ -48,7 +41,6 @@ export function CategorySelector({ selectedCategory }: CategorySelectorProps) {
                 <span className="font-medium">{selectedCategory.title}</span>
               </div>
             </div>
-            <Icons.ChevronDown className={cn('w-4 h-4 transition-transform', open && 'rotate-180')} />
           </PopoverButton>
 
           <PopoverPanel className="absolute z-10 mt-2 w-80 bg-white rounded-lg border shadow-lg dark:bg-gray-800 dark:border-gray-700">
