@@ -35,7 +35,7 @@ export function Header() {
 									<span>Profile</span>
 								</Button>
 								<MenuItems className="absolute right-0 py-2 mt-2 w-48 bg-white rounded-xl border border-rose-100 shadow-lg">
-									{({ open }) => (
+									{() => (
 										<>
 											<Button
 												as={NextLink}

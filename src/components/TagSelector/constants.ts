@@ -152,28 +152,259 @@ export const artistExperience = [
 	{ id: 'veteran', label: 'Veteran', description: 'Active for 10+ years' },
 ] as const;
 
+export type MusicGenre = FilterOption & {
+	id: string;
+	label: string;
+	description: string;
+};
+
+export type GenreCategory = {
+	name: string;
+	genres: MusicGenre[];
+};
+
+export const musicGenres: GenreCategory[] = [
+	{
+		name: 'Electronic',
+		genres: [
+			{
+				id: 'electronic',
+				label: 'Electronic',
+				description: 'Electronic music',
+			},
+			{
+				id: 'indie-electronic',
+				label: 'Indie Electronic',
+				description: 'Electronic with indie elements',
+			},
+			{ id: 'synthpop', label: 'Synthpop', description: 'Synthetic pop music' },
+			{ id: 'lo-fi', label: 'Lo-Fi', description: 'Low fidelity production' },
+			{
+				id: 'ambient',
+				label: 'Ambient',
+				description: 'Atmospheric electronic',
+			},
+			{
+				id: 'experimental',
+				label: 'Experimental',
+				description: 'Pushing boundaries',
+			},
+			{
+				id: 'downtempo',
+				label: 'Downtempo',
+				description: 'Slow tempo electronic',
+			},
+			{
+				id: 'drum-and-bass',
+				label: 'Drum & Bass',
+				description: 'Fast breakbeat',
+			},
+			{ id: 'dubstep', label: 'Dubstep', description: 'Bass-heavy electronic' },
+			{ id: 'house', label: 'House', description: 'Four-on-the-floor beats' },
+			{ id: 'techno', label: 'Techno', description: 'Repetitive electronic' },
+			{ id: 'trance', label: 'Trance', description: 'Hypnotic electronic' },
+			{
+				id: 'hardstyle',
+				label: 'Hardstyle',
+				description: 'Hard-hitting electronic',
+			},
+			{ id: 'hardcore', label: 'Hardcore', description: 'Extreme electronic' },
+		],
+	},
+	{
+		name: 'Hip-Hop & Rap',
+		genres: [
+			{ id: 'rap', label: 'Rap', description: 'Rhythmic poetry' },
+			{
+				id: 'underground-hip-hop',
+				label: 'Underground Hip-Hop',
+				description: 'Alternative rap',
+			},
+			{
+				id: 'alternative-hip-hop',
+				label: 'Alternative Hip-Hop',
+				description: 'Non-mainstream rap',
+			},
+			{
+				id: 'instrumental-hip-hop',
+				label: 'Instrumental Hip-Hop',
+				description: 'Beat-focused',
+			},
+			{ id: 'trip-hop', label: 'Trip-Hop', description: 'Downtempo hip-hop' },
+			{ id: 'trap', label: 'Trap', description: 'Modern rap style' },
+			{ id: 'dark-trap', label: 'Dark Trap', description: 'Atmospheric trap' },
+			{ id: 'drill', label: 'Drill', description: 'Raw trap style' },
+			{ id: 'melodic-rap', label: 'Melodic Rap', description: 'Singing rap' },
+			{
+				id: 'conscious-rap',
+				label: 'Conscious Rap',
+				description: 'Thoughtful lyrics',
+			},
+		],
+	},
+	{
+		name: 'Rock & Metal',
+		genres: [
+			{
+				id: 'indie-rock',
+				label: 'Indie Rock',
+				description: 'Independent rock',
+			},
+			{ id: 'post-rock', label: 'Post-Rock', description: 'Atmospheric rock' },
+			{ id: 'art-rock', label: 'Art Rock', description: 'Experimental rock' },
+			{ id: 'noise-rock', label: 'Noise Rock', description: 'Dissonant rock' },
+			{
+				id: 'psychedelic',
+				label: 'Psychedelic',
+				description: 'Mind-expanding',
+			},
+			{ id: 'garage-rock', label: 'Garage Rock', description: 'Raw rock' },
+			{ id: 'post-punk', label: 'Post-Punk', description: 'Experimental punk' },
+			{ id: 'shoegaze', label: 'Shoegaze', description: 'Wall of sound' },
+			{
+				id: 'industrial',
+				label: 'Industrial',
+				description: 'Mechanical sounds',
+			},
+			{
+				id: 'post-metal',
+				label: 'Post-Metal',
+				description: 'Atmospheric metal',
+			},
+			{ id: 'math-rock', label: 'Math Rock', description: 'Complex rhythms' },
+		],
+	},
+	{
+		name: 'Folk & Acoustic',
+		genres: [
+			{ id: 'indie-folk', label: 'Indie Folk', description: 'Modern folk' },
+			{
+				id: 'contemporary-folk',
+				label: 'Contemporary Folk',
+				description: 'Modern traditional',
+			},
+			{ id: 'folk-punk', label: 'Folk Punk', description: 'Energetic folk' },
+			{ id: 'anti-folk', label: 'Anti-Folk', description: 'Subversive folk' },
+			{
+				id: 'freak-folk',
+				label: 'Freak Folk',
+				description: 'Experimental folk',
+			},
+			{ id: 'spoken-word', label: 'Spoken Word', description: 'Poetic speech' },
+		],
+	},
+	{
+		name: 'Jazz & Classical',
+		genres: [
+			{ id: 'nu-jazz', label: 'Nu Jazz', description: 'Modern jazz' },
+			{ id: 'free-jazz', label: 'Free Jazz', description: 'Experimental jazz' },
+			{ id: 'jazz-fusion', label: 'Jazz Fusion', description: 'Mixed jazz' },
+			{
+				id: 'spiritual-jazz',
+				label: 'Spiritual Jazz',
+				description: 'Meditative jazz',
+			},
+			{
+				id: 'neo-classical',
+				label: 'Neo-Classical',
+				description: 'Modern classical',
+			},
+			{
+				id: 'contemporary-classical',
+				label: 'Contemporary Classical',
+				description: 'New classical',
+			},
+			{ id: 'minimal', label: 'Minimal', description: 'Minimalist music' },
+		],
+	},
+	{
+		name: 'Pop & R&B',
+		genres: [
+			{ id: 'indie-pop', label: 'Indie Pop', description: 'Independent pop' },
+			{ id: 'dream-pop', label: 'Dream Pop', description: 'Ethereal pop' },
+			{ id: 'bedroom-pop', label: 'Bedroom Pop', description: 'DIY pop' },
+			{ id: 'hyperpop', label: 'Hyperpop', description: 'Exaggerated pop' },
+			{ id: 'art-pop', label: 'Art Pop', description: 'Experimental pop' },
+			{
+				id: 'alternative-r&b',
+				label: 'Alternative R&B',
+				description: 'Modern R&B',
+			},
+			{ id: 'future-soul', label: 'Future Soul', description: 'Modern soul' },
+		],
+	},
+	{
+		name: 'Other',
+		genres: [
+			{ id: 'glitch', label: 'Glitch', description: 'Error music' },
+			{ id: 'idm', label: 'IDM', description: 'Intelligent Dance Music' },
+			{ id: 'breakcore', label: 'Breakcore', description: 'Chaotic breaks' },
+			{
+				id: 'vaporwave',
+				label: 'Vaporwave',
+				description: 'Nostalgic electronic',
+			},
+			{
+				id: 'future-garage',
+				label: 'Future Garage',
+				description: 'Modern garage',
+			},
+			{ id: 'darkwave', label: 'Darkwave', description: 'Dark electronic' },
+		],
+	},
+] as const;
+
+// Helper function to get all genres flattened
+export const getAllGenres = () =>
+	musicGenres.flatMap((category) => category.genres);
+
 export const productionStyles = [
 	{
-		id: 'bedroom',
-		label: 'Bedroom Producer',
-		description: 'Home studio setup',
+		id: 'lo-fi',
+		label: 'Lo-Fi',
+		description: 'Raw, unpolished sound',
 	},
-	{ id: 'diy', label: 'DIY Recording', description: 'Self-recorded' },
 	{
-		id: 'studio',
-		label: 'Studio Recording',
-		description: 'Professional studio',
+		id: 'hi-fi',
+		label: 'Hi-Fi',
+		description: 'Clean, polished production',
 	},
-	{ id: 'live', label: 'Live Recording', description: 'Recorded live' },
-] as const;
+	{
+		id: 'experimental',
+		label: 'Experimental',
+		description: 'Unconventional techniques',
+	},
+	{
+		id: 'minimalist',
+		label: 'Minimalist',
+		description: 'Simple, stripped down',
+	},
+	{
+		id: 'maximalist',
+		label: 'Maximalist',
+		description: 'Dense, layered production',
+	},
+] as FilterOption[];
 
 export const releaseFrequency = [
 	{
-		id: 'very_active',
-		label: 'Very Active',
-		description: 'Multiple releases per month',
+		id: 'prolific',
+		label: 'Prolific',
+		description: 'Multiple releases per year',
 	},
-	{ id: 'active', label: 'Active', description: 'Monthly releases' },
-	{ id: 'moderate', label: 'Moderate', description: 'Quarterly releases' },
-	{ id: 'selective', label: 'Selective', description: 'Few releases per year' },
-] as const;
+	{
+		id: 'regular',
+		label: 'Regular',
+		description: 'Annual releases',
+	},
+	{
+		id: 'occasional',
+		label: 'Occasional',
+		description: 'Every few years',
+	},
+	{
+		id: 'rare',
+		label: 'Rare',
+		description: 'Infrequent releases',
+	},
+] as FilterOption[];

@@ -45,15 +45,16 @@ export function LanguageSelector() {
 	};
 
 	return (
-		<Popover className="relative">
-			{({ open, close }) => (
+		<Popover className="flex relative">
+			{({ open }) => (
 				<>
 					<PopoverButton
 						className={cn(
-							'flex items-center gap-2 px-3 py-2 text-sm border rounded-lg transition-colors',
+							'flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors',
+							'border dark:border-gray-800',
 							open || selectedLanguages.length > 0
-								? 'border-rose-500 text-rose-500 bg-rose-50 dark:bg-rose-950/20'
-								: 'border-gray-200 dark:border-gray-700'
+								? 'bg-rose-50 border-rose-200 text-rose-500 dark:bg-rose-500/10 dark:border-rose-500/20 dark:text-rose-400'
+								: 'bg-gray-50 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700'
 						)}>
 						<div className="flex gap-2 items-center">
 							{selectedLanguages.length > 0 ? (
@@ -69,8 +70,8 @@ export function LanguageSelector() {
 									<span>
 										{selectedLanguages.length}
 										{selectedLanguages.length === 1
-											? ' language'
-											: ' languages'}
+											? ' Language'
+											: ' Languages'}
 									</span>
 								</>
 							) : (

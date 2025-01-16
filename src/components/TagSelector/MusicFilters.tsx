@@ -1,60 +1,68 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { artistSizes, artistStatus, genreStyles } from './constants';
+import {
+	artistSizes,
+	artistStatus,
+	genreStyles,
+	productionStyles,
+	releaseFrequency,
+} from './constants';
 import { FilterInput } from './FilterInput';
+import { GenreSelector } from './GenreSelector';
 
 export function MusicFilters() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const getSelectedParam = (param: string) =>
-		searchParams.get(param)?.split(',').filter(Boolean) || [];
 
-	const selectedSizes = getSelectedParam('sizes');
-	const selectedStatus = getSelectedParam('status');
-	const selectedGenreStyles = getSelectedParam('genreStyles');
+	function getActiveFilters(paramName: string) {
+		return searchParams.get(paramName)?.split(',').filter(Boolean) || [];
+	}
 
-	const updateSearchParam = (param: string, values: string[]) => {
-		const params = new URLSearchParams(searchParams);
-		if (values.length) {
-			params.set(param, values.join(','));
+	const handleFilterChange = (paramName: string, values: string[]) => {
+		const params = new URLSearchParams(searchParams.toString());
+
+		if (values.length > 0) {
+			params.set(paramName, values.join(','));
 		} else {
-			params.delete(param);
+			params.delete(paramName);
 		}
+
 		router.push(`?${params.toString()}`, { scroll: false });
 	};
 
-	const setSelectedSizes = (sizes: string[]) =>
-		updateSearchParam('sizes', sizes);
-	const setSelectedStatus = (status: string[]) =>
-		updateSearchParam('status', status);
-	const setSelectedGenreStyles = (styles: string[]) =>
-		updateSearchParam('genreStyles', styles);
-
 	return (
-		<div className="flex sticky gap-2 p-3 bg-white">
+		<div className="flex flex-wrap gap-2">
+			<GenreSelector />
 			<FilterInput
 				title="Size"
 				options={artistSizes}
-				selected={selectedSizes}
-				setSelected={setSelectedSizes}
-				filterType="size"
+				selected={getActiveFilters('sizes')}
+				setSelected={(values) => handleFilterChange('sizes', values)}
 			/>
-
 			<FilterInput
 				title="Status"
 				options={artistStatus}
-				selected={selectedStatus}
-				setSelected={setSelectedStatus}
-				filterType="status"
+				selected={getActiveFilters('status')}
+				setSelected={(values) => handleFilterChange('status', values)}
 			/>
-
 			<FilterInput
-				title="Genre"
+				title="Style"
 				options={genreStyles}
-				selected={selectedGenreStyles}
-				setSelected={setSelectedGenreStyles}
-				filterType="genreStyle"
+				selected={getActiveFilters('styles')}
+				setSelected={(values) => handleFilterChange('styles', values)}
+			/>
+			<FilterInput
+				title="Production"
+				options={productionStyles}
+				selected={getActiveFilters('production')}
+				setSelected={(values) => handleFilterChange('production', values)}
+			/>
+			<FilterInput
+				title="Activity"
+				options={releaseFrequency}
+				selected={getActiveFilters('activity')}
+				setSelected={(values) => handleFilterChange('activity', values)}
 			/>
 		</div>
 	);

@@ -24,7 +24,7 @@ export default function Home() {
 						basement, underground artists that value expression and passion,
 						over money.
 						<br />
-						It's hard to find You folks, but the things You create are one of
+						It&apos;s hard to find You folks, but the things You create are one of
 						the most precious gems in this tiny world. Keep it up!
 					</Typography>
 
