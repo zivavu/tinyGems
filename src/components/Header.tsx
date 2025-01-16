@@ -18,35 +18,20 @@ export function Header() {
 					<NextLink
 						href="/"
 						className="flex gap-2 items-center font-medium text-gray-900">
-						<Icons.sparkles className="w-5 h-5 text-rose-500" />
-						<Typography variant="h2">tinyGems</Typography>
+						<Icons.Sparkles className="w-5 h-5 text-rose-500" />
+						<Typography
+							className="hidden content-baseline sm:block"
+							variant="h2">
+							tinyGems
+						</Typography>
 					</NextLink>
-
-					{/* Main Navigation */}
-					<nav className="hidden gap-6 items-center md:flex">
-						<Link
-							href="/explore"
-							className="text-gray-600 transition-colors hover:text-rose-500">
-							Explore
-						</Link>
-						<Link
-							href="/artists"
-							className="text-gray-600 transition-colors hover:text-rose-500">
-							Artists
-						</Link>
-						<Link
-							href="/about"
-							className="text-gray-600 transition-colors hover:text-rose-500">
-							About
-						</Link>
-					</nav>
 
 					<div className="flex gap-4 items-center">
 						<ThemeToggle />
 						{isAuthenticated ? (
 							<Menu as="div" className="relative">
 								<Button className="flex gap-2 items-center px-4 py-2 bg-rose-50 rounded-full transition-colors hover:bg-rose-100">
-									<Icons.user className="w-4 h-4" />
+									<Icons.User className="w-4 h-4" />
 									<span>Profile</span>
 								</Button>
 								<MenuItems className="absolute right-0 py-2 mt-2 w-48 bg-white rounded-xl border border-rose-100 shadow-lg">
@@ -113,7 +98,7 @@ export function Header() {
 
 					{/* Mobile Menu Button - Only shows on small screens */}
 					<button className="p-2 rounded-lg md:hidden hover:bg-rose-50">
-						<Icons.menu className="w-6 h-6" />
+						<Icons.Menu className="w-6 h-6" />
 					</button>
 				</div>
 			</div>

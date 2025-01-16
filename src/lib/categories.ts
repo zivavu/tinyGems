@@ -1,10 +1,9 @@
-import { LucideIcon } from 'lucide-react';
+import { IconName, iconNames } from 'lucide-react/dynamic';
 import { z } from 'zod';
-import { Icons } from './Icons';
 
 // Zod schema for category validation
 export const categorySchema = z.object({
-	icon: z.custom<LucideIcon>((val) => typeof val === 'function'),
+	icon: z.enum(iconNames as [IconName, ...IconName[]]),
 	title: z.string().min(1).max(50),
 	description: z.string().min(1).max(200),
 	slug: z.string().min(1).max(50),
@@ -15,7 +14,7 @@ export type Category = z.infer<typeof categorySchema>;
 
 export const categories: Category[] = [
 	{
-		icon: Icons.music,
+		icon: 'music',
 		title: 'Music',
 		description:
 			'Music that makes you feel something. Made by Someone, and not a team of analysts.',
@@ -116,10 +115,10 @@ export const categories: Category[] = [
 		],
 	},
 	{
-		icon: Icons.drill,
+		icon: 'drill',
 		title: 'Crafts',
 		description:
-			'People that bring something new and unique into the world. Handmade, unique, and special.',
+			'People that bring something new and unique into the world. Handmade, and special.',
 		slug: 'crafts',
 		subCategories: [
 			'woodwork',
@@ -130,7 +129,7 @@ export const categories: Category[] = [
 		],
 	},
 	{
-		icon: Icons.art,
+		icon: 'paintbrush',
 		title: 'Graphic Art',
 		description:
 			'Illustrations that show the soul of the creator, visualised with every stroke.',
@@ -138,15 +137,15 @@ export const categories: Category[] = [
 		subCategories: ['painting', 'drawing', 'digital art', 'traditional art'],
 	},
 	{
+		icon: 'shirt',
 		title: 'Fiber Arts',
-		icon: Icons.shirt,
 		description:
 			'Textile creations that blend art and functionality, woven with care.',
 		slug: 'fiber-arts',
 		subCategories: ['knitting', 'weaving', 'quilting', 'dyeing', 'embroidery'],
 	},
 	{
-		icon: Icons.camera,
+		icon: 'camera',
 		title: 'Photography',
 		description:
 			'Capturing moments that tell a story, convey feelings, and evoke memories.',
@@ -154,7 +153,7 @@ export const categories: Category[] = [
 		subCategories: ['portrait', 'landscape', 'wildlife', 'macro', 'street'],
 	},
 	{
-		icon: Icons.pen,
+		icon: 'pencil',
 		title: 'Words',
 		description:
 			'Words that weave worlds. Written by people who pour their hearts onto the page.',
@@ -170,7 +169,7 @@ export const categories: Category[] = [
 		],
 	},
 	{
-		icon: Icons.clapperboard,
+		icon: 'clapperboard',
 		title: 'Movies',
 		description:
 			'Dialogues, emotions, stories, angles, lighting, and more. All combined to create something truly unique and beautiful.',
@@ -184,7 +183,7 @@ export const categories: Category[] = [
 		],
 	},
 	{
-		icon: Icons.code,
+		icon: 'code',
 		title: 'Digital Art',
 		description:
 			"Working with collaboration, with powerful GPU's, to create stunning experiences.",
@@ -198,7 +197,7 @@ export const categories: Category[] = [
 		],
 	},
 	{
-		icon: Icons.glasses,
+		icon: 'glasses',
 		title: 'Mixed Media',
 		description:
 			'Combines multiple mediums, creating a rich and layered experience that defies traditional categorization.',
@@ -206,7 +205,7 @@ export const categories: Category[] = [
 		subCategories: ['collage', 'assemblage', 'installation', 'performance'],
 	},
 	{
-		icon: Icons.shell,
+		icon: 'shell',
 		title: 'Content Creation',
 		description:
 			'Do You love podcasts, history videos, documentaries, educational, science, entertainment? Then it might be a place for You.',
@@ -222,7 +221,7 @@ export const categories: Category[] = [
 		],
 	},
 	{
-		icon: Icons.sparkles,
+		icon: 'sparkles',
 		title: 'Other',
 		description:
 			'Things so unique, they do not fit in any of the categories. Who knows what You will find here.',
@@ -230,7 +229,7 @@ export const categories: Category[] = [
 		subCategories: [],
 	},
 	{
-		icon: Icons.sparkles,
+		icon: 'sparkles',
 		title: 'All Categories',
 		description:
 			'Look for everything. No matter the size nor the category. We have it all.',

@@ -1,0 +1,195 @@
+'use client';
+
+import { Typography } from '@/components/ui/Typography';
+import { categories, Category } from '@/lib/categories';
+import { cn } from '@/lib/utils';
+import { Combobox, ComboboxButton, ComboboxInput } from '@headlessui/react';
+import { Check, ChevronsUpDown, Search, X } from 'lucide-react';
+import { DynamicIcon } from 'lucide-react/dynamic';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { MusicFilters } from './MusicFilters';
+import { languages } from './constants';
+
+interface TagSelectorProps {
+	selectedCategory: Category;
+}
+
+export function TagSelector({ selectedCategory }: TagSelectorProps) {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+
+	// Initialize language selection from URL
+	const [selectedLanguages, setSelectedLanguages] = useState<
+		(typeof languages)[0][]
+	>(() => {
+		const langParam = searchParams.get('languages');
+		if (!langParam) return [];
+		const langCodes = langParam.split(',');
+		return languages.filter((lang) => langCodes.includes(lang.code));
+	});
+	const [query, setQuery] = useState('');
+
+	const filteredLanguages = query
+		? languages.filter(
+				(language) =>
+					language.name.toLowerCase().includes(query.toLowerCase()) ||
+					language.code.toLowerCase().includes(query.toLowerCase())
+		  )
+		: languages;
+
+	const updateSearchParams = (updates: Record<string, string | null>) => {
+		const params = new URLSearchParams(searchParams.toString());
+
+		// Update or remove each parameter
+		Object.entries(updates).forEach(([key, value]) => {
+			if (value === null) {
+				params.delete(key);
+			} else {
+				params.set(key, value);
+			}
+		});
+
+		// Update URL without refreshing the page
+		router.push(`/seek?${params.toString()}`, { scroll: false });
+	};
+
+	const handleCategoryChange = (category: Category) => {
+		updateSearchParams({ category: category.slug });
+	};
+
+	const handleLanguageChange = (newLanguages: typeof selectedLanguages) => {
+		setSelectedLanguages(newLanguages);
+		const languageParam =
+			newLanguages.length > 0
+				? newLanguages.map((l) => l.code).join(',')
+				: null;
+		updateSearchParams({ languages: languageParam });
+	};
+
+	const handleMusicFilterChange = (
+		filterType: string,
+		selectedOptions: string[]
+	) => {
+		const filterParam =
+			selectedOptions.length > 0 ? selectedOptions.join(',') : null;
+		updateSearchParams({ [filterType]: filterParam });
+	};
+
+	return (
+		<div className="space-y-6">
+			{/* Categories Section */}
+			<div className="space-y-4">
+				<Typography variant="h3">Categories</Typography>
+				<div className="flex flex-wrap gap-2">
+					{categories.map((category) => (
+						<button
+							key={category.slug}
+							onClick={() => handleCategoryChange(category)}
+							className={cn(
+								'px-4 py-2 rounded-full text-sm transition-colors',
+								category.slug === selectedCategory.slug
+									? 'bg-rose-500 text-white'
+									: 'bg-white text-gray-700 hover:bg-rose-100 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800'
+							)}>
+							<div className="flex gap-2 items-center">
+								<DynamicIcon className="w-4 h-4" name={category.icon} />
+								{category.title}
+							</div>
+						</button>
+					))}
+				</div>
+			</div>
+
+			{/* Language Filter */}
+			<div className="space-y-4">
+				<Typography variant="h3">Language</Typography>
+				<Combobox
+					value={selectedLanguages}
+					onChange={handleLanguageChange}
+					multiple>
+					<div className="relative">
+						<div className="relative w-full">
+							<Search className="absolute left-3 top-1/2 w-4 h-4 text-gray-500 -translate-y-1/2" />
+							<ComboboxInput
+								className="py-2 pr-10 pl-10 w-full text-sm rounded-lg border dark:bg-gray-800 dark:border-gray-700"
+								placeholder="Search languages..."
+								onChange={(event) => setQuery(event.target.value)}
+								displayValue={(languages: typeof selectedLanguages) =>
+									languages.map((lang) => lang.name).join(', ')
+								}
+							/>
+							<ComboboxButton className="flex absolute inset-y-0 right-0 items-center pr-2">
+								<ChevronsUpDown
+									className="w-4 h-4 text-gray-400"
+									aria-hidden="true"
+								/>
+							</ComboboxButton>
+						</div>
+
+						<Combobox.Options className="overflow-auto absolute z-10 py-1 mt-1 w-full max-h-60 text-sm bg-white rounded-md shadow-lg dark:bg-gray-800">
+							{filteredLanguages.length === 0 && query !== '' ? (
+								<div className="px-4 py-2 text-gray-500">Nothing found.</div>
+							) : (
+								filteredLanguages.map((language) => (
+									<Combobox.Option
+										key={language.code}
+										value={language}
+										className={({ active }) =>
+											cn(
+												'relative cursor-pointer select-none py-2 px-4',
+												active ? 'bg-rose-100 dark:bg-rose-900/50' : ''
+											)
+										}>
+										{({ selected }) => (
+											<div className="flex justify-between items-center">
+												<div className="flex gap-2 items-center">
+													<language.Flag className="w-5 h-4" />
+													<span>{language.name}</span>
+													<span className="text-gray-400">
+														({language.code})
+													</span>
+												</div>
+												{selected && (
+													<Check className="w-4 h-4 text-rose-500" />
+												)}
+											</div>
+										)}
+									</Combobox.Option>
+								))
+							)}
+						</Combobox.Options>
+					</div>
+				</Combobox>
+
+				{/* Selected Languages Tags */}
+				{selectedLanguages.length > 0 && (
+					<div className="flex flex-wrap gap-2">
+						{selectedLanguages.map((language) => (
+							<span
+								key={language.code}
+								className="flex gap-1 items-center px-3 py-1 text-sm text-rose-600 bg-rose-100 rounded-full dark:bg-rose-900/50 dark:text-rose-300">
+								<language.Flag className="w-4 h-3" />
+								{language.name}
+								<button
+									onClick={() =>
+										setSelectedLanguages(
+											selectedLanguages.filter((l) => l.code !== language.code)
+										)
+									}
+									className="ml-1 hover:text-rose-800 dark:hover:text-rose-200">
+									<X className="w-3 h-3" />
+								</button>
+							</span>
+						))}
+					</div>
+				)}
+			</div>
+
+			{/* Category-specific filters */}
+			{selectedCategory.slug === 'music' && (
+				<MusicFilters onFilterChange={handleMusicFilterChange} />
+			)}
+		</div>
+	);
+}

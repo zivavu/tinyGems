@@ -20,10 +20,7 @@ export function Link({
 			href={href}
 			className={cn('inline-flex gap-1 items-center', className)}
 			{...props}>
-			<Typography
-				variant={variant}
-				className="inherit" // inherit parent link colors
-			>
+			<Typography variant={variant} className="inherit">
 				{children}
 			</Typography>
 		</NextLink>
