@@ -22,8 +22,20 @@ export function useParamFilters() {
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
+  const clearAllParams = () => {
+    // Create new URLSearchParams with only the category
+    const category = searchParams.get('category');
+    const newParams = new URLSearchParams();
+    if (category) {
+      newParams.set('category', category);
+    }
+
+    router.push(`?${newParams.toString()}`, { scroll: false });
+  };
+
   return {
     getSelectedParams,
     handleParamChange,
+    clearAllParams,
   };
 }

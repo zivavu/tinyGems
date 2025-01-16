@@ -6,6 +6,7 @@ import {
   ChevronsUpDown,
   ChevronUp,
   Clapperboard,
+  Clock,
   Code,
   Drill,
   FileVideo,
@@ -18,6 +19,7 @@ import {
   Moon,
   Music,
   Paintbrush,
+  Palette,
   Pencil,
   PenTool,
   Search,
@@ -27,6 +29,7 @@ import {
   Sparkles,
   Sun,
   User,
+  Users,
   X,
   type LucideIcon,
 } from 'lucide-react';
@@ -70,6 +73,9 @@ export const Icons = {
   Mic,
   PenTool,
   Anvil,
+  Clock,
+  Users,
+  Palette,
 } as const satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof Icons;

@@ -3,7 +3,9 @@
 import { Icons } from '@/lib/Icons';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
+import React from 'react';
 import { FilterButton } from './buttons/FilterButton';
+import { PopoverTransition } from './transitions/PopoverTransition';
 import { Typography } from './Typography';
 
 interface SelectProps {
@@ -13,9 +15,10 @@ interface SelectProps {
   count?: number;
   icon?: keyof typeof Icons;
   children: React.ReactNode;
+  popoverClassName?: string;
 }
 
-export function Select({ title, selected, count, icon: IconName, children }: SelectProps) {
+export function Select({ title, selected, count, icon: IconName, popoverClassName, children }: SelectProps) {
   const Icon = IconName ? Icons[IconName] : null;
 
   return (
@@ -43,9 +46,16 @@ export function Select({ title, selected, count, icon: IconName, children }: Sel
             </div>
           </PopoverButton>
 
-          <PopoverPanel className="absolute z-10 mt-2 w-80 bg-white rounded-lg border-2 border-gray-200 shadow-lg dark:bg-gray-800 dark:border-gray-700">
-            {children}
-          </PopoverPanel>
+          <PopoverTransition show={isOpen}>
+            <PopoverPanel
+              className={cn(
+                'absolute z-10 mt-2 w-80 bg-white rounded-lg border-2 border-gray-200 shadow-lg dark:bg-gray-800 dark:border-gray-700',
+                popoverClassName,
+              )}
+            >
+              {children}
+            </PopoverPanel>
+          </PopoverTransition>
         </>
       )}
     </Popover>

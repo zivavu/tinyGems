@@ -21,12 +21,14 @@ interface FilterGroup {
 
 interface FilterInputProps {
   title: string;
+  icon?: keyof typeof Icons;
   options: FilterOption[] | FilterGroup[];
   selected: string[];
   setSelected: (value: string[]) => void;
   count?: number;
-  grouped?: boolean;
-  searchable?: boolean;
+  isGrouped?: boolean;
+  isSearchable?: boolean;
+  showFilterChips?: boolean;
 }
 
 function FilterOption({ option, selected, onClick }: { option: FilterOption; selected: boolean; onClick: () => void }) {
@@ -101,7 +103,17 @@ function SelectedChips({
   );
 }
 
-export function FilterSelect({ title, options, selected, setSelected, count, grouped = false, searchable = false }: FilterInputProps) {
+export function FilterSelect({
+  title,
+  icon,
+  options,
+  selected,
+  setSelected,
+  count,
+  isGrouped = false,
+  isSearchable = false,
+  showFilterChips = false,
+}: FilterInputProps) {
   const [query, setQuery] = useState('');
 
   const toggleFilter = (option: FilterOption) => {
@@ -109,7 +121,7 @@ export function FilterSelect({ title, options, selected, setSelected, count, gro
     setSelected(newSelection);
   };
 
-  const filteredOptions = grouped
+  const filteredOptions = isGrouped
     ? (options as FilterGroup[])
         .map((group) => ({
           name: group.name,
@@ -128,12 +140,12 @@ export function FilterSelect({ title, options, selected, setSelected, count, gro
           !query,
       );
 
-  const allOptions: FilterOption[] = grouped ? (options as FilterGroup[]).flatMap((group) => group.options) : (options as FilterOption[]);
+  const allOptions: FilterOption[] = isGrouped ? (options as FilterGroup[]).flatMap((group) => group.options) : (options as FilterOption[]);
 
   const selectedOptions = allOptions.filter((option) => selected.includes(option.id));
 
   return (
-    <Select title={title} selected={selected.length > 0} count={count || selected.length || undefined}>
+    <Select title={title} icon={icon} selected={selected.length > 0} count={count || selected.length || undefined}>
       <div className="p-3 space-y-3">
         <div className="flex justify-between items-center">
           <Typography variant="h4" className="text-base">
@@ -151,7 +163,7 @@ export function FilterSelect({ title, options, selected, setSelected, count, gro
           )}
         </div>
 
-        {searchable && (
+        {isSearchable && (
           <div className="relative">
             <Icons.Search className="absolute left-2 top-1/2 w-4 h-4 text-gray-500 -translate-y-1/2" />
             <input
@@ -164,10 +176,10 @@ export function FilterSelect({ title, options, selected, setSelected, count, gro
           </div>
         )}
 
-        <SelectedChips options={selectedOptions} onRemove={toggleFilter} maxVisible={3} />
+        {showFilterChips && <SelectedChips options={selectedOptions} onRemove={toggleFilter} maxVisible={3} />}
 
         <div className="overflow-auto max-h-[400px] space-y-2">
-          {grouped ? (
+          {isGrouped ? (
             (filteredOptions as FilterGroup[]).map((group) => (
               <div key={group.name} className="space-y-1">
                 <div className="sticky top-0 px-2 py-1 text-xs font-semibold text-gray-500 backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 dark:text-gray-400">
@@ -204,4 +216,3 @@ export function FilterSelect({ title, options, selected, setSelected, count, gro
 }
 
 export type { FilterGroup, FilterInputProps, FilterOption };
-

@@ -1,56 +1,71 @@
 'use client';
 
+import { Icons } from '@/lib/Icons';
 import { FilterSelect } from '../ui/FilterSelect';
 import { artistSizes, genreStyles, musicGenres, productionStyles, releaseFrequency } from './constants';
 import { useParamFilters } from './hooks';
 
+interface MusicFilter {
+  title: string;
+  options: any[];
+  param: string;
+  icon: keyof typeof Icons;
+  grouped?: boolean;
+  searchable?: boolean;
+  showFilterChips?: boolean;
+}
+
 export function MusicFilters() {
   const { getSelectedParams, handleParamChange } = useParamFilters();
 
+  const filtersArr: MusicFilter[] = [
+    {
+      title: 'Genres',
+      options: musicGenres,
+      param: 'genres',
+      icon: 'Music',
+      grouped: true,
+      searchable: true,
+      showFilterChips: true,
+    },
+    {
+      title: 'Size',
+      options: artistSizes,
+      param: 'sizes',
+      icon: 'Users',
+    },
+    {
+      title: 'Style',
+      options: genreStyles,
+      param: 'styles',
+      icon: 'Palette',
+    },
+    {
+      title: 'Production',
+      options: productionStyles,
+      param: 'production',
+      icon: 'Mic',
+    },
+    {
+      title: 'Activity',
+      options: releaseFrequency,
+      param: 'activity',
+      icon: 'Clock',
+    },
+  ] as const;
   return (
     <div className="flex flex-wrap gap-2">
-      {[
-        {
-          title: 'Genres',
-          options: musicGenres,
-          param: 'genres',
-          grouped: true,
-          searchable: true,
-          getSelected: () =>
-            musicGenres
-              .flatMap((group) => group.options)
-              .filter((option) => getSelectedParams('genres').includes(option.id))
-              .map((option) => option.id),
-        },
-        {
-          title: 'Size',
-          options: artistSizes,
-          param: 'sizes',
-        },
-        {
-          title: 'Style',
-          options: genreStyles,
-          param: 'styles',
-        },
-        {
-          title: 'Production',
-          options: productionStyles,
-          param: 'production',
-        },
-        {
-          title: 'Activity',
-          options: releaseFrequency,
-          param: 'activity',
-        },
-      ].map(({ title, options, param, grouped, searchable, getSelected }) => (
+      {filtersArr.map(({ title, options, param, icon, grouped, searchable, showFilterChips }) => (
         <FilterSelect
           key={title}
           title={title}
+          icon={icon}
           options={options}
-          selected={getSelected?.() || options.filter((option) => getSelectedParams(param).includes(option.id)).map((option) => option.id)}
+          selected={getSelectedParams(param)}
           setSelected={(newValues) => handleParamChange(param, newValues)}
-          grouped={grouped}
-          searchable={searchable}
+          isGrouped={grouped}
+          isSearchable={searchable}
+          showFilterChips={showFilterChips}
         />
       ))}
     </div>
