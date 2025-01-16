@@ -14,7 +14,7 @@ export default function Home() {
           </div>
 
           <Typography variant="h1" className="mb-6">
-            tiny art, for tiny people
+            tiny Art, for tiny People
           </Typography>
 
           <Typography variant="p" className="mb-8 text-lg lg:px-28 md:px-6 sm:px-0">
@@ -26,7 +26,7 @@ export default function Home() {
 
           <div className="flex gap-4 justify-center">
             <NextLink
-              href="/seek"
+              href={{ pathname: '/seek', query: { category: 'all' } }}
               className="px-6 py-3 text-white bg-rose-500 rounded-full shadow-sm transition-transform hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-500 hover:scale-105 hover:shadow-md"
             >
               Seek For tinyGems

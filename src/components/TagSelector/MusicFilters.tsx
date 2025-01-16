@@ -54,7 +54,7 @@ export function MusicFilters() {
     },
   ] as const;
   return (
-    <div className="flex flex-wrap gap-2">
+    <>
       {filtersArr.map(({ title, options, param, icon, grouped, searchable, showFilterChips }) => (
         <FilterSelect
           key={title}
@@ -68,6 +68,6 @@ export function MusicFilters() {
           showFilterChips={showFilterChips}
         />
       ))}
-    </div>
+    </>
   );
 }

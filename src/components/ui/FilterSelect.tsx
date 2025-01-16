@@ -29,6 +29,7 @@ interface FilterInputProps {
   isGrouped?: boolean;
   isSearchable?: boolean;
   showFilterChips?: boolean;
+  className?: string;
 }
 
 function FilterOption({ option, selected, onClick }: { option: FilterOption; selected: boolean; onClick: () => void }) {
@@ -113,6 +114,7 @@ export function FilterSelect({
   isGrouped = false,
   isSearchable = false,
   showFilterChips = false,
+  className,
 }: FilterInputProps) {
   const [query, setQuery] = useState('');
 
@@ -145,22 +147,15 @@ export function FilterSelect({
   const selectedOptions = allOptions.filter((option) => selected.includes(option.id));
 
   return (
-    <Select title={title} icon={icon} selected={selected.length > 0} count={count || selected.length || undefined}>
+    <Select title={title} icon={icon} selected={selected.length > 0} count={count || selected.length || undefined} className={className}>
       <div className="p-3 space-y-3">
         <div className="flex justify-between items-center">
           <Typography variant="h4" className="text-base">
             {title}
           </Typography>
-          {selected.length > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSelected([])}
-              className="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
-            >
-              Clear all
-            </Button>
-          )}
+          <Button disabled={selected.length === 0} variant="ghost" onClick={() => setSelected([])}>
+            Clear all
+          </Button>
         </div>
 
         {isSearchable && (

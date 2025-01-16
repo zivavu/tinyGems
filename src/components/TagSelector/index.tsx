@@ -1,5 +1,6 @@
 'use client';
 
+import { HEADER_HEIGHT } from '@/consts';
 import { Category } from '@/lib/categories';
 import { Icons } from '@/lib/Icons';
 import { Button } from '../ui/buttons/Button';
@@ -22,8 +23,8 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
   );
 
   return (
-    <div className="sticky top-0 p-3 rounded-md border border-gray-200 dark:border-gray-800">
-      <div className="flex flex-wrap gap-2">
+    <div className={`sticky z-10 p-3 border-b top-${HEADER_HEIGHT}`}>
+      <div className="flex flex-row flex-wrap gap-2 justify-center items-stretch">
         <CategorySelect selectedCategory={selectedCategory} />
         <FilterSelect
           title="Languages"
@@ -42,7 +43,7 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
             variant="ghost"
             size="sm"
             onClick={clearAllParams}
-            className="ml-auto text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
+            className="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
           >
             <Icons.X className="mr-1 w-3 h-3" />
             Clear all filters

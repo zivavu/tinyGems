@@ -1,6 +1,7 @@
 'use client';
 
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { HEADER_HEIGHT } from '@/consts';
 import { Icons } from '@/lib/Icons';
 import { Button, Menu, MenuItems } from '@headlessui/react';
 import NextLink from 'next/link';
@@ -12,12 +13,14 @@ export function Header() {
   const isAuthenticated = false;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-rose-100 backdrop-blur-sm dark:border-rose-900 bg-white/80 dark:bg-gray-950/80">
+    <header
+      className={`sticky top-0 z-50 w-full border-b border-rose-100 backdrop-blur-sm h-${HEADER_HEIGHT} dark:border-rose-900 bg-white/80 dark:bg-gray-950/80`}
+    >
       <div className="container px-4 mx-auto">
         <div className="flex justify-between items-center h-16">
           <NextLink href="/" className="flex gap-2 items-center font-medium text-gray-900">
             <Icons.Sparkles className="w-5 h-5 text-rose-500" />
-            <Typography className="hidden content-baseline sm:block" variant="h2">
+            <Typography className="hidden content-center sm:block" variant="h2">
               tinyGems
             </Typography>
           </NextLink>

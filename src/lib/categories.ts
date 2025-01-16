@@ -188,7 +188,7 @@ export const categories: Category[] = [
     icon: 'sparkles',
     title: 'All Categories',
     description: 'Look for everything. No matter the size nor the category. We have it all.',
-    slug: 'all-categories',
+    slug: 'all',
     options: [],
   },
 ];

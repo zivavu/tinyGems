@@ -13,13 +13,11 @@ export default async function SeekPage({ searchParams }: SeekPageProps) {
   const selectedCategory = categories.find((c) => c.slug === category) || categories[0];
 
   return (
-    <div className="min-h-screen bg-rose-50 dark:bg-gray-950">
-      <main className="container px-8 py-12 mx-auto">
-        <div className="mb-8">
-          <TagSelector selectedCategory={selectedCategory} />
-        </div>
+    <div className="relative min-h-screen bg-rose-50/50 dark:bg-gray-950">
+      <TagSelector selectedCategory={selectedCategory} />
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+      <main className="container px-8 py-12 mx-auto">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">{/* Content goes here */}</div>
       </main>
     </div>
   );
