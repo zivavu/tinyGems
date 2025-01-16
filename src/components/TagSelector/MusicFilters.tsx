@@ -1,29 +1,35 @@
 'use client';
 
-import { useState } from 'react';
-import {
-	artistSizes,
-	artistStatus,
-	genreStyles,
-	releaseTypes,
-} from './constants';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { artistSizes, artistStatus, genreStyles } from './constants';
 import { FilterSection } from './FilterSection';
 
-export interface FilterChangeHandler {
-	(filterType: string, selectedOptions: string[]): void;
-}
+export function MusicFilters() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const getSelectedParam = (param: string) =>
+		searchParams.get(param)?.split(',').filter(Boolean) || [];
 
-export function MusicFilters({
-	onFilterChange,
-}: {
-	onFilterChange: FilterChangeHandler;
-}) {
-	const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-	const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
-	const [selectedGenreStyles, setSelectedGenreStyles] = useState<string[]>([]);
-	const [selectedReleaseTypes, setSelectedReleaseTypes] = useState<string[]>(
-		[]
-	);
+	const selectedSizes = getSelectedParam('sizes');
+	const selectedStatus = getSelectedParam('status');
+	const selectedGenreStyles = getSelectedParam('genreStyles');
+
+	const updateSearchParam = (param: string, values: string[]) => {
+		const params = new URLSearchParams(searchParams);
+		if (values.length) {
+			params.set(param, values.join(','));
+		} else {
+			params.delete(param);
+		}
+		router.push(`?${params.toString()}`, { scroll: false });
+	};
+
+	const setSelectedSizes = (sizes: string[]) =>
+		updateSearchParam('sizes', sizes);
+	const setSelectedStatus = (status: string[]) =>
+		updateSearchParam('status', status);
+	const setSelectedGenreStyles = (styles: string[]) =>
+		updateSearchParam('genreStyles', styles);
 
 	return (
 		<div className="space-y-4">
@@ -49,14 +55,6 @@ export function MusicFilters({
 				selected={selectedGenreStyles}
 				setSelected={setSelectedGenreStyles}
 				filterType="genreStyle"
-			/>
-
-			<FilterSection
-				title="Release Types"
-				options={releaseTypes}
-				selected={selectedReleaseTypes}
-				setSelected={setSelectedReleaseTypes}
-				filterType="releaseType"
 			/>
 		</div>
 	);

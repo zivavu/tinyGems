@@ -3,7 +3,13 @@
 import { Typography } from '@/components/ui/Typography';
 import { categories, Category } from '@/lib/categories';
 import { cn } from '@/lib/utils';
-import { Combobox, ComboboxButton, ComboboxInput } from '@headlessui/react';
+import {
+	Combobox,
+	ComboboxButton,
+	ComboboxInput,
+	ComboboxOption,
+	ComboboxOptions,
+} from '@headlessui/react';
 import { Check, ChevronsUpDown, Search, X } from 'lucide-react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -19,15 +25,13 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
-	// Initialize language selection from URL
-	const [selectedLanguages, setSelectedLanguages] = useState<
-		(typeof languages)[0][]
-	>(() => {
+	const selectedLanguages = (() => {
 		const langParam = searchParams.get('languages');
 		if (!langParam) return [];
 		const langCodes = langParam.split(',');
 		return languages.filter((lang) => langCodes.includes(lang.code));
-	});
+	})();
+
 	const [query, setQuery] = useState('');
 
 	const filteredLanguages = query
@@ -37,6 +41,8 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 					language.code.toLowerCase().includes(query.toLowerCase())
 		  )
 		: languages;
+
+	console.log(filteredLanguages);
 
 	const updateSearchParams = (updates: Record<string, string | null>) => {
 		const params = new URLSearchParams(searchParams.toString());
@@ -59,7 +65,6 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 	};
 
 	const handleLanguageChange = (newLanguages: typeof selectedLanguages) => {
-		setSelectedLanguages(newLanguages);
 		const languageParam =
 			newLanguages.length > 0
 				? newLanguages.map((l) => l.code).join(',')
@@ -67,18 +72,19 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 		updateSearchParams({ languages: languageParam });
 	};
 
-	const handleMusicFilterChange = (
-		filterType: string,
-		selectedOptions: string[]
-	) => {
-		const filterParam =
-			selectedOptions.length > 0 ? selectedOptions.join(',') : null;
-		updateSearchParams({ [filterType]: filterParam });
+	const handleRemoveLanguage = (languageCode: string) => {
+		const newLanguages = selectedLanguages.filter(
+			(l) => l.code !== languageCode
+		);
+		const languageParam =
+			newLanguages.length > 0
+				? newLanguages.map((l) => l.code).join(',')
+				: null;
+		updateSearchParams({ languages: languageParam });
 	};
 
 	return (
 		<div className="space-y-6">
-			{/* Categories Section */}
 			<div className="space-y-4">
 				<Typography variant="h3">Categories</Typography>
 				<div className="flex flex-wrap gap-2">
@@ -101,12 +107,12 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 				</div>
 			</div>
 
-			{/* Language Filter */}
 			<div className="space-y-4">
 				<Typography variant="h3">Language</Typography>
 				<Combobox
 					value={selectedLanguages}
 					onChange={handleLanguageChange}
+					immediate
 					multiple>
 					<div className="relative">
 						<div className="relative w-full">
@@ -114,10 +120,14 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 							<ComboboxInput
 								className="py-2 pr-10 pl-10 w-full text-sm rounded-lg border dark:bg-gray-800 dark:border-gray-700"
 								placeholder="Search languages..."
+								autoComplete="off"
+								spellCheck="false"
+								autoCorrect="off"
+								aria-autocomplete="list"
+								aria-controls="language-options"
 								onChange={(event) => setQuery(event.target.value)}
-								displayValue={(languages: typeof selectedLanguages) =>
-									languages.map((lang) => lang.name).join(', ')
-								}
+								onBlur={() => setQuery('')}
+								value={query}
 							/>
 							<ComboboxButton className="flex absolute inset-y-0 right-0 items-center pr-2">
 								<ChevronsUpDown
@@ -127,18 +137,18 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 							</ComboboxButton>
 						</div>
 
-						<Combobox.Options className="overflow-auto absolute z-10 py-1 mt-1 w-full max-h-60 text-sm bg-white rounded-md shadow-lg dark:bg-gray-800">
-							{filteredLanguages.length === 0 && query !== '' ? (
+						<ComboboxOptions className="overflow-auto absolute z-10 py-1 mt-1 w-full max-h-60 text-sm bg-white rounded-md shadow-lg dark:bg-gray-800">
+							{filteredLanguages.length === 0 ? (
 								<div className="px-4 py-2 text-gray-500">Nothing found.</div>
 							) : (
 								filteredLanguages.map((language) => (
-									<Combobox.Option
+									<ComboboxOption
 										key={language.code}
 										value={language}
-										className={({ active }) =>
+										className={({ selected }) =>
 											cn(
 												'relative cursor-pointer select-none py-2 px-4',
-												active ? 'bg-rose-100 dark:bg-rose-900/50' : ''
+												selected ? 'bg-rose-50 dark:bg-rose-900/25' : ''
 											)
 										}>
 										{({ selected }) => (
@@ -155,14 +165,13 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 												)}
 											</div>
 										)}
-									</Combobox.Option>
+									</ComboboxOption>
 								))
 							)}
-						</Combobox.Options>
+						</ComboboxOptions>
 					</div>
 				</Combobox>
 
-				{/* Selected Languages Tags */}
 				{selectedLanguages.length > 0 && (
 					<div className="flex flex-wrap gap-2">
 						{selectedLanguages.map((language) => (
@@ -172,11 +181,7 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 								<language.Flag className="w-4 h-3" />
 								{language.name}
 								<button
-									onClick={() =>
-										setSelectedLanguages(
-											selectedLanguages.filter((l) => l.code !== language.code)
-										)
-									}
+									onClick={() => handleRemoveLanguage(language.code)}
 									className="ml-1 hover:text-rose-800 dark:hover:text-rose-200">
 									<X className="w-3 h-3" />
 								</button>
@@ -186,10 +191,7 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
 				)}
 			</div>
 
-			{/* Category-specific filters */}
-			{selectedCategory.slug === 'music' && (
-				<MusicFilters onFilterChange={handleMusicFilterChange} />
-			)}
+			{selectedCategory.slug === 'music' && <MusicFilters />}
 		</div>
 	);
 }
