@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { artistSizes, artistStatus, genreStyles } from './constants';
-import { FilterSection } from './FilterSection';
+import { FilterInput } from './FilterInput';
 
 export function MusicFilters() {
 	const router = useRouter();
@@ -32,25 +32,25 @@ export function MusicFilters() {
 		updateSearchParam('genreStyles', styles);
 
 	return (
-		<div className="space-y-4">
-			<FilterSection
-				title="Artist Size"
+		<div className="flex sticky gap-2 p-3 bg-white">
+			<FilterInput
+				title="Size"
 				options={artistSizes}
 				selected={selectedSizes}
 				setSelected={setSelectedSizes}
 				filterType="size"
 			/>
 
-			<FilterSection
-				title="Artist Status"
+			<FilterInput
+				title="Status"
 				options={artistStatus}
 				selected={selectedStatus}
 				setSelected={setSelectedStatus}
 				filterType="status"
 			/>
 
-			<FilterSection
-				title="Genre Approach"
+			<FilterInput
+				title="Genre"
 				options={genreStyles}
 				selected={selectedGenreStyles}
 				setSelected={setSelectedGenreStyles}

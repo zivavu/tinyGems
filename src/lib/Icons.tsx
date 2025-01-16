@@ -1,6 +1,9 @@
 import {
 	Anvil,
 	Camera,
+	Check,
+	ChevronDown,
+	ChevronsUpDown,
 	ChevronUp,
 	Clapperboard,
 	Code,
@@ -8,38 +11,65 @@ import {
 	FileVideo,
 	Gamepad,
 	Glasses,
+	Globe,
+	Layout,
 	Menu,
 	Mic,
+	Moon,
 	Music,
 	Paintbrush,
 	Pencil,
 	PenTool,
+	Search,
 	Shell,
 	Shirt,
+	SlidersHorizontal,
 	Sparkles,
+	Sun,
 	User,
+	X,
 	type LucideIcon,
 } from 'lucide-react';
 
 export const Icons = {
+	// Navigation & UI
 	Menu,
-	Sparkles,
+	Search,
 	ChevronUp,
-	Drill,
-	Glasses,
+	ChevronDown,
+	ChevronsUpDown,
+	X,
+	Check,
+
+	// Theme
+	Sun,
+	Moon,
+
+	// Categories
 	Music,
+	Drill,
 	Paintbrush,
-	Pencil,
 	Shirt,
-	User,
 	Camera,
-	PenTool,
+	Pencil,
 	Clapperboard,
-	FileVideo,
-	Shell,
-	Gamepad,
 	Code,
+	Glasses,
+	Shell,
+	Sparkles,
+
+	// User & Settings
+	User,
+	Globe,
+	Layout,
+	SlidersHorizontal,
+
+	// Media & Content
+	FileVideo,
+	Gamepad,
 	Mic,
+	PenTool,
 	Anvil,
 } as const satisfies Record<string, LucideIcon>;
 
+export type IconName = keyof typeof Icons;
