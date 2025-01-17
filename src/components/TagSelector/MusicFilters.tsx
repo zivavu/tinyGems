@@ -1,13 +1,13 @@
 'use client';
 
 import { Icons } from '@/lib/Icons';
-import { FilterSelect } from '../ui/FilterSelect';
-import { artistSizes, genreStyles, musicGenres, productionStyles, releaseFrequency } from './constants';
+import { FilterOption, FilterSelect } from '../ui/FilterSelect';
+import { artistSizes, GenreCategory, genreStyles, musicGenres, productionStyles, releaseFrequency } from './constants';
 import { useParamFilters } from './hooks';
 
 interface MusicFilter {
   title: string;
-  options: any[];
+  options: FilterOption[] | GenreCategory[];
   param: string;
   icon: keyof typeof Icons;
   grouped?: boolean;

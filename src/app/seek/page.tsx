@@ -5,11 +5,12 @@ import { categories } from '@/lib/categories';
 import { dummyGems } from '@/lib/dummy/gems';
 
 interface SeekPageProps {
-  searchParams: { category?: string };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function SeekPage({ searchParams }: SeekPageProps) {
-  const selectedCategory = categories.find((category) => category.slug === searchParams.category) ?? categories[0];
+export default async function SeekPage({ searchParams }: SeekPageProps) {
+  const resolvedParams = await searchParams;
+  const selectedCategory = categories.find((category) => category.slug === resolvedParams.category) ?? categories[0];
 
   return (
     <main className="container px-4 mx-auto">

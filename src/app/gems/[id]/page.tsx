@@ -8,11 +8,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-interface GemPageProps {
-  params: { id: string };
-}
+type GemPageProps = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
 
-export default async function GemPage({ params }: GemPageProps) {
+export default async function GemPag({ params }: GemPageProps) {
   const resolvedParams = await params;
   const gem = dummyGems.find((g) => g.id === resolvedParams.id);
 
