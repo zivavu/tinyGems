@@ -25,6 +25,7 @@ interface GemBase {
 export interface MusicGem extends GemBase {
   type: 'music';
   artist: {
+    id: string;
     name: string;
     avatar?: string;
     location?: string;

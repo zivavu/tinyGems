@@ -69,7 +69,7 @@ export function GemCard({ gem, className }: GemCardProps) {
           </div>
         </div>
 
-        <Link href={`/gems/${gem.id}`} className="absolute inset-0">
+        <Link href={`/gem/${gem.id}`} className="absolute inset-0">
           <span className="sr-only">View details for {gem.title}</span>
         </Link>
       </div>

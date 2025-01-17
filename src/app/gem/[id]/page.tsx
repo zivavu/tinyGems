@@ -8,14 +8,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-type GemPageProps = {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-};
+interface GemPageProps {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-export default async function GemPag({ params }: GemPageProps) {
-  const resolvedParams = await params;
-  const gem = dummyGems.find((g) => g.id === resolvedParams.id);
+export default function GemPage({ params }: GemPageProps) {
+  const gem = dummyGems.find((g) => g.id === params.id);
 
   if (!gem) {
     notFound();
@@ -45,15 +44,23 @@ export default async function GemPag({ params }: GemPageProps) {
             )}
           </div>
 
-          {/* Title and Description */}
+          {/* Title and Artist Link */}
           <div className="space-y-4">
             <div>
               <Typography variant="h1" className="mb-2">
                 {gem.title}
               </Typography>
-              <Typography variant="h3" className="text-gray-600 dark:text-gray-400">
-                by {gem.artist.name}
-              </Typography>
+              <Link href={`/artist/${gem.artist.id}`} className="inline-flex gap-2 items-center group">
+                {gem.artist.avatar && (
+                  <Image src={gem.artist.avatar} alt={gem.artist.name} width={24} height={24} className="rounded-full" />
+                )}
+                <Typography
+                  variant="h3"
+                  className="text-gray-600 transition-colors dark:text-gray-400 group-hover:text-rose-500 dark:group-hover:text-rose-400"
+                >
+                  by {gem.artist.name}
+                </Typography>
+              </Link>
             </div>
             {gem.description && (
               <Typography variant="p" className="text-gray-600 dark:text-gray-400">

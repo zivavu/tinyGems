@@ -21,7 +21,6 @@ interface SelectProps {
 
 export function Select({ title, selected, count, icon: IconName, popoverClassName, className, children }: SelectProps) {
   const Icon = IconName ? Icons[IconName] : null;
-
   return (
     <Popover className={cn('relative', className)}>
       {({ open: isOpen }) => (

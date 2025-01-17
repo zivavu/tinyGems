@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { MusicGem } from '../types/gems';
+import { dummyArtists } from './artists';
 
 const MUSIC_SOURCES = ['bandcamp', 'spotify', 'soundcloud', 'youtube'] as const;
 const GENRES = [
@@ -20,7 +21,7 @@ const GENRES = [
 ] as const;
 
 function generateMusicGem(): MusicGem {
-  const hasAvatar = faker.datatype.boolean(0.7); // 70% chance to have avatar
+  const randomArtist = faker.helpers.arrayElement(dummyArtists);
   const hasAlbumArt = faker.datatype.boolean(0.9); // 90% chance to have album art
   const genres = faker.helpers.arrayElements(GENRES, { min: 1, max: 3 });
   const source = faker.helpers.arrayElement(MUSIC_SOURCES);
@@ -32,9 +33,10 @@ function generateMusicGem(): MusicGem {
     description: faker.lorem.sentence(),
     category: 'music',
     artist: {
-      name: faker.person.firstName() + ' ' + faker.helpers.arrayElement(['Project', 'Collective', 'Experience', '']),
-      location: `${faker.location.city()}, ${faker.location.country()}`,
-      ...(hasAvatar && { avatar: `https://i.pravatar.cc/150?u=${faker.string.uuid()}` }),
+      id: randomArtist.id,
+      name: randomArtist.name,
+      location: randomArtist.location,
+      avatar: randomArtist.avatar,
     },
     source,
     sourceUrl: `https://${source}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
