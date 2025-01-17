@@ -1,117 +1,65 @@
+import { faker } from '@faker-js/faker';
 import { MusicGem } from '../types/gems';
 
-export const dummyGems: MusicGem[] = [
-  {
-    id: '1',
+const MUSIC_SOURCES = ['bandcamp', 'spotify', 'soundcloud', 'youtube'] as const;
+const GENRES = [
+  'synthwave',
+  'punk',
+  'indie-folk',
+  'experimental',
+  'ambient',
+  'lo-fi',
+  'electronic',
+  'underground-hip-hop',
+  'post-rock',
+  'darkwave',
+  'bedroom-pop',
+  'noise-rock',
+  'drone',
+  'industrial',
+] as const;
+
+function generateMusicGem(): MusicGem {
+  const hasAvatar = faker.datatype.boolean(0.7); // 70% chance to have avatar
+  const hasAlbumArt = faker.datatype.boolean(0.9); // 90% chance to have album art
+  const genres = faker.helpers.arrayElements(GENRES, { min: 1, max: 3 });
+  const source = faker.helpers.arrayElement(MUSIC_SOURCES);
+
+  return {
+    id: faker.string.uuid(),
     type: 'music',
-    title: 'Neon Dreams',
-    description: 'A synthwave journey through midnight cities',
+    title: faker.music.songName(),
+    description: faker.lorem.sentence(),
     category: 'music',
     artist: {
-      name: 'Midnight Protocol',
-      location: 'Tokyo, Japan',
-      avatar: 'https://i.pravatar.cc/150?u=artist1',
+      name: faker.person.firstName() + ' ' + faker.helpers.arrayElement(['Project', 'Collective', 'Experience', '']),
+      location: `${faker.location.city()}, ${faker.location.country()}`,
+      ...(hasAvatar && { avatar: `https://i.pravatar.cc/150?u=${faker.string.uuid()}` }),
     },
-    source: 'bandcamp',
-    sourceUrl: 'https://bandcamp.com',
-    albumArt: 'https://picsum.photos/seed/gem1/300/300',
-    duration: '5:23',
-    releaseDate: '2024-01-15',
-    genres: ['synthwave', 'electronic', 'ambient'],
-    tags: ['electronic', 'synthwave', 'night', 'city'],
-    createdAt: '2024-01-15T00:00:00Z',
-    updatedAt: '2024-01-15T00:00:00Z',
-    likes: 142,
-    saves: 67,
-  },
-  {
-    id: '2',
-    type: 'music',
-    title: 'Underground Echoes',
-    description: 'Raw basement recordings with pure punk energy',
-    category: 'music',
-    artist: {
-      name: 'Concrete Youth',
-      location: 'Berlin, Germany',
-      avatar: 'https://i.pravatar.cc/150?u=artist2',
-    },
-    source: 'soundcloud',
-    sourceUrl: 'https://soundcloud.com',
-    albumArt: 'https://picsum.photos/seed/gem2/300/300',
-    duration: '2:47',
-    releaseDate: '2024-02-01',
-    genres: ['punk', 'hardcore', 'underground'],
-    tags: ['punk', 'diy', 'raw', 'basement'],
-    createdAt: '2024-02-01T00:00:00Z',
-    updatedAt: '2024-02-01T00:00:00Z',
-    likes: 89,
-    saves: 34,
-  },
-  {
-    id: '3',
-    type: 'music',
-    title: 'Quantum Frequencies',
-    description: 'Experimental electronic soundscapes',
-    category: 'music',
-    artist: {
-      name: 'Data Horizon',
-      location: 'Stockholm, Sweden',
-      avatar: 'https://i.pravatar.cc/150?u=artist3',
-    },
-    source: 'youtube',
-    sourceUrl: 'https://youtube.com',
-    albumArt: 'https://picsum.photos/seed/gem3/300/300',
-    duration: '7:15',
-    releaseDate: '2024-01-28',
-    genres: ['experimental', 'electronic', 'ambient'],
-    tags: ['experimental', 'electronic', 'soundscape'],
-    createdAt: '2024-01-28T00:00:00Z',
-    updatedAt: '2024-01-28T00:00:00Z',
-    likes: 234,
-    saves: 112,
-  },
-  {
-    id: '4',
-    type: 'music',
-    title: 'Bedroom Tapes Vol. 1',
-    description: 'Lo-fi indie folk recordings',
-    category: 'music',
-    artist: {
-      name: 'Autumn Leaves',
-      location: 'Portland, USA',
-    },
-    source: 'bandcamp',
-    sourceUrl: 'https://bandcamp.com',
-    duration: '4:18',
-    releaseDate: '2024-02-10',
-    genres: ['indie-folk', 'lo-fi', 'acoustic'],
-    tags: ['folk', 'acoustic', 'lo-fi', 'indie'],
-    createdAt: '2024-02-10T00:00:00Z',
-    updatedAt: '2024-02-10T00:00:00Z',
-    likes: 67,
-    saves: 28,
-  },
-  {
-    id: '5',
-    type: 'music',
-    title: 'Neural Beats',
-    description: 'AI-assisted underground hip-hop',
-    category: 'music',
-    artist: {
-      name: 'Circuit Break',
-      location: 'Seoul, South Korea',
-      avatar: 'https://i.pravatar.cc/150?u=artist5',
-    },
-    source: 'spotify',
-    sourceUrl: 'https://spotify.com',
-    albumArt: 'https://picsum.photos/seed/gem5/300/300',
-    duration: '3:45',
-    releaseDate: '2024-02-15',
-    genres: ['hip-hop', 'electronic', 'experimental'],
-    tags: ['hip-hop', 'electronic', 'ai', 'experimental'],
-    createdAt: '2024-02-15T00:00:00Z',
-    updatedAt: '2024-02-15T00:00:00Z',
-    likes: 312,
-    saves: 145,
-  },
-]; 
+    source,
+    sourceUrl: `https://${source}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
+    ...(hasAlbumArt && {
+      albumArt: `https://picsum.photos/seed/${faker.string.uuid()}/300/300`,
+    }),
+    duration: `${faker.number.int({ min: 2, max: 8 })}:${faker.number.int({ min: 10, max: 59 })}`,
+    releaseDate: faker.date.recent({ days: 90 }).toISOString(),
+    genres,
+    tags: [...genres, ...faker.helpers.arrayElements(['underground', 'diy', 'indie', 'alternative'], { min: 1, max: 2 })],
+    createdAt: faker.date.recent({ days: 30 }).toISOString(),
+    updatedAt: faker.date.recent({ days: 15 }).toISOString(),
+    likes: faker.number.int({ min: 0, max: 500 }),
+    saves: faker.number.int({ min: 0, max: 200 }),
+    curator: faker.datatype.boolean(0.3)
+      ? {
+          // 30% chance to have curator
+          name: faker.internet.userName(),
+          avatar: `https://i.pravatar.cc/150?u=${faker.string.uuid()}`,
+        }
+      : undefined,
+  };
+}
+
+export const dummyGems: MusicGem[] = Array.from({ length: 60 }, generateMusicGem);
+
+// You can also export the generator function if you need it elsewhere
+export { generateMusicGem };
