@@ -51,8 +51,7 @@ function generateMusicGem(): MusicGem {
     saves: faker.number.int({ min: 0, max: 200 }),
     curator: faker.datatype.boolean(0.3)
       ? {
-          // 30% chance to have curator
-          name: faker.internet.userName(),
+          name: faker.internet.displayName(),
           avatar: `https://i.pravatar.cc/150?u=${faker.string.uuid()}`,
         }
       : undefined,
