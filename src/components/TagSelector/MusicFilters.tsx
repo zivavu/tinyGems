@@ -29,27 +29,27 @@ export function MusicFilters() {
       showFilterChips: true,
     },
     {
-      title: 'Size',
+      title: 'Audience Size',
       options: artistSizes,
-      param: 'sizes',
+      param: 'audienceSize',
       icon: 'Users',
     },
     {
       title: 'Style',
       options: genreStyles,
-      param: 'styles',
+      param: 'genreStyle',
       icon: 'Palette',
     },
     {
       title: 'Production',
       options: productionStyles,
-      param: 'production',
+      param: 'productionStyle',
       icon: 'Mic',
     },
     {
       title: 'Activity',
       options: releaseFrequency,
-      param: 'activity',
+      param: 'releaseFrequency',
       icon: 'Clock',
     },
   ] as const;

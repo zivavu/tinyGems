@@ -1,5 +1,6 @@
 import {
   Anvil,
+  Bookmark,
   Camera,
   Check,
   ChevronDown,
@@ -13,7 +14,9 @@ import {
   Gamepad,
   Glasses,
   Globe,
+  Heart,
   Layout,
+  Link,
   Menu,
   Mic,
   Moon,
@@ -41,14 +44,13 @@ export const Icons = {
   ChevronUp,
   ChevronDown,
   ChevronsUpDown,
+  Link,
   X,
   Check,
-
-  // Theme
   Sun,
   Moon,
-
-  // Categories
+  Heart,
+  Bookmark,
   Music,
   Drill,
   Paintbrush,
@@ -60,14 +62,10 @@ export const Icons = {
   Glasses,
   Shell,
   Sparkles,
-
-  // User & Settings
   User,
   Globe,
   Layout,
   SlidersHorizontal,
-
-  // Media & Content
   FileVideo,
   Gamepad,
   Mic,
