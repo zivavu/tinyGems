@@ -9,12 +9,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 interface GemPageProps {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function GemPage({ params }: GemPageProps) {
-  const gem = dummyGems.find((g) => g.id === params.id);
+export default async function GemPage({ params }: GemPageProps) {
+  const resolvedParams = await params;
+  const gem = dummyGems.find((g) => g.id === resolvedParams.id);
 
   if (!gem) {
     notFound();
@@ -94,7 +95,7 @@ export default function GemPage({ params }: GemPageProps) {
                 'bg-[#FF0000]': gem.source === 'youtube',
               })}
             >
-              {sourceIcon && <FontAwesomeIcon icon={sourceIcon.icon} className="w-5 h-5" />}
+              {sourceIcon && <FontAwesomeIcon icon={sourceIcon.icon} className="w-5 max-h-5" />}
               <span className="font-medium">Listen on {gem.source}</span>
             </Link>
 

@@ -11,12 +11,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 interface ArtistPageProps {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: Promise<{ id: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function ArtistPage({ params }: ArtistPageProps) {
-  const artist = dummyArtists.find((a) => a.id === params.id);
+export default async function ArtistPage({ params }: ArtistPageProps) {
+  const resolvedParams = await params;
+  const artist = dummyArtists.find((a) => a.id === resolvedParams.id);
 
   if (!artist) {
     notFound();
