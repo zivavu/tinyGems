@@ -26,24 +26,22 @@ export function Select({ title, selected, count, icon: IconName, popoverClassNam
       {({ open: isOpen }) => (
         <>
           <div className="flex h-full">
-            <PopoverButton as={FilterButton} className="flex-1">
+            <PopoverButton
+              as={FilterButton}
+              className={cn(
+                'flex-1 transition-all duration-200',
+                count && count > 0 && !isOpen && 'shadow-[0_0_0_1px] shadow-rose-200 dark:shadow-rose-500/30',
+                isOpen && 'bg-rose-50 dark:bg-rose-500/10',
+              )}
+            >
               <div className="flex gap-2 items-center">
-                {Icon && <Icon className="w-4 h-4" />}
-                <Typography variant="small" className="font-medium">
+                {Icon && <Icon className={cn('w-4 h-4 transition-colors', (isOpen || selected) && 'text-rose-600 dark:text-rose-400')} />}
+                <Typography
+                  variant="small"
+                  className={cn('font-medium transition-colors', (isOpen || selected) && 'text-rose-600 dark:text-rose-400')}
+                >
                   {title}
                 </Typography>
-                {count !== undefined && (
-                  <span
-                    className={cn(
-                      'px-1.5 py-0.5 text-xs rounded-full font-medium',
-                      isOpen || selected
-                        ? 'bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-300'
-                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
-                    )}
-                  >
-                    {count}
-                  </span>
-                )}
               </div>
             </PopoverButton>
           </div>
@@ -51,10 +49,11 @@ export function Select({ title, selected, count, icon: IconName, popoverClassNam
           <PopoverTransition show={isOpen}>
             <PopoverPanel
               className={cn(
-                'absolute z-10 mt-2 w-80 bg-white rounded-lg border-2 border-gray-200 shadow-lg dark:bg-gray-800 dark:border-gray-700',
+                'absolute z-10 mt-2 bg-white rounded-lg border-gray-200 shadow-lg border-1 min-w-80 dark:bg-gray-800 dark:border-gray-700',
                 popoverClassName,
               )}
             >
+              <div className="absolute -top-1.5 left-4 w-3 h-3 bg-white rotate-45 border-l-2 border-t-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700" />
               {children}
             </PopoverPanel>
           </PopoverTransition>

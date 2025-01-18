@@ -17,8 +17,16 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
   const searchParams = useSearchParams();
 
   const handleCategoryChange = (category: Category) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams();
+
+    // Only preserve lang parameter and category
+    const lang = searchParams.get('lang');
+    if (lang) {
+      params.set('lang', lang);
+    }
+
     params.set('category', category.slug);
+
     router.push(`/seek?${params.toString()}`, { scroll: false });
   };
 
@@ -44,7 +52,7 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
           </PopoverButton>
 
           <PopoverTransition show={open}>
-            <PopoverPanel className="absolute z-10 mt-2 w-80 bg-white rounded-lg border shadow-lg dark:bg-gray-800 dark:border-gray-700">
+            <PopoverPanel className="absolute z-10 mt-2 w-max bg-white rounded-lg border shadow-lg min-w-80 dark:bg-gray-800 dark:border-gray-700">
               <div className="p-2">
                 <div className="grid grid-cols-2 gap-1.5">
                   {categories.map((category) => (

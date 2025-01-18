@@ -65,8 +65,8 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
           title="Language"
           icon="Globe"
           options={languages}
-          selected={getSelectedParams('language')}
-          setSelected={(newValues) => handleParamChange('language', newValues)}
+          selected={getSelectedParams('lang')}
+          setSelected={(newValues) => handleParamChange('lang', newValues)}
           isSearchable
         />
 

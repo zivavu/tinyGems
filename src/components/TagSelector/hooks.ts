@@ -4,38 +4,28 @@ export function useParamFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const getSelectedParams = (paramName: string) => {
-    const param = searchParams.get(paramName);
-    if (!param) return [];
-    return param.split(',').filter(Boolean);
-  };
-
-  const handleParamChange = (paramName: string, newValues: string[]) => {
+  const handleParamChange = (param: string, values: string[]) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (newValues.length) {
-      params.set(paramName, newValues.join(','));
+    if (values.length > 0) {
+      params.set(param, values.join(','));
     } else {
-      params.delete(paramName);
+      params.delete(param);
     }
 
-    router.push(`?${params.toString()}`, { scroll: false });
+    router.push(`/seek?${params.toString()}`, { scroll: false });
+  };
+
+  const getSelectedParams = (param: string) => {
+    const value = searchParams.get(param);
+    return value ? value.split(',') : [];
   };
 
   const clearAllParams = () => {
-    // Create new URLSearchParams with only the category
-    const category = searchParams.get('category');
-    const newParams = new URLSearchParams();
-    if (category) {
-      newParams.set('category', category);
-    }
-
-    router.push(`?${newParams.toString()}`, { scroll: false });
+    const params = new URLSearchParams();
+    params.set('category', searchParams.get('category') || '');
+    router.push(`/seek?${params.toString()}`, { scroll: false });
   };
 
-  return {
-    getSelectedParams,
-    handleParamChange,
-    clearAllParams,
-  };
+  return { handleParamChange, getSelectedParams, clearAllParams };
 }
