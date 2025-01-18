@@ -1,14 +1,23 @@
 'use client';
 
-import { HEADER_HEIGHT } from '@/consts';
 import { Category } from '@/lib/categories';
 import { Icons } from '@/lib/Icons';
 import { Button } from '../ui/buttons/Button';
 import { FilterSelect } from '../ui/FilterSelect';
 import { CategorySelect } from './comps/CategorySelect';
+import { ContentCreationFilters } from './comps/ContentCreationFilters';
+import { CraftFilters } from './comps/CraftFilters';
+import { DigitalArtFilters } from './comps/DigitalArtFilters';
+import { FiberArtFilters } from './comps/FiberArtFilters';
+import { GraphicArtFilters } from './comps/GraphicArtFilters';
+import { MixedMediaFilters } from './comps/MixedMediaFilters';
+import { MovieFilters } from './comps/MovieFilters';
+import { MusicFilters } from './comps/MusicFilters';
+import { OtherFilters } from './comps/OtherFilters';
+import { PhotographyFilters } from './comps/PhotographyFilters';
+import { WordsFilters } from './comps/WordsFilters';
 import { languages } from './constants';
 import { useParamFilters } from './hooks';
-import { MusicFilters } from './comps/MusicFilters';
 
 interface TagSelectorProps {
   selectedCategory: Category;
@@ -16,27 +25,52 @@ interface TagSelectorProps {
 
 export function TagSelector({ selectedCategory }: TagSelectorProps) {
   const { getSelectedParams, handleParamChange, clearAllParams } = useParamFilters();
+  const hasActiveFilters = false; // You'll need to implement this logic
 
-  // Check if any filters are active
-  const hasActiveFilters = ['languages', 'genres', 'sizes', 'styles', 'production', 'activity'].some(
-    (param) => getSelectedParams(param).length > 0,
-  );
+  const renderCategoryFilters = () => {
+    switch (selectedCategory.slug) {
+      case 'music':
+        return <MusicFilters />;
+      case 'crafts':
+        return <CraftFilters />;
+      case 'graphic-art':
+        return <GraphicArtFilters />;
+      case 'fiber-arts':
+        return <FiberArtFilters />;
+      case 'photography':
+        return <PhotographyFilters />;
+      case 'words':
+        return <WordsFilters />;
+      case 'movies':
+        return <MovieFilters />;
+      case 'digital-art':
+        return <DigitalArtFilters />;
+      case 'mixed-media':
+        return <MixedMediaFilters />;
+      case 'content-creation':
+        return <ContentCreationFilters />;
+      case 'other':
+        return <OtherFilters />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className={`sticky z-10 p-3 border-b top-${HEADER_HEIGHT}`}>
-      <div className="flex flex-row flex-wrap gap-2 justify-center items-stretch">
+    <div className="sticky top-16 z-40 bg-white border-b dark:bg-gray-950 dark:border-gray-800">
+      <div className="container flex flex-wrap gap-2 items-center px-4 py-4">
         <CategorySelect selectedCategory={selectedCategory} />
+
         <FilterSelect
-          title="Languages"
+          title="Language"
           icon="Globe"
           options={languages}
-          selected={getSelectedParams('languages')}
-          setSelected={(newValues) => handleParamChange('languages', newValues)}
-          isSearchable={true}
-          showFilterChips={true}
+          selected={getSelectedParams('language')}
+          setSelected={(newValues) => handleParamChange('language', newValues)}
+          isSearchable
         />
 
-        {selectedCategory.slug === 'music' && <MusicFilters />}
+        {renderCategoryFilters()}
 
         {hasActiveFilters && (
           <Button

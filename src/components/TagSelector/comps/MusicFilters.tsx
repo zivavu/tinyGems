@@ -1,24 +1,14 @@
 'use client';
 
-import { FilterOption, FilterSelect } from '@/components/ui/FilterSelect';
-import { Icons } from '@/lib/Icons';
-import { artistSizes, GenreCategory, genreStyles, musicGenres, productionStyles, releaseFrequency } from '../constants';
+import { FilterSelect } from '@/components/ui/FilterSelect';
+import { artistSizes, genreStyles, musicGenres, productionStyles, releaseFrequency } from '../constants';
 import { useParamFilters } from '../hooks';
-
-interface MusicFilter {
-  title: string;
-  options: FilterOption[] | GenreCategory[];
-  param: string;
-  icon: keyof typeof Icons;
-  grouped?: boolean;
-  searchable?: boolean;
-  showFilterChips?: boolean;
-}
+import { GemFilter } from './types';
 
 export function MusicFilters() {
   const { getSelectedParams, handleParamChange } = useParamFilters();
 
-  const filtersArr: MusicFilter[] = [
+  const filtersArr: GemFilter[] = [
     {
       title: 'Genres',
       options: musicGenres,
