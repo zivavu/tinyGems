@@ -1,9 +1,9 @@
 'use client';
 
+import { FilterOption, FilterSelect } from '@/components/ui/FilterSelect';
 import { Icons } from '@/lib/Icons';
-import { FilterOption, FilterSelect } from '../ui/FilterSelect';
-import { artistSizes, GenreCategory, genreStyles, musicGenres, productionStyles, releaseFrequency } from './constants';
-import { useParamFilters } from './hooks';
+import { artistSizes, GenreCategory, genreStyles, musicGenres, productionStyles, releaseFrequency } from '../constants';
+import { useParamFilters } from '../hooks';
 
 interface MusicFilter {
   title: string;

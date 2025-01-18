@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FilterButton } from '../ui/buttons/FilterButton';
-import { PopoverTransition } from '../ui/transitions/PopoverTransition';
+import { FilterButton } from '../../ui/buttons/FilterButton';
+import { PopoverTransition } from '../../ui/transitions/PopoverTransition';
 
 interface CategorySelectorProps {
   selectedCategory: Category;

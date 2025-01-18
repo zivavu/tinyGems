@@ -5,10 +5,10 @@ import { Category } from '@/lib/categories';
 import { Icons } from '@/lib/Icons';
 import { Button } from '../ui/buttons/Button';
 import { FilterSelect } from '../ui/FilterSelect';
-import { CategorySelect } from './CategorySelect';
+import { CategorySelect } from './comps/CategorySelect';
 import { languages } from './constants';
 import { useParamFilters } from './hooks';
-import { MusicFilters } from './MusicFilters';
+import { MusicFilters } from './comps/MusicFilters';
 
 interface TagSelectorProps {
   selectedCategory: Category;
