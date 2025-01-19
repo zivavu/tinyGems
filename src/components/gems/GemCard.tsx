@@ -1,21 +1,8 @@
 'use client';
 
 import { Icons } from '@/lib/Icons';
-import {
-  Gem,
-  GemSource,
-  GemType,
-  isArtGem,
-  isContentGem,
-  isCraftGem,
-  isMusicGem,
-  isPhotographyGem,
-  isVideoGem,
-  isWordsGem,
-} from '@/lib/types/gems';
+import { Gem, GemType } from '@/lib/types/gems';
 import { cn } from '@/lib/utils';
-import { faBandcamp, faSoundcloud, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Typography } from '../ui/Typography';
@@ -113,226 +100,54 @@ export function GemCard({ gem, className }: GemCardProps) {
     </div>
   );
 
-  // Music Gem Card
-  if (isMusicGem(gem)) {
-    return (
-      <CardWrapper>
-        <div className="overflow-hidden aspect-square">
-          {gem.properties.albumArt ? (
-            <Image
-              src={gem.properties.albumArt}
-              alt={`${gem.title} album art`}
-              width={300}
-              height={300}
-              className="object-cover w-full h-full transition-transform group-hover:scale-105"
-            />
-          ) : (
-            <GemPlaceholder type="music" />
-          )}
-        </div>
+  const mainImage = gem.properties.media.coverImage || gem.properties.media.images?.[0];
 
-        <div className="p-4">
-          <div className="flex gap-2 items-center mb-2">
-            <div className="flex-1">
-              <Typography variant="h4" className="line-clamp-1">
-                {gem.title}
-              </Typography>
-              <Typography variant="small" className="text-gray-500 line-clamp-1">
-                {gem.artist.name}
-              </Typography>
-            </div>
-            <SourceIcon source={gem.properties.source} />
-          </div>
-          <StatsSection />
-          <Typography variant="small" className="text-gray-500">
-            {gem.properties.duration}
-          </Typography>
-        </div>
-      </CardWrapper>
-    );
-  }
-
-  // Art/Photography Gem Card
-  if (isArtGem(gem) || isPhotographyGem(gem)) {
-    return (
-      <CardWrapper>
-        <div className="overflow-hidden aspect-[3/2]">
-          {gem.properties.images[0] ? (
-            <Image
-              src={gem.properties.images[0]}
-              alt={gem.title}
-              width={600}
-              height={400}
-              className="object-cover w-full h-full transition-transform group-hover:scale-105"
-            />
-          ) : (
-            <GemPlaceholder type={gem.type} />
-          )}
-        </div>
-
-        <div className="p-4">
-          <Typography variant="h4" className="mb-1 line-clamp-1">
-            {gem.title}
-          </Typography>
-          <Typography variant="small" className="text-gray-500 line-clamp-1">
-            {gem.artist.name}
-          </Typography>
-          <div className="flex flex-wrap gap-1 mt-2">
-            {gem.properties.medium.map((medium) => (
-              <span key={medium} className="px-2 py-0.5 text-xs text-gray-600 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-gray-400">
-                {medium}
-              </span>
-            ))}
-          </div>
-          <StatsSection />
-        </div>
-      </CardWrapper>
-    );
-  }
-
-  // Craft Gem Card
-  if (isCraftGem(gem)) {
-    return (
-      <CardWrapper>
-        <div className="overflow-hidden aspect-square">
-          {gem.properties.images[0] ? (
-            <Image
-              src={gem.properties.images[0]}
-              alt={gem.title}
-              width={300}
-              height={300}
-              className="object-cover w-full h-full transition-transform group-hover:scale-105"
-            />
-          ) : (
-            <GemPlaceholder type="craft" />
-          )}
-        </div>
-
-        <div className="p-4">
-          <Typography variant="h4" className="mb-1 line-clamp-1">
-            {gem.title}
-          </Typography>
-          <Typography variant="small" className="text-gray-500 line-clamp-1">
-            {gem.artist.name}
-          </Typography>
-          <div className="flex flex-wrap gap-1 mt-2">
-            {gem.properties.materials.map((material) => (
-              <span
-                key={material}
-                className="px-2 py-0.5 text-xs text-gray-600 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-gray-400"
-              >
-                {material}
-              </span>
-            ))}
-          </div>
-          <StatsSection />
-        </div>
-      </CardWrapper>
-    );
-  }
-
-  // Video Gem Card
-  if (isVideoGem(gem)) {
-    return (
-      <CardWrapper>
-        <div className="overflow-hidden aspect-video">
-          {gem.properties.coverImage ? (
-            <Image
-              src={gem.properties.coverImage}
-              alt={gem.title}
-              width={600}
-              height={338}
-              className="object-cover w-full h-full transition-transform group-hover:scale-105"
-            />
-          ) : (
-            <GemPlaceholder type="video" />
-          )}
-        </div>
-
-        <div className="p-4">
-          <Typography variant="h4" className="mb-1 line-clamp-2">
-            {gem.title}
-          </Typography>
-          <Typography variant="small" className="text-gray-500 line-clamp-1">
-            {gem.artist.name}
-          </Typography>
-          {gem.description && (
-            <Typography variant="small" className="mt-2 text-gray-600 line-clamp-3 dark:text-gray-400">
-              {gem.description}
-            </Typography>
-          )}
-          <StatsSection />
-        </div>
-      </CardWrapper>
-    );
-  }
-
-  // Content/Words Gem Card
-  if (isContentGem(gem) || isWordsGem(gem)) {
-    return (
-      <CardWrapper>
-        {gem.properties.coverImage ? (
-          <div className="overflow-hidden aspect-[3/2]">
-            <Image
-              src={gem.properties.coverImage}
-              alt={gem.title}
-              width={600}
-              height={400}
-              className="object-cover w-full h-full transition-transform group-hover:scale-105"
-            />
-          </div>
+  return (
+    <CardWrapper>
+      {/* Media Section */}
+      <div
+        className={cn('overflow-hidden', {
+          'aspect-square': gem.type === 'music' || gem.type === 'craft',
+          'aspect-video': gem.type === 'video',
+          'aspect-[4/3]': gem.type === 'art',
+          'aspect-[3/2]': gem.type === 'content' || gem.type === 'words',
+        })}
+      >
+        {mainImage ? (
+          <Image
+            src={mainImage}
+            alt={gem.title}
+            width={600}
+            height={400}
+            className="object-cover w-full h-full transition-transform group-hover:scale-105"
+          />
         ) : (
           <GemPlaceholder type={gem.type} />
         )}
-        <div className="p-4">
-          <Typography variant="h4" className="mb-1 line-clamp-2">
+      </div>
+
+      {/* Content Section */}
+      <div className="p-4">
+        <div className="mb-2 space-y-1">
+          <Typography variant="h4" className="line-clamp-1">
             {gem.title}
           </Typography>
           <Typography variant="small" className="text-gray-500 line-clamp-1">
             {gem.artist.name}
           </Typography>
-          {gem.description && (
-            <Typography variant="small" className="mt-2 text-gray-600 line-clamp-3 dark:text-gray-400">
-              {gem.description}
-            </Typography>
-          )}
-          <StatsSection />
         </div>
-      </CardWrapper>
-    );
-  }
 
-  return null;
-}
+        {/* Type-specific metadata */}
+        <div className="flex flex-wrap gap-1 mb-4">
+          {gem.tags.map((tag) => (
+            <span key={tag} className="px-2 py-0.5 text-xs text-gray-600 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-gray-400">
+              {tag}
+            </span>
+          ))}
+        </div>
 
-function SourceIcon({ source }: { source: GemSource }) {
-  if (source === 'other') {
-    return <Icons.Link className="w-4 h-4 text-gray-400" />;
-  }
-
-  return (
-    <FontAwesomeIcon
-      icon={
-        source === 'bandcamp'
-          ? faBandcamp
-          : source === 'spotify'
-            ? faSpotify
-            : source === 'soundcloud'
-              ? faSoundcloud
-              : source === 'youtube'
-                ? faYoutube
-                : faBandcamp // fallback
-      }
-      className={cn(
-        'w-4 h-4',
-        {
-          'text-[#1DA0C3]': source === 'bandcamp',
-          'text-[#1DB954]': source === 'spotify',
-          'text-[#FF3300]': source === 'soundcloud',
-          'text-[#FF0000]': source === 'youtube',
-        },
-        'transition-opacity opacity-75 hover:opacity-100',
-      )}
-    />
+        <StatsSection />
+      </div>
+    </CardWrapper>
   );
 }
