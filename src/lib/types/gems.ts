@@ -4,7 +4,14 @@ export type GemSource = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'oth
 
 export type GemType = 'music' | 'art' | 'craft' | 'content' | 'words' | 'video' | 'photography';
 
-// Base Gem interface with common properties
+export interface BaseGemProperties {
+  media: {
+    images?: string[];
+    coverImage?: string;
+    aspectRatio?: string;
+  };
+}
+
 interface BaseGem {
   id: string;
   type: GemType;
@@ -29,34 +36,30 @@ interface BaseGem {
 }
 
 // Specific properties for each type
-interface MusicGemProperties {
+interface MusicGemProperties extends BaseGemProperties {
   source: 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube';
   sourceUrl: string;
-  albumArt?: string;
   duration: string;
   releaseDate: string;
   genres: string[];
 }
 
-interface ArtGemProperties {
+interface ArtGemProperties extends BaseGemProperties {
   medium: string[];
-  images: string[];
   dimensions?: string;
   materials?: string[];
 }
 
-interface CraftGemProperties {
+interface CraftGemProperties extends BaseGemProperties {
   materials: string[];
-  images: string[];
   dimensions?: string;
   timeToMake?: string;
 }
 
-interface ContentGemProperties {
+interface ContentGemProperties extends BaseGemProperties {
   platform: 'blog' | 'substack' | 'medium' | 'other';
   url: string;
   readTime?: string;
-  coverImage?: string;
 }
 
 // Union type for all gem properties
@@ -100,4 +103,12 @@ export function isPhotographyGem(gem: Gem): gem is BaseGem & { properties: ArtGe
   return gem.type === 'photography';
 }
 
-export type { ArtGemProperties, BaseGem, ContentGemProperties, CraftGemProperties, Gem, MusicGemProperties };
+export type {
+  ArtGemProperties,
+  BaseGem,
+  ContentGemProperties,
+  CraftGemProperties,
+  Gem,
+  MusicGemProperties
+};
+

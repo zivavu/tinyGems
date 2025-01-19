@@ -1,9 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { Category } from '../categories';
-import { ArtGemProperties, ContentGemProperties, CraftGemProperties, Gem, GemType, MusicGemProperties } from '../types/gems';
+import {
+  ArtGemProperties,
+  BaseGemProperties,
+  ContentGemProperties,
+  CraftGemProperties,
+  Gem,
+  GemType,
+  MusicGemProperties,
+} from '../types/gems';
 import { dummyArtists } from './artists';
 
-faker.seed(42); 
+faker.seed(42);
 
 const MUSIC_SOURCES = ['bandcamp', 'spotify', 'soundcloud', 'youtube'] as const;
 const MUSIC_GENRES = [
@@ -56,22 +64,33 @@ function generateBaseGem(type: GemType): Omit<Gem, 'properties'> {
   };
 }
 
-function generateMusicProperties(): MusicGemProperties {
-  const source = faker.helpers.arrayElement(MUSIC_SOURCES);
+function generateBaseGemProperties(): BaseGemProperties {
   return {
-    source,
-    sourceUrl: `https://${source}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
-    albumArt: faker.datatype.boolean(0.9) ? `https://picsum.photos/seed/${faker.string.uuid()}/300/300` : undefined,
-    duration: `${faker.number.int({ min: 2, max: 8 })}:${faker.number.int({ min: 10, max: 59 })}`,
-    releaseDate: faker.date.recent({ days: 90 }).toISOString(),
+    media: {
+      images: faker.datatype.boolean(0.8)
+        ? Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => `https://picsum.photos/seed/${faker.string.uuid()}/800/600`)
+        : undefined,
+      coverImage: faker.datatype.boolean(0.6) ? `https://picsum.photos/seed/${faker.string.uuid()}/1200/630` : undefined,
+      aspectRatio: faker.helpers.arrayElement(['1:1', '16:9', '4:3', '3:2']),
+    },
+  };
+}
+
+function generateMusicProperties(): MusicGemProperties {
+  return {
+    ...generateBaseGemProperties(),
+    source: faker.helpers.arrayElement(MUSIC_SOURCES),
+    sourceUrl: `https://${faker.helpers.arrayElement(MUSIC_SOURCES)}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
+    duration: `${faker.number.int({ min: 1, max: 10 })}:${faker.number.int({ min: 10, max: 59 })}`,
+    releaseDate: faker.date.past().toISOString(),
     genres: faker.helpers.arrayElements(MUSIC_GENRES, { min: 1, max: 3 }),
   };
 }
 
 function generateArtProperties(): ArtGemProperties {
   return {
+    ...generateBaseGemProperties(),
     medium: faker.helpers.arrayElements(ART_MEDIUMS, { min: 1, max: 3 }),
-    images: Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => `https://picsum.photos/seed/${faker.string.uuid()}/800/600`),
     dimensions: faker.datatype.boolean(0.7)
       ? `${faker.number.int({ min: 20, max: 200 })}x${faker.number.int({ min: 20, max: 200 })}cm`
       : undefined,
@@ -81,8 +100,8 @@ function generateArtProperties(): ArtGemProperties {
 
 function generateCraftProperties(): CraftGemProperties {
   return {
+    ...generateBaseGemProperties(),
     materials: faker.helpers.arrayElements(CRAFT_MATERIALS, { min: 1, max: 4 }),
-    images: Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => `https://picsum.photos/seed/${faker.string.uuid()}/800/600`),
     dimensions: faker.datatype.boolean(0.6)
       ? `${faker.number.int({ min: 10, max: 100 })}x${faker.number.int({ min: 10, max: 100 })}cm`
       : undefined,
@@ -91,12 +110,11 @@ function generateCraftProperties(): CraftGemProperties {
 }
 
 function generateContentProperties(): ContentGemProperties {
-  const platform = faker.helpers.arrayElement(CONTENT_PLATFORMS);
   return {
-    platform,
-    url: `https://${platform}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
+    ...generateBaseGemProperties(),
+    platform: faker.helpers.arrayElement(CONTENT_PLATFORMS),
+    url: `https://${faker.helpers.arrayElement(CONTENT_PLATFORMS)}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
     readTime: faker.datatype.boolean(0.8) ? `${faker.number.int({ min: 3, max: 30 })} min read` : undefined,
-    coverImage: faker.datatype.boolean(0.6) ? `https://picsum.photos/seed/${faker.string.uuid()}/800/400` : undefined,
   };
 }
 

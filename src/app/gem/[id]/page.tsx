@@ -20,7 +20,7 @@ export default async function GemPage({ params }: GemPageProps) {
   }
 
   return (
-    <main className="min-h-screen">
+    <main className="w-50">
       {/* Hero Section */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-b to-gray-900 from-gray-900/0 via-gray-900/60" />
