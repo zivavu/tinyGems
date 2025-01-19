@@ -1,6 +1,7 @@
 import { Category } from '../categories';
 
 export type GemSource = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
+
 export type GemType = 'music' | 'art' | 'craft' | 'content' | 'words' | 'video' | 'photography';
 
 // Base Gem interface with common properties
