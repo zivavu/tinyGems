@@ -80,6 +80,24 @@ export function isArtGem(gem: Gem): gem is BaseGem & { properties: ArtGemPropert
   return gem.type === 'art';
 }
 
-// ... other type guards as needed
+export function isCraftGem(gem: Gem): gem is BaseGem & { properties: CraftGemProperties } {
+  return gem.type === 'craft';
+}
+
+export function isContentGem(gem: Gem): gem is BaseGem & { properties: ContentGemProperties } {
+  return gem.type === 'content';
+}
+
+export function isWordsGem(gem: Gem): gem is BaseGem & { properties: ContentGemProperties } {
+  return gem.type === 'words';
+}
+
+export function isVideoGem(gem: Gem): gem is BaseGem & { properties: ContentGemProperties } {
+  return gem.type === 'video';
+}
+
+export function isPhotographyGem(gem: Gem): gem is BaseGem & { properties: ArtGemProperties } {
+  return gem.type === 'photography';
+}
 
 export type { ArtGemProperties, BaseGem, ContentGemProperties, CraftGemProperties, Gem, MusicGemProperties };

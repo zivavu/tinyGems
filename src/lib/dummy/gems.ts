@@ -3,7 +3,8 @@ import { Category } from '../categories';
 import { ArtGemProperties, ContentGemProperties, CraftGemProperties, Gem, GemType, MusicGemProperties } from '../types/gems';
 import { dummyArtists } from './artists';
 
-// Constants for different gem types
+faker.seed(42); 
+
 const MUSIC_SOURCES = ['bandcamp', 'spotify', 'soundcloud', 'youtube'] as const;
 const MUSIC_GENRES = [
   'synthwave',
@@ -55,7 +56,6 @@ function generateBaseGem(type: GemType): Omit<Gem, 'properties'> {
   };
 }
 
-// Type-specific property generators
 function generateMusicProperties(): MusicGemProperties {
   const source = faker.helpers.arrayElement(MUSIC_SOURCES);
   return {
@@ -100,7 +100,6 @@ function generateContentProperties(): ContentGemProperties {
   };
 }
 
-// Main gem generator
 function generateGem(type: GemType): Gem {
   const baseGem = generateBaseGem(type);
   let properties;
@@ -128,12 +127,13 @@ function generateGem(type: GemType): Gem {
   };
 }
 
-// Generate a set of dummy gems
-export function generateGems(count: number): Gem[] {
-  return Array.from({ length: count }, () => {
+export function generateDummyGems(count = 100): Gem[] {
+  return Array.from({ length: count }, (_, index) => {
+    faker.seed(42 + index);
+
     const type = faker.helpers.arrayElement(['music', 'art', 'craft', 'content'] as const);
     return generateGem(type);
   });
 }
 
-export const dummyGems = generateGems(100);
+export const dummyGems = generateDummyGems();
