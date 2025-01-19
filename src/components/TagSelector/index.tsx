@@ -68,6 +68,7 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
           selected={getSelectedParams('lang')}
           setSelected={(newValues) => handleParamChange('lang', newValues)}
           isSearchable
+          showFilterChips
         />
 
         {renderCategoryFilters()}

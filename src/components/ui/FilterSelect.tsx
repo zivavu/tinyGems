@@ -56,7 +56,7 @@ function FilterOption({ option, selected, onClick }: { option: FilterOption; sel
 function SelectedChips({
   options,
   onRemove,
-  maxVisible = 3,
+  maxVisible = 2,
 }: {
   options: FilterOption[];
   onRemove: (option: FilterOption) => void;
@@ -171,7 +171,7 @@ export function FilterSelect({
           </div>
         )}
 
-        {showFilterChips && <SelectedChips options={selectedOptions} onRemove={toggleFilter} maxVisible={3} />}
+        {showFilterChips && <SelectedChips options={selectedOptions} onRemove={toggleFilter} maxVisible={2} />}
 
         <div className="overflow-auto max-h-[400px] space-y-2">
           {isGrouped ? (
