@@ -1,16 +1,14 @@
 import { Typography } from '@/components/ui/Typography';
 import { dummyGems } from '@/lib/dummy/gems';
 import { Icons } from '@/lib/Icons';
-import { cn } from '@/lib/utils';
-import { faBandcamp, faSoundcloud, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { GemMedia } from '../../../components/pageComponents/GemMedia';
+import { GemMetadata } from '../../../components/pageComponents/GemMetadata';
 
 interface GemPageProps {
   params: Promise<{ id: string }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function GemPage({ params }: GemPageProps) {
@@ -21,132 +19,104 @@ export default async function GemPage({ params }: GemPageProps) {
     notFound();
   }
 
-  const sourceIcon = {
-    bandcamp: { icon: faBandcamp, color: 'text-[#1DA0C3]' },
-    spotify: { icon: faSpotify, color: 'text-[#1DB954]' },
-    soundcloud: { icon: faSoundcloud, color: 'text-[#FF3300]' },
-    youtube: { icon: faYoutube, color: 'text-[#FF0000]' },
-    other: { icon: faBandcamp, color: 'text-gray-400' },
-  }[gem.source];
-
   return (
-    <main className="container px-4 py-8 mx-auto">
-      <div className="grid gap-8 lg:grid-cols-[2fr,1fr]">
-        {/* Main Content */}
-        <div className="space-y-6">
-          {/* Album Art */}
-          <div className="overflow-hidden bg-gray-100 rounded-lg aspect-square dark:bg-gray-800">
-            {gem.albumArt ? (
-              <Image src={gem.albumArt} alt={gem.title} width={600} height={600} className="object-cover w-full h-full" />
-            ) : (
-              <div className="flex justify-center items-center w-full h-full">
-                <Icons.Music className="w-20 h-20 text-gray-400" />
-              </div>
-            )}
-          </div>
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-b to-gray-900 from-gray-900/0 via-gray-900/60" />
+        <GemMedia gem={gem} className="w-full" />
 
-          {/* Title and Artist Link */}
-          <div className="space-y-4">
-            <div>
-              <Typography variant="h1" className="mb-2">
-                {gem.title}
-              </Typography>
-              <Link href={`/artist/${gem.artist.id}`} className="inline-flex gap-2 items-center group">
-                {gem.artist.avatar && (
-                  <Image src={gem.artist.avatar} alt={gem.artist.name} width={24} height={24} className="rounded-full" />
-                )}
-                <Typography
-                  variant="h3"
-                  className="text-gray-600 transition-colors dark:text-gray-400 group-hover:text-rose-500 dark:group-hover:text-rose-400"
-                >
-                  by {gem.artist.name}
+        {/* Overlay Content */}
+        <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+          <div className="container mx-auto">
+            <div className="flex gap-4 items-end">
+              <div className="flex-1 space-y-2">
+                <div className="flex gap-2 items-center">
+                  <span className="px-2 py-1 text-xs font-medium tracking-wider uppercase rounded-full bg-white/10">{gem.type}</span>
+                  {gem.tags.map((tag) => (
+                    <span key={tag} className="px-2 py-1 text-xs rounded-full text-white/80 bg-white/5">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <Typography variant="h1" className="text-white">
+                  {gem.title}
                 </Typography>
-              </Link>
-            </div>
-            {gem.description && (
-              <Typography variant="p" className="text-gray-600 dark:text-gray-400">
-                {gem.description}
-              </Typography>
-            )}
-          </div>
+                <Link href={`/artist/${gem.artist.id}`} className="inline-flex gap-2 items-center group">
+                  {gem.artist.avatar && (
+                    <Image src={gem.artist.avatar} alt="" width={32} height={32} className="rounded-full ring-2 ring-white/20" />
+                  )}
+                  <Typography variant="h4" className="text-white/90 group-hover:text-white">
+                    {gem.artist.name}
+                  </Typography>
+                </Link>
+              </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2">
-            {gem.tags.map((tag) => (
-              <span key={tag} className="px-3 py-1 text-sm text-rose-700 bg-rose-100 rounded-full dark:bg-rose-900/30 dark:text-rose-300">
-                {tag}
-              </span>
-            ))}
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/10 hover:bg-white/20">
+                  <Icons.Heart className="w-5 h-5" />
+                  <span>{gem.likes}</span>
+                </button>
+                <button className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/10 hover:bg-white/20">
+                  <Icons.Bookmark className="w-5 h-5" />
+                  <span>{gem.saves}</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Action Buttons */}
-          <div className="p-4 space-y-4 bg-white rounded-lg shadow-sm dark:bg-gray-800">
-            <Link
-              href={gem.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn('flex gap-2 items-center w-full p-3 text-white rounded-lg transition-transform hover:scale-[1.02]', {
-                'bg-[#1DA0C3]': gem.source === 'bandcamp',
-                'bg-[#1DB954]': gem.source === 'spotify',
-                'bg-[#FF3300]': gem.source === 'soundcloud',
-                'bg-[#FF0000]': gem.source === 'youtube',
-              })}
-            >
-              {sourceIcon && <FontAwesomeIcon icon={sourceIcon.icon} className="w-5 max-h-5" />}
-              <span className="font-medium">Listen on {gem.source}</span>
-            </Link>
+      {/* Content Section */}
+      <div className="container px-6 py-12 mx-auto">
+        <div className="grid gap-12 lg:grid-cols-[2fr,1fr]">
+          {/* Main Content */}
+          <div className="space-y-8">
+            {gem.description && (
+              <div className="prose prose-lg dark:prose-invert">
+                <Typography variant="p" className="text-gray-600 dark:text-gray-300">
+                  {gem.description}
+                </Typography>
+              </div>
+            )}
 
-            <div className="flex gap-4">
-              <button className="flex flex-1 gap-2 justify-center items-center p-3 font-medium text-rose-600 rounded-lg border-2 border-rose-200 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400 dark:hover:bg-rose-900/30">
-                <Icons.Heart className="w-5 h-5" />
-                <span>{gem.likes}</span>
-              </button>
-              <button className="flex flex-1 gap-2 justify-center items-center p-3 font-medium text-rose-600 rounded-lg border-2 border-rose-200 hover:bg-rose-50 dark:border-rose-900 dark:text-rose-400 dark:hover:bg-rose-900/30">
-                <Icons.Bookmark className="w-5 h-5" />
-                <span>{gem.saves}</span>
-              </button>
-            </div>
+            {/* Type-specific content will be rendered here */}
+            <GemMetadata gem={gem} />
           </div>
 
-          {/* Info Card */}
-          <div className="p-4 space-y-4 bg-white rounded-lg shadow-sm dark:bg-gray-800">
-            <div className="space-y-2">
-              <Typography variant="small" className="text-gray-500">
-                Location
-              </Typography>
-              <Typography variant="p">{gem.artist.location}</Typography>
-            </div>
-
-            <div className="space-y-2">
-              <Typography variant="small" className="text-gray-500">
-                Release Date
-              </Typography>
-              {gem.releaseDate && <Typography variant="p">{new Date(gem?.releaseDate).toLocaleDateString()}</Typography>}
-            </div>
-
-            <div className="space-y-2">
-              <Typography variant="small" className="text-gray-500">
-                Duration
-              </Typography>
-              <Typography variant="p">{gem.duration}</Typography>
-            </div>
-
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Curator Info */}
             {gem.curator && (
-              <div className="space-y-2">
-                <Typography variant="small" className="text-gray-500">
+              <div className="p-6 bg-gray-50 rounded-xl dark:bg-gray-800/50">
+                <Typography variant="h4" className="mb-4">
                   Curated by
                 </Typography>
-                <div className="flex gap-2 items-center">
-                  {gem.curator.avatar && (
-                    <Image src={gem.curator.avatar} alt={gem.curator.name} width={24} height={24} className="rounded-full" />
-                  )}
+                <div className="flex gap-3 items-center">
+                  {gem.curator.avatar && <Image src={gem.curator.avatar} alt="" width={40} height={40} className="rounded-full" />}
                   <Typography variant="p">{gem.curator.name}</Typography>
                 </div>
               </div>
             )}
+
+            {/* Creation Info */}
+            <div className="p-6 space-y-4 bg-gray-50 rounded-xl dark:bg-gray-800/50">
+              <div>
+                <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                  Created
+                </Typography>
+                <Typography variant="p">{new Date(gem.createdAt).toLocaleDateString()}</Typography>
+              </div>
+              {gem.artist.location && (
+                <div>
+                  <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                    Location
+                  </Typography>
+                  <Typography variant="p">{gem.artist.location}</Typography>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -83,7 +83,6 @@ function GemPlaceholder({ type, className }: { type: GemType; className?: string
 }
 
 export function GemCard({ gem, className }: GemCardProps) {
-  // Common card wrapper
   const CardWrapper = ({ children }: { children: React.ReactNode }) => (
     <div
       className={cn(
