@@ -36,20 +36,23 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
   ].filter((link) => link.url);
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen" role="main" aria-label={`Artist profile: ${artist.name}`}>
       {/* Banner */}
-      <div className="relative h-48 bg-gray-200 dark:bg-gray-800">
-        {artist.banner && <Image src={artist.banner} alt="" fill className="object-cover" />}
+      <div className="relative h-48 bg-gray-200 dark:bg-gray-800" aria-label="Artist banner">
+        {artist.banner && <Image src={artist.banner} alt="" role="presentation" fill className="object-cover" />}
       </div>
 
       <div className="container px-4 mx-auto">
         {/* Profile Section */}
         <div className="flex relative gap-6 -mt-12 mb-8">
-          <div className="overflow-hidden relative flex-shrink-0 w-24 h-24 bg-white rounded-full border-4 border-white dark:border-gray-900">
+          <div
+            className="overflow-hidden relative flex-shrink-0 w-24 h-24 bg-white rounded-full border-4 border-white dark:border-gray-900"
+            aria-label="Artist avatar"
+          >
             {artist.avatar ? (
-              <Image src={artist.avatar} alt={artist.name} fill className="object-cover" />
+              <Image src={artist.avatar} alt={`${artist.name}'s profile picture`} fill className="object-cover" />
             ) : (
-              <div className="flex justify-center items-center w-full h-full bg-rose-100 dark:bg-rose-900">
+              <div className="flex justify-center items-center w-full h-full bg-rose-100 dark:bg-rose-900" aria-hidden="true">
                 <Typography variant="h2">{artist.name[0]}</Typography>
               </div>
             )}
@@ -59,16 +62,24 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
             <Typography variant="h1" className="mb-1">
               {artist.name}
             </Typography>
-            {artist.location && <Typography variant="muted">{artist.location}</Typography>}
+            {artist.location && (
+              <Typography variant="muted" aria-label="Artist location">
+                {artist.location}
+              </Typography>
+            )}
           </div>
         </div>
 
         {/* Stats & Social Links */}
         <div className="grid gap-6 mb-8 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-6">
-            {artist.bio && <Typography variant="p">{artist.bio}</Typography>}
+            {artist.bio && (
+              <Typography variant="p" aria-label="Artist biography">
+                {artist.bio}
+              </Typography>
+            )}
 
-            <div className="flex gap-6">
+            <div className="flex gap-6" aria-label="Artist statistics">
               <div>
                 <Typography variant="h4">{artist.stats.gems}</Typography>
                 <Typography variant="small" className="text-gray-500">
@@ -91,7 +102,7 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
           </div>
 
           {socialLinks.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2" role="list" aria-label="Social media links">
               {socialLinks.map((link) => (
                 <Link
                   key={link.label}
@@ -99,8 +110,9 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={cn('p-2 rounded-lg transition-colors', 'hover:bg-rose-100 dark:hover:bg-rose-900/30')}
+                  aria-label={`Visit ${artist.name}'s ${link.label}`}
                 >
-                  <FontAwesomeIcon icon={link.icon} className="w-5 h-5" />
+                  <FontAwesomeIcon icon={link.icon} className="w-5 h-5" aria-hidden="true" />
                   <span className="sr-only">{link.label}</span>
                 </Link>
               ))}
@@ -111,7 +123,9 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
         {/* Artist's Gems */}
         <div className="space-y-6">
           <Typography variant="h2">Gems</Typography>
-          <GemGrid gems={artistGems} />
+          <section aria-label={`${artist.name}'s gems`}>
+            <GemGrid gems={artistGems} />
+          </section>
         </div>
       </div>
     </main>

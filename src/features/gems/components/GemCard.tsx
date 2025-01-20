@@ -84,8 +84,12 @@ function GemPlaceholder({ type, className }: { type: GemType; className?: string
   }[type];
 
   return (
-    <div className={cn('flex flex-col justify-center items-center w-full', 'bg-gradient-to-br', config.gradient, config.aspect, className)}>
-      <config.icon className="w-10 h-10 text-gray-400 dark:text-gray-500" />
+    <div
+      className={cn('flex flex-col justify-center items-center w-full', 'bg-gradient-to-br', config.gradient, config.aspect, className)}
+      role="img"
+      aria-label={config.text}
+    >
+      <config.icon className="w-10 h-10 text-gray-400 dark:text-gray-500" aria-hidden="true" />
       <Typography variant="small" className="mt-2 text-gray-500 dark:text-gray-400">
         {config.text}
       </Typography>
@@ -110,14 +114,14 @@ export function GemCard({ gem, className }: GemCardProps) {
 
   // Common stats section
   const StatsSection = () => (
-    <div className="flex justify-between items-center mt-4 text-sm">
+    <div className="flex justify-between items-center mt-4 text-sm" aria-label="Engagement stats">
       <div className="flex gap-4 items-center">
-        <button className="flex gap-1 items-center text-gray-500 hover:text-rose-500">
-          <Icons.Heart className="w-4 h-4" />
+        <button className="flex gap-1 items-center text-gray-500 hover:text-rose-500" aria-label={`Like this gem (${gem.likes} likes)`}>
+          <Icons.Heart className="w-4 h-4" aria-hidden="true" />
           <span>{gem.likes}</span>
         </button>
-        <button className="flex gap-1 items-center text-gray-500 hover:text-rose-500">
-          <Icons.Bookmark className="w-4 h-4" />
+        <button className="flex gap-1 items-center text-gray-500 hover:text-rose-500" aria-label={`Save this gem (${gem.saves} saves)`}>
+          <Icons.Bookmark className="w-4 h-4" aria-hidden="true" />
           <span>{gem.saves}</span>
         </button>
       </div>
@@ -136,11 +140,13 @@ export function GemCard({ gem, className }: GemCardProps) {
           'aspect-[4/3]': gem.type === 'art',
           'aspect-[3/2]': gem.type === 'content-creation' || gem.type === 'words',
         })}
+        role="img"
+        aria-label={`Preview image for ${gem.title}`}
       >
         {mainImage ? (
           <Image
             src={mainImage}
-            alt={gem.title}
+            alt={`${gem.title} by ${gem.artist.name}`}
             width={600}
             height={400}
             className="object-cover w-full h-full transition-transform group-hover:scale-105"
@@ -157,14 +163,18 @@ export function GemCard({ gem, className }: GemCardProps) {
             {gem.title}
           </Typography>
           <Typography variant="small" className="text-gray-500 line-clamp-1">
-            {gem.artist.name}
+            By {gem.artist.name}
           </Typography>
         </div>
 
         {/* Type-specific metadata */}
-        <div className="flex flex-wrap gap-1 mb-4">
+        <div className="flex flex-wrap gap-1 mb-4" role="list" aria-label="Tags">
           {gem.tags.map((tag) => (
-            <span key={tag} className="px-2 py-0.5 text-xs text-gray-600 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-gray-400">
+            <span
+              key={tag}
+              className="px-2 py-0.5 text-xs text-gray-600 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-gray-400"
+              role="listitem"
+            >
               {tag}
             </span>
           ))}

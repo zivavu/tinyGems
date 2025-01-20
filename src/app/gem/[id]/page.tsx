@@ -20,10 +20,10 @@ export default async function GemPage({ params }: GemPageProps) {
   }
 
   return (
-    <main className="w-50">
+    <main className="w-50" role="main" aria-label={`Gem details: ${gem.title}`}>
       {/* Hero Section */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-b to-gray-900 from-gray-900/0 via-gray-900/60" />
+        <div className="absolute inset-0 bg-gradient-to-b to-gray-900 from-gray-900/0 via-gray-900/60" aria-hidden="true" />
         <GemMedia gem={gem} className="w-full" />
 
         {/* Overlay Content */}
@@ -31,10 +31,12 @@ export default async function GemPage({ params }: GemPageProps) {
           <div className="container mx-auto">
             <div className="flex gap-4 items-end">
               <div className="flex-1 space-y-2">
-                <div className="flex gap-2 items-center">
-                  <span className="px-2 py-1 text-xs font-medium tracking-wider uppercase rounded-full bg-white/10">{gem.type}</span>
+                <div className="flex gap-2 items-center" role="list" aria-label="Gem categories">
+                  <span className="px-2 py-1 text-xs font-medium tracking-wider uppercase rounded-full bg-white/10" role="listitem">
+                    {gem.type}
+                  </span>
                   {gem.tags.map((tag) => (
-                    <span key={tag} className="px-2 py-1 text-xs rounded-full text-white/80 bg-white/5">
+                    <span key={tag} className="px-2 py-1 text-xs rounded-full text-white/80 bg-white/5" role="listitem">
                       {tag}
                     </span>
                   ))}
@@ -42,9 +44,20 @@ export default async function GemPage({ params }: GemPageProps) {
                 <Typography variant="h1" className="text-white">
                   {gem.title}
                 </Typography>
-                <Link href={`/artist/${gem.artist.id}`} className="inline-flex gap-2 items-center group">
+                <Link
+                  href={`/artist/${gem.artist.id}`}
+                  className="inline-flex gap-2 items-center group"
+                  aria-label={`View ${gem.artist.name}'s profile`}
+                >
                   {gem.artist.avatar && (
-                    <Image src={gem.artist.avatar} alt="" width={32} height={32} className="rounded-full ring-2 ring-white/20" />
+                    <Image
+                      src={gem.artist.avatar}
+                      alt=""
+                      width={32}
+                      height={32}
+                      className="rounded-full ring-2 ring-white/20"
+                      aria-hidden="true"
+                    />
                   )}
                   <Typography variant="h4" className="text-white/90 group-hover:text-white">
                     {gem.artist.name}
@@ -53,13 +66,19 @@ export default async function GemPage({ params }: GemPageProps) {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3">
-                <button className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/10 hover:bg-white/20">
-                  <Icons.Heart className="w-5 h-5" />
+              <div className="flex gap-3" aria-label="Engagement actions">
+                <button
+                  className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/10 hover:bg-white/20"
+                  aria-label={`Like this gem (${gem.likes} likes)`}
+                >
+                  <Icons.Heart className="w-5 h-5" aria-hidden="true" />
                   <span>{gem.likes}</span>
                 </button>
-                <button className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/10 hover:bg-white/20">
-                  <Icons.Bookmark className="w-5 h-5" />
+                <button
+                  className="flex gap-2 items-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-white/10 hover:bg-white/20"
+                  aria-label={`Save this gem (${gem.saves} saves)`}
+                >
+                  <Icons.Bookmark className="w-5 h-5" aria-hidden="true" />
                   <span>{gem.saves}</span>
                 </button>
               </div>

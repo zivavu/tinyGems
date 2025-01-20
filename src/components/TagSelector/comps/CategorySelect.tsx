@@ -1,12 +1,12 @@
 'use client';
 
 import { categories, Category } from '@/features/shared/utils/dummy/categories';
+import { cn } from '@/features/shared/utils/dummy/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { FilterButton } from '../../../features/shared/components/buttons/FilterButton';
 import { PopoverTransition } from '../../../features/shared/components/transitions/PopoverTransition';
-import { cn } from '@/features/shared/utils/dummy/utils';
 
 interface CategorySelectorProps {
   selectedCategory: Category;
@@ -34,7 +34,7 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
     <Popover className="relative">
       {({ open }) => (
         <>
-          <PopoverButton as={FilterButton}>
+          <PopoverButton as={FilterButton} aria-label={`Selected category: ${selectedCategory.title}`}>
             <div className="flex gap-2 items-center">
               <div
                 className={cn(
@@ -42,7 +42,7 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
                   open ? 'bg-rose-100 dark:bg-rose-900/20' : 'bg-gray-100 dark:bg-gray-800',
                 )}
               >
-                <DynamicIcon className="w-4 h-4" name={selectedCategory.icon} />
+                <DynamicIcon className="w-4 h-4" name={selectedCategory.icon} aria-hidden="true" />
               </div>
               <div className="flex flex-col items-start">
                 <span className="text-xs text-gray-500 dark:text-gray-400">Category</span>
@@ -52,9 +52,12 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
           </PopoverButton>
 
           <PopoverTransition show={open}>
-            <PopoverPanel className="absolute z-10 mt-2 w-max bg-white rounded-lg border shadow-lg min-w-80 dark:bg-gray-800 dark:border-gray-700">
+            <PopoverPanel
+              className="absolute z-10 mt-2 w-max bg-white rounded-lg border shadow-lg min-w-80 dark:bg-gray-800 dark:border-gray-700"
+              aria-label="Category selection menu"
+            >
               <div className="p-2">
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-2 gap-1.5" role="listbox" aria-label="Available categories">
                   {categories.map((category) => (
                     <button
                       key={category.slug}
@@ -63,6 +66,9 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
                         'flex items-center gap-3 p-3 rounded-lg transition-colors text-left',
                         category.slug === selectedCategory.slug ? 'bg-rose-500 text-white' : 'hover:bg-gray-50 dark:hover:bg-gray-700',
                       )}
+                      role="option"
+                      aria-selected={category.slug === selectedCategory.slug}
+                      aria-label={`Select ${category.title} category`}
                     >
                       <div
                         className={cn(
@@ -70,7 +76,7 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
                           category.slug === selectedCategory.slug ? 'bg-rose-400/20' : 'bg-gray-100 dark:bg-gray-800',
                         )}
                       >
-                        <DynamicIcon className="w-4 h-4" name={category.icon} />
+                        <DynamicIcon className="w-4 h-4" name={category.icon} aria-hidden="true" />
                       </div>
                       <div className="flex flex-col">
                         <span className="font-medium">{category.title}</span>
@@ -79,7 +85,9 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
                             'text-xs',
                             category.slug === selectedCategory.slug ? 'text-rose-200' : 'text-gray-500 dark:text-gray-400',
                           )}
-                        ></span>
+                        >
+                          {category.description}
+                        </span>
                       </div>
                     </button>
                   ))}

@@ -27,18 +27,22 @@ export default async function SeekPage({ searchParams }: SeekPageProps) {
   const sortedGems = [...filteredGems].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   return (
-    <main className="container px-4 mx-auto">
+    <main className="container px-4 mx-auto" role="main" aria-label="Search gems">
       <TagSelector selectedCategory={selectedCategory} />
 
       <div className="py-8">
         <div className="mb-8">
-          <Typography variant="h2" className="mb-2">
+          <Typography variant="h2" className="mb-2" role="heading" aria-level={1}>
             {selectedCategory.slug === 'all' ? 'Latest Gems' : `Latest ${selectedCategory.title}`}
           </Typography>
-          <Typography variant="muted">{selectedCategory.description}</Typography>
+          <Typography variant="muted" aria-label="Category description">
+            {selectedCategory.description}
+          </Typography>
         </div>
 
-        <GemGrid gems={sortedGems} />
+        <section aria-label="Gems grid">
+          <GemGrid gems={sortedGems} />
+        </section>
       </div>
     </main>
   );
