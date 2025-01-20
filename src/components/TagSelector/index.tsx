@@ -5,18 +5,21 @@ import { Icons } from '@/lib/Icons';
 import { Button } from '../ui/buttons/Button';
 import { FilterSelect } from '../ui/FilterSelect';
 import { CategorySelect } from './comps/CategorySelect';
-import { ContentCreationFilters } from './comps/ContentCreationFilters';
-import { CraftFilters } from './comps/CraftFilters';
-import { DigitalArtFilters } from './comps/DigitalArtFilters';
-import { FiberArtFilters } from './comps/FiberArtFilters';
-import { GraphicArtFilters } from './comps/GraphicArtFilters';
-import { MixedMediaFilters } from './comps/MixedMediaFilters';
-import { MovieFilters } from './comps/MovieFilters';
-import { MusicFilters } from './comps/MusicFilters';
-import { OtherFilters } from './comps/OtherFilters';
-import { PhotographyFilters } from './comps/PhotographyFilters';
-import { WordsFilters } from './comps/WordsFilters';
 import { languages } from './constants';
+import { FilterComponent } from './FilterComponent';
+import {
+  contentCreationFilters,
+  craftFilters,
+  digitalArtFilters,
+  fiberArtFilters,
+  graphicArtFilters,
+  mixedMediaFilters,
+  movieFilters,
+  musicFilters,
+  otherFilters,
+  photographyFilters,
+  wordsFilters,
+} from './filters';
 import { useParamFilters } from './hooks';
 
 interface TagSelectorProps {
@@ -30,27 +33,27 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
   const renderCategoryFilters = () => {
     switch (selectedCategory.slug) {
       case 'music':
-        return <MusicFilters />;
+        return <FilterComponent filters={musicFilters} onFilterChange={handleParamChange} />;
       case 'craft':
-        return <CraftFilters />;
+        return <FilterComponent filters={craftFilters} onFilterChange={handleParamChange} />;
       case 'graphic-art':
-        return <GraphicArtFilters />;
+        return <FilterComponent filters={graphicArtFilters} onFilterChange={handleParamChange} />;
       case 'fiber-arts':
-        return <FiberArtFilters />;
+        return <FilterComponent filters={fiberArtFilters} onFilterChange={handleParamChange} />;
       case 'photography':
-        return <PhotographyFilters />;
+        return <FilterComponent filters={photographyFilters} onFilterChange={handleParamChange} />;
       case 'words':
-        return <WordsFilters />;
+        return <FilterComponent filters={wordsFilters} onFilterChange={handleParamChange} />;
       case 'movies':
-        return <MovieFilters />;
+        return <FilterComponent filters={movieFilters} onFilterChange={handleParamChange} />;
       case 'digital-art':
-        return <DigitalArtFilters />;
+        return <FilterComponent filters={digitalArtFilters} onFilterChange={handleParamChange} />;
       case 'mixed-media':
-        return <MixedMediaFilters />;
+        return <FilterComponent filters={mixedMediaFilters} onFilterChange={handleParamChange} />;
       case 'content-creation':
-        return <ContentCreationFilters />;
+        return <FilterComponent filters={contentCreationFilters} onFilterChange={handleParamChange} />;
       case 'other':
-        return <OtherFilters />;
+        return <FilterComponent filters={otherFilters} onFilterChange={handleParamChange} />;
       default:
         return null;
     }
