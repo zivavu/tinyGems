@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import { type HTMLAttributes } from 'react';
+import { cn } from '../utils/dummy/utils';
 
 type TypographyVariant = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'small' | 'muted';
 

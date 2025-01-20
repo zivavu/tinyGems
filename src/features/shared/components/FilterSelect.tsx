@@ -4,8 +4,8 @@ import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Select } from '@/features/shared/components/Select';
 import { Typography } from '@/features/shared/components/Typography';
-import { cn } from '@/lib/utils';
 import { useState } from 'react';
+import { cn } from '../utils/dummy/utils';
 
 interface FilterOption {
   id: string;

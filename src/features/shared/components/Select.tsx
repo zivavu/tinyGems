@@ -1,12 +1,12 @@
 'use client';
 
 import { Icons } from '@/features/shared/components/Icons';
-import { cn } from '@/lib/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import React from 'react';
 import { FilterButton } from './buttons/FilterButton';
 import { PopoverTransition } from './transitions/PopoverTransition';
 import { Typography } from './Typography';
+import { cn } from '../utils/dummy/utils';
 
 interface SelectProps {
   title: string;
