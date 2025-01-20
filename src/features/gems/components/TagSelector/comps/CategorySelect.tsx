@@ -5,8 +5,8 @@ import { cn } from '@/features/shared/utils/dummy/utils';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FilterButton } from '../../../features/shared/components/buttons/FilterButton';
-import { PopoverTransition } from '../../../features/shared/components/transitions/PopoverTransition';
+import { FilterButton } from '../../../../shared/components/buttons/FilterButton';
+import { PopoverTransition } from '../../../../shared/components/transitions/PopoverTransition';
 
 interface CategorySelectorProps {
   selectedCategory: Category;
@@ -53,7 +53,7 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
 
           <PopoverTransition show={open}>
             <PopoverPanel
-              className="absolute z-10 mt-2 w-max bg-white rounded-lg border shadow-lg min-w-80 dark:bg-gray-800 dark:border-gray-700"
+              className="absolute z-10 mt-2 bg-white rounded-lg border shadow-lg w-fit min-w-[24rem] dark:bg-gray-800 dark:border-gray-700"
               aria-label="Category selection menu"
             >
               <div className="p-2">
@@ -85,9 +85,7 @@ export function CategorySelect({ selectedCategory }: CategorySelectorProps) {
                             'text-xs',
                             category.slug === selectedCategory.slug ? 'text-rose-200' : 'text-gray-500 dark:text-gray-400',
                           )}
-                        >
-                          {category.description}
-                        </span>
+                        ></span>
                       </div>
                     </button>
                   ))}

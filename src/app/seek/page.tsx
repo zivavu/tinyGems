@@ -1,5 +1,5 @@
-import { TagSelector } from '@/components/TagSelector';
 import { GemGrid } from '@/features/gems/components/GemGrid';
+import { TagSelector } from '@/features/gems/components/TagSelector';
 import { Typography } from '@/features/shared/components/Typography';
 import { categories } from '@/features/shared/utils/dummy/categories';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';

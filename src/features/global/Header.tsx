@@ -1,12 +1,12 @@
 'use client';
 
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { ThemeToggle } from '@/features/global/ThemeToggle';
 import { HEADER_HEIGHT } from '@/consts';
 import { Icons } from '@/features/shared/components/Icons';
 import { Button, Menu, MenuItems } from '@headlessui/react';
 import NextLink from 'next/link';
 
-import { Typography } from '../features/shared/components/Typography';
+import { Typography } from '../shared/components/Typography';
 
 export function Header() {
   // This will be replaced with real auth state later

@@ -2,7 +2,7 @@
 
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
-import { Link } from '../features/shared/components/Link';
+import { Link } from '../shared/components/Link';
 
 export function Footer() {
   return (
