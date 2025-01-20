@@ -37,10 +37,14 @@ function GemTypeIcon({ type, className }: { type: GemType; className?: string })
     music: Icons.Music,
     art: Icons.Image,
     craft: Icons.Hammer,
-    content: Icons.FileText,
+    'content-creation': Icons.FileText,
     words: Icons.FileText,
     video: Icons.Video,
     photography: Icons.Camera,
+    'mixed-media': Icons.Image,
+    other: Icons.FileText,
+    'fiber-arts': Icons.Scissors,
+    'digital-art': Icons.Monitor,
   }[type];
 
   return <Icon className={className} />;

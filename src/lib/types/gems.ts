@@ -2,7 +2,18 @@ import { Category } from '../categories';
 
 export type GemSource = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
 
-export type GemType = 'music' | 'art' | 'craft' | 'content' | 'words' | 'video' | 'photography';
+export type GemType =
+  | 'music'
+  | 'art'
+  | 'craft'
+  | 'content-creation'
+  | 'words'
+  | 'video'
+  | 'photography'
+  | 'mixed-media'
+  | 'other'
+  | 'fiber-arts'
+  | 'digital-art';
 
 export interface BaseGemProperties {
   media: {
@@ -67,7 +78,7 @@ type GemTypeProperties =
   | { type: 'music'; properties: MusicGemProperties }
   | { type: 'art'; properties: ArtGemProperties }
   | { type: 'craft'; properties: CraftGemProperties }
-  | { type: 'content'; properties: ContentGemProperties };
+  | { type: 'content-creation'; properties: ContentGemProperties };
 
 // Final Gem type that combines base and specific properties
 type Gem = BaseGem & {
@@ -88,7 +99,7 @@ export function isCraftGem(gem: Gem): gem is BaseGem & { properties: CraftGemPro
 }
 
 export function isContentGem(gem: Gem): gem is BaseGem & { properties: ContentGemProperties } {
-  return gem.type === 'content';
+  return gem.type === 'content-creation';
 }
 
 export function isWordsGem(gem: Gem): gem is BaseGem & { properties: ContentGemProperties } {
@@ -103,12 +114,4 @@ export function isPhotographyGem(gem: Gem): gem is BaseGem & { properties: ArtGe
   return gem.type === 'photography';
 }
 
-export type {
-  ArtGemProperties,
-  BaseGem,
-  ContentGemProperties,
-  CraftGemProperties,
-  Gem,
-  MusicGemProperties
-};
-
+export type { ArtGemProperties, BaseGem, ContentGemProperties, CraftGemProperties, Gem, MusicGemProperties };

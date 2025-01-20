@@ -115,9 +115,9 @@ export const categories: Category[] = [
   },
   {
     icon: 'drill',
-    title: 'Crafts',
+    title: 'Craft',
     description: 'People that bring something new and unique into the world. Handmade, and special.',
-    slug: 'crafts',
+    slug: 'craft',
     options: ['woodwork', 'metalwork', 'ceramics', 'jewelry', 'electronics'],
   },
   {

@@ -31,7 +31,7 @@ export function TagSelector({ selectedCategory }: TagSelectorProps) {
     switch (selectedCategory.slug) {
       case 'music':
         return <MusicFilters />;
-      case 'crafts':
+      case 'craft':
         return <CraftFilters />;
       case 'graphic-art':
         return <GraphicArtFilters />;

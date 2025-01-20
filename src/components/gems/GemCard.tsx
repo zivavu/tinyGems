@@ -45,7 +45,7 @@ function GemPlaceholder({ type, className }: { type: GemType; className?: string
       aspect: 'aspect-video',
       gradient: 'from-purple-50/50 to-purple-100/50 dark:from-purple-900/20 dark:to-purple-800/20',
     },
-    content: {
+    'content-creation': {
       icon: Icons.FileText,
       text: 'No content preview',
       aspect: 'aspect-[3/2]',
@@ -56,6 +56,30 @@ function GemPlaceholder({ type, className }: { type: GemType; className?: string
       text: 'No preview',
       aspect: 'aspect-[3/2]',
       gradient: 'from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
+    },
+    'mixed-media': {
+      icon: Icons.Image,
+      text: 'No preview',
+      aspect: 'aspect-[3/2]',
+      gradient: 'from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
+    },
+    other: {
+      icon: Icons.FileText,
+      text: 'No preview',
+      aspect: 'aspect-[3/2]',
+      gradient: 'from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
+    },
+    'fiber-arts': {
+      icon: Icons.Scissors,
+      text: 'No preview',
+      aspect: 'aspect-[3/2]',
+      gradient: 'from-pink-50/50 to-pink-100/50 dark:from-pink-900/20 dark:to-pink-800/20',
+    },
+    'digital-art': {
+      icon: Icons.Monitor,
+      text: 'No preview',
+      aspect: 'aspect-[3/2]',
+      gradient: 'from-indigo-50/50 to-indigo-100/50 dark:from-indigo-900/20 dark:to-indigo-800/20',
     },
   }[type];
 
@@ -110,7 +134,7 @@ export function GemCard({ gem, className }: GemCardProps) {
           'aspect-square': gem.type === 'music' || gem.type === 'craft',
           'aspect-video': gem.type === 'video',
           'aspect-[4/3]': gem.type === 'art',
-          'aspect-[3/2]': gem.type === 'content' || gem.type === 'words',
+          'aspect-[3/2]': gem.type === 'content-creation' || gem.type === 'words',
         })}
       >
         {mainImage ? (
