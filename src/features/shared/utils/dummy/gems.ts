@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-import { Category } from '../categories';
 import {
   ArtGemProperties,
   BaseGemProperties,
@@ -8,8 +7,9 @@ import {
   Gem,
   GemType,
   MusicGemProperties,
-} from '../types/gems';
+} from '../../../gems/types/gems';
 import { dummyArtists } from './artists';
+import { Category } from './categories';
 
 faker.seed(42);
 

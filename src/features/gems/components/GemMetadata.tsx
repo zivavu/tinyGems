@@ -1,7 +1,7 @@
 'use client';
 
-import { Typography } from '@/components/ui/Typography';
-import { Gem, isMusicGem, isArtGem, isCraftGem } from '@/lib/types/gems';
+import { Gem, isArtGem, isCraftGem, isMusicGem } from '@/features/gems/types/gems';
+import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/lib/utils';
 
 interface GemMetadataProps {

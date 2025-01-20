@@ -1,4 +1,4 @@
-import { FilterSelect } from '../ui/FilterSelect';
+import { FilterSelect } from '../../features/shared/components/FilterSelect';
 import { GemFilter } from './comps/types';
 import { useParamFilters } from './hooks';
 

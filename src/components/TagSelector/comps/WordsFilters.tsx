@@ -1,6 +1,6 @@
 'use client';
 
-import { FilterSelect } from '@/components/ui/FilterSelect';
+import { FilterSelect } from '@/features/shared/components/FilterSelect';
 import { writingGenres, writingStyles, writingThemes, writingTypes } from '../constants';
 import { useParamFilters } from '../hooks';
 import { GemFilter } from './types';

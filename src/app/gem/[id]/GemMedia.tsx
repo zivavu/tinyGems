@@ -1,7 +1,7 @@
 'use client';
 
-import { Icons } from '@/lib/Icons';
-import { Gem, GemType } from '@/lib/types/gems';
+import { Gem, GemType } from '@/features/gems/types/gems';
+import { Icons } from '@/features/shared/components/Icons';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 

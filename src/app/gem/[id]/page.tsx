@@ -1,11 +1,11 @@
-import { Typography } from '@/components/ui/Typography';
-import { dummyGems } from '@/lib/dummy/gems';
-import { Icons } from '@/lib/Icons';
+import { Icons } from '@/features/shared/components/Icons';
+import { Typography } from '@/features/shared/components/Typography';
+import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { GemMedia } from '../../../components/pageComponents/GemMedia';
-import { GemMetadata } from '../../../components/pageComponents/GemMetadata';
+import { GemMedia } from '../../../features/gems/components/GemMedia';
+import { GemMetadata } from '../../../features/gems/components/GemMetadata';
 
 interface GemPageProps {
   params: Promise<{ id: string }>;

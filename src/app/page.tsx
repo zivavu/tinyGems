@@ -1,6 +1,6 @@
-import { Typography } from '@/components/ui/Typography';
-import { categories } from '@/lib/categories';
-import { Icons } from '@/lib/Icons';
+import { Icons } from '@/features/shared/components/Icons';
+import { Typography } from '@/features/shared/components/Typography';
+import { categories } from '@/features/shared/utils/dummy/categories';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import NextLink from 'next/link';
 

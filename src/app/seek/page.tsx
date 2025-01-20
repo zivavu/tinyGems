@@ -1,8 +1,8 @@
-import { GemGrid } from '@/components/gems/GemGrid';
 import { TagSelector } from '@/components/TagSelector';
-import { Typography } from '@/components/ui/Typography';
-import { categories } from '@/lib/categories';
-import { dummyGems } from '@/lib/dummy/gems';
+import { GemGrid } from '@/features/gems/components/GemGrid';
+import { Typography } from '@/features/shared/components/Typography';
+import { categories } from '@/features/shared/utils/dummy/categories';
+import { dummyGems } from '@/features/shared/utils/dummy/gems';
 
 interface SeekPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

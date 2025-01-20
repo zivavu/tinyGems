@@ -1,11 +1,11 @@
 'use client';
 
-import { Icons } from '@/lib/Icons';
-import { Gem, GemType } from '@/lib/types/gems';
-import { cn } from '@/lib/utils';
+import { Gem, GemType } from '@/features/gems/types/gems';
+import { Icons } from '@/features/shared/components/Icons';
+import { Typography } from '@/features/shared/components/Typography';
+import { cn } from '@/features/shared/utils/dummy/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Typography } from '../ui/Typography';
 
 interface GemCardProps {
   gem: Gem;

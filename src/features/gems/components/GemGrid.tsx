@@ -1,4 +1,4 @@
-import { Gem } from '@/lib/types/gems';
+import { Gem } from '@/features/gems/types/gems';
 import { GemCard } from './GemCard';
 
 interface GemGridProps {

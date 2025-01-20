@@ -1,4 +1,4 @@
-import { Category } from '../categories';
+import { Category } from '../../shared/utils/dummy/categories';
 
 export type GemSource = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
 

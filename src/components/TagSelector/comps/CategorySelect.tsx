@@ -1,12 +1,12 @@
 'use client';
 
-import { categories, Category } from '@/lib/categories';
-import { cn } from '@/lib/utils';
+import { categories, Category } from '@/features/shared/utils/dummy/categories';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { DynamicIcon } from 'lucide-react/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { FilterButton } from '../../ui/buttons/FilterButton';
-import { PopoverTransition } from '../../ui/transitions/PopoverTransition';
+import { FilterButton } from '../../../features/shared/components/buttons/FilterButton';
+import { PopoverTransition } from '../../../features/shared/components/transitions/PopoverTransition';
+import { cn } from '@/features/shared/utils/dummy/utils';
 
 interface CategorySelectorProps {
   selectedCategory: Category;

@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { categories } from '../categories';
-import { Artist } from '../types/artist';
+import { Artist } from '../../../artists/types/artist';
+import { categories } from './categories';
 
 // Set a consistent seed for reproducible data
 faker.seed(42);

@@ -1,6 +1,6 @@
 'use client';
 
-import { Icons } from '@/lib/Icons';
+import { Icons } from '@/features/shared/components/Icons';
 import { cn } from '@/lib/utils';
 import { Button } from './Button';
 

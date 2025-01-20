@@ -1,8 +1,8 @@
-import { GemGrid } from '@/components/gems/GemGrid';
-import { Typography } from '@/components/ui/Typography';
-import { dummyArtists } from '@/lib/dummy/artists';
-import { dummyGems } from '@/lib/dummy/gems';
-import { cn } from '@/lib/utils';
+import { GemGrid } from '@/features/gems/components/GemGrid';
+import { Typography } from '@/features/shared/components/Typography';
+import { dummyArtists } from '@/features/shared/utils/dummy/artists';
+import { dummyGems } from '@/features/shared/utils/dummy/gems';
+import { cn } from '@/features/shared/utils/dummy/utils';
 import { faBandcamp, faInstagram, faSoundcloud, faSpotify, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
