@@ -5,7 +5,7 @@ import { HEADER_HEIGHT } from '@/consts';
 import { Icons } from '@/features/shared/components/Icons';
 import { Button, Menu, MenuItems } from '@headlessui/react';
 import NextLink from 'next/link';
-import { Link } from '../features/shared/components/Link';
+
 import { Typography } from '../features/shared/components/Typography';
 
 export function Header() {
@@ -20,12 +20,12 @@ export function Header() {
     >
       <div className="container px-4 mx-auto">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex gap-2 items-center" aria-label="tinyGems home">
+          <NextLink href="/" className="flex gap-2 items-center" aria-label="tinyGems home">
             <Icons.Sparkles className="w-5 h-5 text-rose-500" aria-hidden="true" />
             <Typography variant="h2" className="hidden content-center sm:block">
               tinyGems
             </Typography>
-          </Link>
+          </NextLink>
 
           <div className="flex gap-4 items-center">
             <ThemeToggle />

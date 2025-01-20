@@ -129,7 +129,7 @@ export function FilterSelect({
           name: group.name,
           options: group.options.filter(
             (option) =>
-              option.label.toLowerCase().includes(query.toLowerCase()) ||
+              option.label?.toLowerCase().includes(query.toLowerCase()) ||
               (option.description?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
               !query,
           ),
@@ -137,7 +137,7 @@ export function FilterSelect({
         .filter((group) => group.options.length > 0)
     : (options as FilterOption[]).filter(
         (option) =>
-          option.label.toLowerCase().includes(query.toLowerCase()) ||
+          option.label?.toLowerCase().includes(query.toLowerCase()) ||
           (option.description?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
           !query,
       );
