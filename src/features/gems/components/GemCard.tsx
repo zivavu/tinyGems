@@ -1,6 +1,6 @@
 'use client';
 
-import { Gem, GemType } from '@/features/gems/types/gems';
+import { Gem } from '@/features/gems/types/gems';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
@@ -12,86 +12,20 @@ interface GemCardProps {
   className?: string;
 }
 
-// Add a reusable placeholder component with specific styles per type
-function GemPlaceholder({ type, className }: { type: GemType; className?: string }) {
-  const config = {
-    music: {
-      icon: Icons.Music,
-      text: 'No music preview',
-      aspect: 'aspect-square',
-      gradient: 'from-rose-50/50 to-rose-100/50 dark:from-rose-900/20 dark:to-rose-800/20',
-    },
-    art: {
-      icon: Icons.Image,
-      text: 'No artwork preview',
-      aspect: 'aspect-[4/3]',
-      gradient: 'from-blue-50/50 to-blue-100/50 dark:from-blue-900/20 dark:to-blue-800/20',
-    },
-    craft: {
-      icon: Icons.Hammer,
-      text: 'No craft preview',
-      aspect: 'aspect-square',
-      gradient: 'from-amber-50/50 to-amber-100/50 dark:from-amber-900/20 dark:to-amber-800/20',
-    },
-    photography: {
-      icon: Icons.Camera,
-      text: 'No photo preview',
-      aspect: 'aspect-[3/2]',
-      gradient: 'from-emerald-50/50 to-emerald-100/50 dark:from-emerald-900/20 dark:to-emerald-800/20',
-    },
-    video: {
-      icon: Icons.Video,
-      text: 'No video preview',
-      aspect: 'aspect-video',
-      gradient: 'from-purple-50/50 to-purple-100/50 dark:from-purple-900/20 dark:to-purple-800/20',
-    },
-    'content-creation': {
-      icon: Icons.FileText,
-      text: 'No content preview',
-      aspect: 'aspect-[3/2]',
-      gradient: 'from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
-    },
-    words: {
-      icon: Icons.FileText,
-      text: 'No preview',
-      aspect: 'aspect-[3/2]',
-      gradient: 'from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
-    },
-    'mixed-media': {
-      icon: Icons.Image,
-      text: 'No preview',
-      aspect: 'aspect-[3/2]',
-      gradient: 'from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
-    },
-    other: {
-      icon: Icons.FileText,
-      text: 'No preview',
-      aspect: 'aspect-[3/2]',
-      gradient: 'from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
-    },
-    'fiber-arts': {
-      icon: Icons.Scissors,
-      text: 'No preview',
-      aspect: 'aspect-[3/2]',
-      gradient: 'from-pink-50/50 to-pink-100/50 dark:from-pink-900/20 dark:to-pink-800/20',
-    },
-    'digital-art': {
-      icon: Icons.Monitor,
-      text: 'No preview',
-      aspect: 'aspect-[3/2]',
-      gradient: 'from-indigo-50/50 to-indigo-100/50 dark:from-indigo-900/20 dark:to-indigo-800/20',
-    },
-  }[type];
-
+function GemPlaceholder({ className }: { className?: string }) {
   return (
     <div
-      className={cn('flex flex-col justify-center items-center w-full', 'bg-gradient-to-br', config.gradient, config.aspect, className)}
+      className={cn(
+        'flex flex-col justify-center items-center w-full aspect-[3/2]',
+        'bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
+        className,
+      )}
       role="img"
-      aria-label={config.text}
+      aria-label="No preview available"
     >
-      <config.icon className="w-10 h-10 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+      <Icons.Image className="w-10 h-10 text-gray-400 dark:text-gray-500" aria-hidden="true" />
       <Typography variant="small" className="mt-2 text-gray-500 dark:text-gray-400">
-        {config.text}
+        No preview
       </Typography>
     </div>
   );
@@ -112,7 +46,6 @@ export function GemCard({ gem, className }: GemCardProps) {
     </div>
   );
 
-  // Common stats section
   const StatsSection = () => (
     <div className="flex justify-between items-center mt-4 text-sm" aria-label="Engagement stats">
       <div className="flex gap-4 items-center">
@@ -132,7 +65,6 @@ export function GemCard({ gem, className }: GemCardProps) {
 
   return (
     <CardWrapper>
-      {/* Media Section */}
       <div
         className={cn('overflow-hidden', {
           'aspect-square': gem.type === 'music' || gem.type === 'craft',
@@ -152,11 +84,10 @@ export function GemCard({ gem, className }: GemCardProps) {
             className="object-cover w-full h-full transition-transform group-hover:scale-105"
           />
         ) : (
-          <GemPlaceholder type={gem.type} />
+          <GemPlaceholder />
         )}
       </div>
 
-      {/* Content Section */}
       <div className="p-4">
         <div className="mb-2 space-y-1">
           <Typography variant="h4" className="line-clamp-1">
@@ -167,7 +98,6 @@ export function GemCard({ gem, className }: GemCardProps) {
           </Typography>
         </div>
 
-        {/* Type-specific metadata */}
         <div className="flex flex-wrap gap-1 mb-4" role="list" aria-label="Tags">
           {gem.tags.map((tag) => (
             <span

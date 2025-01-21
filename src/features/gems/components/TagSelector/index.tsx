@@ -5,21 +5,21 @@ import { Category } from '@/features/shared/utils/dummy/categories';
 import { Button } from '../../../shared/components/buttons/Button';
 import { FilterSelect } from '../../../shared/components/FilterSelect';
 import { CategorySelect } from './comps/CategorySelect';
-import { languages } from './constants';
-import { FilterComponent } from './FilterComponent';
 import {
   contentCreationFilters,
   craftFilters,
   digitalArtFilters,
   fiberArtFilters,
   graphicArtFilters,
+  languages,
   mixedMediaFilters,
   movieFilters,
   musicFilters,
   otherFilters,
   photographyFilters,
   wordsFilters,
-} from './filters';
+} from './constants';
+import { FilterComponent } from './FilterComponent';
 import { useParamFilters } from './hooks';
 
 interface TagSelectorProps {

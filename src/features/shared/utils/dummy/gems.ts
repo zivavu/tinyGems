@@ -57,7 +57,7 @@ function generateBaseGem(type: GemType): Omit<Gem, 'properties'> {
     saves: faker.number.int({ min: 0, max: 200 }),
     curator: faker.datatype.boolean(0.3)
       ? {
-          name: faker.internet.userName(),
+          name: faker.internet.username(),
           avatar: `https://i.pravatar.cc/150?u=${faker.string.uuid()}`,
         }
       : undefined,

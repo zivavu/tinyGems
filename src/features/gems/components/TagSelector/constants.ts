@@ -30,6 +30,7 @@ import {
   UA,
   VN,
 } from 'country-flag-icons/react/3x2';
+import { GemFilter } from './comps/types';
 
 export const languageFlags = {
   en: GB,
@@ -119,38 +120,6 @@ export const artistSizes = [
   },
   { id: 'giant', label: 'Giant', description: 'More than 100k followers' },
 ] as FilterOption[];
-
-export const artistStatus = [
-  { id: 'active', label: 'Active', description: 'Released in last 6 months' },
-  { id: 'rising', label: 'Rising', description: 'Growing rapidly' },
-  { id: 'established', label: 'Established', description: 'Stable presence' },
-  { id: 'hiatus', label: 'On Hiatus', description: 'No recent activity' },
-] as FilterOption[];
-
-export const genreStyles = [
-  { id: 'purist', label: 'Genre Purist', description: 'Focuses on one genre' },
-  {
-    id: 'explorer',
-    label: 'Genre Explorer',
-    description: 'Experiments across genres',
-  },
-  {
-    id: 'fusion',
-    label: 'Genre Fusion',
-    description: 'Blends multiple genres',
-  },
-  { id: 'evolving', label: 'Evolving Style', description: 'Changes over time' },
-] as FilterOption[];
-
-export const artistExperience = [
-  { id: 'young', label: 'Young', description: 'Active for 0-3 years' },
-  {
-    id: 'full-grown',
-    label: 'Full-grown',
-    description: 'Active for 3-10 years',
-  },
-  { id: 'veteran', label: 'Veteran', description: 'Active for 10+ years' },
-] as const;
 
 export type MusicGenre = FilterOption & {
   id: string;
@@ -365,34 +334,6 @@ export const musicGenres: GenreCategory[] = [
 // Helper function to get all genres flattened
 export const getAllGenres = () => musicGenres.flatMap((category) => category.options);
 
-export const productionStyles = [
-  {
-    id: 'lo-fi',
-    label: 'Lo-Fi',
-    description: 'Raw, unpolished sound',
-  },
-  {
-    id: 'hi-fi',
-    label: 'Hi-Fi',
-    description: 'Clean, polished production',
-  },
-  {
-    id: 'experimental',
-    label: 'Experimental',
-    description: 'Unconventional techniques',
-  },
-  {
-    id: 'minimalist',
-    label: 'Minimalist',
-    description: 'Simple, stripped down',
-  },
-  {
-    id: 'maximalist',
-    label: 'Maximalist',
-    description: 'Dense, layered production',
-  },
-] as FilterOption[];
-
 export const releaseFrequency = [
   {
     id: 'prolific',
@@ -442,67 +383,6 @@ export const craftMaterials = [
     label: 'Glass',
     description: 'Glassblowing and forming',
   },
-  {
-    id: 'textile',
-    label: 'Textile',
-    description: 'Fabric and fiber arts',
-  },
-  {
-    id: 'leather',
-    label: 'Leather',
-    description: 'Leatherworking and crafting',
-  },
-] as FilterOption[];
-
-export const craftComplexity = [
-  {
-    id: 'beginner',
-    label: 'Beginner',
-    description: 'Simple, straightforward pieces',
-  },
-  {
-    id: 'intermediate',
-    label: 'Intermediate',
-    description: 'More complex techniques',
-  },
-  {
-    id: 'advanced',
-    label: 'Advanced',
-    description: 'Intricate, detailed work',
-  },
-  {
-    id: 'master',
-    label: 'Master',
-    description: 'Expert-level craftsmanship',
-  },
-] as FilterOption[];
-
-export const craftStyles = [
-  {
-    id: 'traditional',
-    label: 'Traditional',
-    description: 'Classic techniques and designs',
-  },
-  {
-    id: 'modern',
-    label: 'Modern',
-    description: 'Contemporary approaches',
-  },
-  {
-    id: 'minimalist',
-    label: 'Minimalist',
-    description: 'Simple, clean designs',
-  },
-  {
-    id: 'rustic',
-    label: 'Rustic',
-    description: 'Natural, weathered look',
-  },
-  {
-    id: 'industrial',
-    label: 'Industrial',
-    description: 'Raw, mechanical aesthetic',
-  },
 ] as FilterOption[];
 
 export const artMediums = [
@@ -520,72 +400,6 @@ export const artMediums = [
     id: 'mixed-media',
     label: 'Mixed Media',
     description: 'Combination of digital and traditional',
-  },
-] as FilterOption[];
-
-export const artStyles = [
-  {
-    id: 'realistic',
-    label: 'Realistic',
-    description: 'True to life representation',
-  },
-  {
-    id: 'abstract',
-    label: 'Abstract',
-    description: 'Non-representational art',
-  },
-  {
-    id: 'impressionistic',
-    label: 'Impressionistic',
-    description: 'Emphasis on light and movement',
-  },
-  {
-    id: 'cartoon',
-    label: 'Cartoon',
-    description: 'Stylized and simplified',
-  },
-  {
-    id: 'manga-anime',
-    label: 'Manga/Anime',
-    description: 'Japanese-inspired style',
-  },
-  {
-    id: 'surreal',
-    label: 'Surreal',
-    description: 'Dreamlike and fantastical',
-  },
-] as FilterOption[];
-
-export const artSubjects = [
-  {
-    id: 'portrait',
-    label: 'Portrait',
-    description: 'People and faces',
-  },
-  {
-    id: 'landscape',
-    label: 'Landscape',
-    description: 'Natural and urban scenes',
-  },
-  {
-    id: 'still-life',
-    label: 'Still Life',
-    description: 'Inanimate objects',
-  },
-  {
-    id: 'conceptual',
-    label: 'Conceptual',
-    description: 'Ideas and concepts',
-  },
-  {
-    id: 'fantasy',
-    label: 'Fantasy',
-    description: 'Imaginative and mythical',
-  },
-  {
-    id: 'character-design',
-    label: 'Character Design',
-    description: 'Original character creation',
   },
 ] as FilterOption[];
 
@@ -618,6 +432,11 @@ export const artTechniques = [
 ] as FilterOption[];
 
 export const fiberTechniques: FilterOption[] = [
+  {
+    id: 'sewing',
+    label: 'Sewing',
+    description: 'Creating fabric with needles and thread',
+  },
   {
     id: 'knitting',
     label: 'Knitting',
@@ -657,57 +476,107 @@ export const fiberTechniques: FilterOption[] = [
 
 export const fiberMaterials: FilterOption[] = [
   {
-    id: 'wool',
-    label: 'Wool',
-    description: 'Natural animal fiber',
+    id: 'mixed',
+    label: 'Mixed',
+    description: 'A mix of materials',
   },
   {
     id: 'cotton',
     label: 'Cotton',
-    description: 'Natural plant fiber',
+    description: 'Soft and breathable',
+  },
+  {
+    id: 'wool',
+    label: 'Wool',
+    description: 'Warm and insulating natural',
   },
   {
     id: 'silk',
     label: 'Silk',
-    description: 'Luxury natural fiber',
+    description: 'Smooth and luxurious natural',
   },
   {
-    id: 'synthetic',
-    label: 'Synthetic',
-    description: 'Man-made fibers',
+    id: 'linen',
+    label: 'Linen',
+    description: 'Durable and cooling natural',
   },
   {
-    id: 'blend',
-    label: 'Blend',
-    description: 'Mixed fiber types',
+    id: 'acrylic',
+    label: 'Acrylic',
+    description: 'Synthetic, with wool-like qualities',
+  },
+  {
+    id: 'polyester',
+    label: 'Polyester',
+    description: 'Durable synthetic',
+  },
+  {
+    id: 'bamboo',
+    label: 'Bamboo',
+    description: 'Sustainable and soft',
+  },
+  {
+    id: 'hemp',
+    label: 'Hemp',
+    description: 'Strong and eco-friendly natural',
+  },
+  {
+    id: 'cashmere',
+    label: 'Cashmere',
+    description: 'Ultra-soft luxury wool',
   },
 ];
 
-export const fiberStyles: FilterOption[] = [
+export const clothingTypes: FilterOption[] = [
   {
-    id: 'traditional',
-    label: 'Traditional',
-    description: 'Classic patterns and techniques',
+    id: 'tops',
+    label: 'Tops',
+    description: 'Shirts, blouses, t-shirts',
   },
   {
-    id: 'contemporary',
-    label: 'Contemporary',
-    description: 'Modern interpretations',
+    id: 'bottoms',
+    label: 'Bottoms',
+    description: 'Pants, skirts, shorts',
   },
   {
-    id: 'geometric',
-    label: 'Geometric',
-    description: 'Pattern-based designs',
+    id: 'dresses',
+    label: 'Dresses',
+    description: 'One-piece garments',
   },
   {
-    id: 'organic',
-    label: 'Organic',
-    description: 'Natural, flowing forms',
+    id: 'outerwear',
+    label: 'Outerwear',
+    description: 'Coats, jackets, sweaters',
   },
   {
-    id: 'minimalist',
-    label: 'Minimalist',
-    description: 'Simple, clean designs',
+    id: 'formal',
+    label: 'Formal Wear',
+    description: 'Suits, gowns, tuxedos',
+  },
+  {
+    id: 'lingerie',
+    label: 'Lingerie',
+    description: 'Undergarments and sleepwear',
+  },
+  {
+    id: 'accessories',
+    label: 'Accessories',
+    description: 'Scarves, belts, hats',
+  },
+  {
+    id: 'swimwear',
+    label: 'Swimwear',
+    description: 'Bathing suits and beachwear',
+  },
+  {
+    id: 'ethnic',
+    label: 'Ethnic Wear',
+    description: 'Traditional and cultural clothing',
+  },
+  {
+    id: 'other',
+    label: 'Other',
+    description: 'Other clothing types',
   },
 ];
 
@@ -769,34 +638,6 @@ export const photographyTypes: FilterOption[] = [
     id: 'abstract',
     label: 'Abstract',
     description: 'Non-representational',
-  },
-];
-
-export const photographyStyles: FilterOption[] = [
-  {
-    id: 'documentary',
-    label: 'Documentary',
-    description: 'Capturing real moments',
-  },
-  {
-    id: 'fine-art',
-    label: 'Fine Art',
-    description: 'Artistic expression',
-  },
-  {
-    id: 'minimalist',
-    label: 'Minimalist',
-    description: 'Simple, clean compositions',
-  },
-  {
-    id: 'experimental',
-    label: 'Experimental',
-    description: 'Innovative techniques',
-  },
-  {
-    id: 'vintage',
-    label: 'Vintage',
-    description: 'Classic film look',
   },
 ];
 
@@ -1595,5 +1436,319 @@ export const otherComplexity: FilterOption[] = [
     id: 'experimental',
     label: 'Experimental',
     description: 'Boundary-pushing',
+  },
+];
+
+export const musicFilters: GemFilter[] = [
+  {
+    title: 'Genres',
+    options: musicGenres,
+    param: 'genres',
+    icon: 'Music',
+    grouped: true,
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Audience Size',
+    options: artistSizes,
+    param: 'audienceSize',
+    icon: 'Users',
+  },
+
+  {
+    title: 'Activity',
+    options: releaseFrequency,
+    param: 'releaseFrequency',
+    icon: 'Clock',
+  },
+];
+
+export const craftFilters: GemFilter[] = [
+  {
+    title: 'Materials',
+    options: craftMaterials,
+    param: 'materials',
+    icon: 'Hammer',
+    searchable: true,
+    showFilterChips: true,
+  },
+];
+
+export const graphicArtFilters: GemFilter[] = [
+  {
+    title: 'Medium',
+    options: artMediums,
+    param: 'medium',
+    icon: 'PenTool',
+    searchable: true,
+    showFilterChips: true,
+  },
+
+  {
+    title: 'Technique',
+    options: artTechniques,
+    param: 'technique',
+    icon: 'Brush',
+    searchable: true,
+  },
+];
+
+export const fiberArtFilters: GemFilter[] = [
+  {
+    title: 'Type',
+    options: clothingTypes,
+    param: 'type',
+    icon: 'Shirt',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Technique',
+    options: fiberTechniques,
+    param: 'technique',
+    icon: 'Scissors',
+    searchable: true,
+    showFilterChips: true,
+  },
+
+  {
+    title: 'Complexity',
+    options: fiberComplexity,
+    param: 'complexity',
+    icon: 'Stars',
+    searchable: true,
+  },
+  {
+    title: 'Materials',
+    options: fiberMaterials,
+    param: 'materials',
+    icon: 'Hammer',
+    searchable: true,
+    showFilterChips: true,
+  },
+];
+
+export const photographyFilters: GemFilter[] = [
+  {
+    title: 'Type',
+    options: photographyTypes,
+    param: 'photoType',
+    icon: 'Camera',
+    searchable: true,
+    showFilterChips: true,
+  },
+
+  {
+    title: 'Technique',
+    options: photographyTechniques,
+    param: 'technique',
+    icon: 'Settings',
+    searchable: true,
+  },
+  {
+    title: 'Subject',
+    options: photographySubjects,
+    param: 'subject',
+    icon: 'Focus',
+    searchable: true,
+  },
+];
+
+export const wordsFilters: GemFilter[] = [
+  {
+    title: 'Type',
+    options: writingTypes,
+    param: 'writingType',
+    icon: 'BookOpen',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Genre',
+    options: writingGenres,
+    param: 'genre',
+    icon: 'Library',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Style',
+    options: writingStyles,
+    param: 'style',
+    icon: 'PenTool',
+    searchable: true,
+  },
+  {
+    title: 'Theme',
+    options: writingThemes,
+    param: 'theme',
+    icon: 'Bookmark',
+    searchable: true,
+  },
+];
+
+export const movieFilters: GemFilter[] = [
+  {
+    title: 'Type',
+    options: filmTypes,
+    param: 'filmType',
+    icon: 'Clapperboard',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Genre',
+    options: filmGenres,
+    param: 'genre',
+    icon: 'Film',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Style',
+    options: filmStyles,
+    param: 'style',
+    icon: 'Video',
+    searchable: true,
+  },
+  {
+    title: 'Technique',
+    options: filmTechniques,
+    param: 'technique',
+    icon: 'Camera',
+    searchable: true,
+  },
+];
+
+export const digitalArtFilters: GemFilter[] = [
+  {
+    title: 'Type',
+    options: digitalArtTypes,
+    param: 'digitalType',
+    icon: 'Box',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Style',
+    options: digitalArtStyles,
+    param: 'style',
+    icon: 'Palette',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Software',
+    options: digitalArtSoftware,
+    param: 'software',
+    icon: 'Monitor',
+    searchable: true,
+  },
+  {
+    title: 'Category',
+    options: digitalArtCategories,
+    param: 'category',
+    icon: 'Layers',
+    searchable: true,
+  },
+];
+
+export const mixedMediaFilters: GemFilter[] = [
+  {
+    title: 'Type',
+    options: mixedMediaTypes,
+    param: 'mixedType',
+    icon: 'Combine',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Materials',
+    options: mixedMediaMaterials,
+    param: 'materials',
+    icon: 'Shapes',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Approach',
+    options: mixedMediaApproaches,
+    param: 'approach',
+    icon: 'Lightbulb',
+    searchable: true,
+  },
+  {
+    title: 'Space',
+    options: mixedMediaSpaces,
+    param: 'space',
+    icon: 'Box',
+    searchable: true,
+  },
+];
+
+export const contentCreationFilters: GemFilter[] = [
+  {
+    title: 'Type',
+    options: contentTypes,
+    param: 'contentType',
+    icon: 'Radio',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Topic',
+    options: contentTopics,
+    param: 'topic',
+    icon: 'BookOpen',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Format',
+    options: contentFormats,
+    param: 'format',
+    icon: 'Layout',
+    searchable: true,
+  },
+  {
+    title: 'Style',
+    options: contentStyles,
+    param: 'style',
+    icon: 'Sparkles',
+    searchable: true,
+  },
+];
+
+export const otherFilters: GemFilter[] = [
+  {
+    title: 'Medium',
+    options: otherMediums,
+    param: 'medium',
+    icon: 'Box',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Approach',
+    options: otherApproaches,
+    param: 'approach',
+    icon: 'Lightbulb',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Theme',
+    options: otherThemes,
+    param: 'theme',
+    icon: 'Compass',
+    searchable: true,
+  },
+  {
+    title: 'Complexity',
+    options: otherComplexity,
+    param: 'complexity',
+    icon: 'Network',
+    searchable: true,
   },
 ];
