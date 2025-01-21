@@ -364,6 +364,11 @@ export const releaseFrequency = [
 
 export const craftMaterials = [
   {
+    id: 'mixed-materials',
+    label: 'Mixed Materials',
+    description: 'Combining multiple materials',
+  },
+  {
     id: 'wood',
     label: 'Wood',
     description: 'Woodworking and carpentry',
@@ -382,6 +387,54 @@ export const craftMaterials = [
     id: 'glass',
     label: 'Glass',
     description: 'Glassblowing and forming',
+  },
+  {
+    id: 'leather',
+    label: 'Leather',
+    description: 'Leatherworking and crafting',
+  },
+  {
+    id: 'paper',
+    label: 'Paper',
+    description: 'Papercraft and origami',
+  },
+  {
+    id: 'stone',
+    label: 'Stone',
+    description: 'Stone carving and sculpture',
+  },
+  {
+    id: 'plastic',
+    label: 'Plastic',
+    description: 'Plastic molding and forming',
+  },
+  {
+    id: 'resin',
+    label: 'Resin',
+    description: 'Resin casting and art',
+  },
+] as FilterOption[];
+
+export const productionMethods = [
+  {
+    id: 'digital-fabrication',
+    label: 'Digital Fabrication',
+    description: '3D printing, CNC, laser cutting, digital design',
+  },
+  {
+    id: 'hand-crafted',
+    label: 'Hand Crafted',
+    description: 'Traditional tools and manual techniques',
+  },
+  {
+    id: 'molding-casting',
+    label: 'Molding & Casting',
+    description: 'Molds, casting, forming, and shaping',
+  },
+  {
+    id: 'assembly',
+    label: 'Assembly',
+    description: 'Combining components and materials',
   },
 ] as FilterOption[];
 
@@ -1469,7 +1522,15 @@ export const craftFilters: GemFilter[] = [
     title: 'Materials',
     options: craftMaterials,
     param: 'materials',
-    icon: 'Hammer',
+    icon: 'BrickWall',
+    searchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Production Method',
+    options: productionMethods,
+    param: 'productionMethod',
+    icon: 'Anvil',
     searchable: true,
     showFilterChips: true,
   },
