@@ -1,13 +1,5 @@
 import { faker } from '@faker-js/faker';
-import {
-  ArtGemProperties,
-  BaseGemProperties,
-  ContentGemProperties,
-  CraftGemProperties,
-  Gem,
-  GemType,
-  MusicGemProperties,
-} from '../../../gems/types/gems';
+import { BaseGemProperties, Gem, GemType, MusicGemProperties } from '../../../gems/types/gems';
 import { dummyArtists } from './artists';
 import { Category } from './categories';
 
@@ -30,9 +22,6 @@ const MUSIC_GENRES = [
   'drone',
   'industrial',
 ] as const;
-const ART_MEDIUMS = ['digital', 'oil', 'acrylic', 'watercolor', 'pencil', 'charcoal', 'mixed-media', 'sculpture'] as const;
-const CRAFT_MATERIALS = ['wood', 'metal', 'fabric', 'clay', 'glass', 'paper', 'yarn', 'leather'] as const;
-const CONTENT_PLATFORMS = ['blog', 'substack', 'medium', 'other'] as const;
 
 // Generate base gem properties
 function generateBaseGem(type: GemType): Omit<Gem, 'properties'> {
@@ -87,112 +76,6 @@ function generateMusicProperties(): MusicGemProperties {
   };
 }
 
-function generateArtProperties(): ArtGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    medium: faker.helpers.arrayElements(ART_MEDIUMS, { min: 1, max: 3 }),
-    dimensions: faker.datatype.boolean(0.7)
-      ? `${faker.number.int({ min: 20, max: 200 })}x${faker.number.int({ min: 20, max: 200 })}cm`
-      : undefined,
-    materials: faker.datatype.boolean(0.8) ? faker.helpers.arrayElements(CRAFT_MATERIALS, { min: 1, max: 3 }) : undefined,
-  };
-}
-
-function generateCraftProperties(): CraftGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    materials: faker.helpers.arrayElements(CRAFT_MATERIALS, { min: 1, max: 4 }),
-    dimensions: faker.datatype.boolean(0.6)
-      ? `${faker.number.int({ min: 10, max: 100 })}x${faker.number.int({ min: 10, max: 100 })}cm`
-      : undefined,
-    timeToMake: faker.datatype.boolean(0.7) ? `${faker.number.int({ min: 1, max: 100 })} hours` : undefined,
-  };
-}
-
-function generateContentProperties(): ContentGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    platform: faker.helpers.arrayElement(CONTENT_PLATFORMS),
-    url: `https://${faker.helpers.arrayElement(CONTENT_PLATFORMS)}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
-    readTime: faker.datatype.boolean(0.8) ? `${faker.number.int({ min: 3, max: 30 })} min read` : undefined,
-  };
-}
-
-function generateWordsProperties(): ContentGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    platform: 'blog',
-    url: `https://${faker.helpers.arrayElement(CONTENT_PLATFORMS)}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
-    readTime: faker.datatype.boolean(0.8) ? `${faker.number.int({ min: 3, max: 30 })} min read` : undefined,
-  };
-}
-
-function generateVideoProperties(): ContentGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    platform: 'blog',
-    url: `https://youtube.com/watch?v=${faker.string.alphanumeric(11)}`,
-    readTime: faker.datatype.boolean(0.8) ? `${faker.number.int({ min: 2, max: 20 })} min` : undefined,
-  };
-}
-
-function generatePhotographyProperties(): ArtGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    medium: ['photography'],
-    dimensions: faker.datatype.boolean(0.9)
-      ? `${faker.number.int({ min: 2000, max: 6000 })}x${faker.number.int({ min: 1500, max: 4000 })}px`
-      : undefined,
-    materials: faker.datatype.boolean(0.6)
-      ? faker.helpers.arrayElements(['digital', 'film', '35mm', 'medium format'], { min: 1, max: 2 })
-      : undefined,
-  };
-}
-
-function generateMixedMediaProperties(): ArtGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    medium: faker.helpers.arrayElements([...ART_MEDIUMS, 'photography', 'digital', 'video'], { min: 2, max: 4 }),
-    dimensions: faker.datatype.boolean(0.6)
-      ? `${faker.number.int({ min: 20, max: 200 })}x${faker.number.int({ min: 20, max: 200 })}cm`
-      : undefined,
-    materials: faker.helpers.arrayElements([...CRAFT_MATERIALS, 'digital media', 'found objects'], { min: 2, max: 5 }),
-  };
-}
-
-function generateOtherProperties(): ContentGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    platform: 'other',
-    url: `https://${faker.internet.domainName()}/${faker.helpers.slugify(faker.lorem.words(2))}`,
-    readTime: undefined,
-  };
-}
-
-function generateDigitalArtProperties(): ArtGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    medium: ['digital', 'video', 'photography'],
-    dimensions: faker.datatype.boolean(0.9)
-      ? `${faker.number.int({ min: 2000, max: 6000 })}x${faker.number.int({ min: 1500, max: 4000 })}px`
-      : undefined,
-  };
-}
-
-function generateFiberArtsProperties(): CraftGemProperties {
-  return {
-    ...generateBaseGemProperties(),
-    materials: faker.helpers.arrayElements(['yarn', 'wool', 'cotton', 'silk', 'linen', 'thread', 'embroidery floss', 'felt', 'fabric'], {
-      min: 1,
-      max: 4,
-    }),
-    dimensions: faker.datatype.boolean(0.7)
-      ? `${faker.number.int({ min: 20, max: 200 })}x${faker.number.int({ min: 20, max: 200 })}cm`
-      : undefined,
-    timeToMake: faker.datatype.boolean(0.6) ? `${faker.number.int({ min: 2, max: 100 })} hours` : undefined,
-  };
-}
-
 function generateGem(type: GemType): Gem {
   const baseGem = generateBaseGem(type);
   let properties;
@@ -201,37 +84,6 @@ function generateGem(type: GemType): Gem {
     case 'music':
       properties = generateMusicProperties();
       break;
-    case 'art':
-      properties = generateArtProperties();
-      break;
-    case 'craft':
-      properties = generateCraftProperties();
-      break;
-    case 'content-creation':
-      properties = generateContentProperties();
-      break;
-    case 'words':
-      properties = generateWordsProperties();
-      break;
-    case 'video':
-      properties = generateVideoProperties();
-      break;
-    case 'photography':
-      properties = generatePhotographyProperties();
-      break;
-    case 'mixed-media':
-      properties = generateMixedMediaProperties();
-      break;
-    case 'other':
-      properties = generateOtherProperties();
-      break;
-    case 'fiber-arts':
-      properties = generateFiberArtsProperties();
-      break;
-    case 'digital-art':
-      properties = generateDigitalArtProperties();
-      break;
-
     default:
       throw new Error(`Unsupported gem type: ${type}`);
   }
@@ -245,21 +97,7 @@ function generateGem(type: GemType): Gem {
 export function generateDummyGems(count = 100): Gem[] {
   return Array.from({ length: count }, (_, index) => {
     faker.seed(42 + index);
-
-    const type = faker.helpers.arrayElement([
-      'music',
-      'art',
-      'craft',
-      'content-creation',
-      'words',
-      'video',
-      'photography',
-      'mixed-media',
-      'other',
-      'fiber-arts',
-      'digital-art',
-    ] as const);
-    return generateGem(type);
+    return generateGem('music');
   });
 }
 
