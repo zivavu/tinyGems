@@ -22,7 +22,7 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           <NextLink href="/" className="flex gap-2 items-center" aria-label="tinyGems home">
             <Icons.Sparkles className="w-5 h-5 text-rose-500" aria-hidden="true" />
-            <Typography variant="h6" className="hidden content-center sm:block">
+            <Typography variant="h4" className="hidden content-center sm:block">
               tinyGems
             </Typography>
           </NextLink>

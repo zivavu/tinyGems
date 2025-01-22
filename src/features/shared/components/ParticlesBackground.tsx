@@ -1,0 +1,66 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
+export default function ParticlesBackground() {
+  const [isMounted, setIsMounted] = useState(false);
+  function getRandomTransform() {
+    const MAX_OFFSET = 20;
+    return `transform: translate(${Math.random() * MAX_OFFSET - MAX_OFFSET / 2}px, ${Math.random() * MAX_OFFSET - MAX_OFFSET / 2}px)`;
+  }
+
+  function getRandomSize() {
+    const MIN_SIZE = 7; // Minimum size of the particle
+    const MAX_SIZE = 20; // Maximum size of the particle
+    const size = Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE; // Random size between MIN_SIZE and MAX_SIZE
+    return `${size}px`; // Return size as a string with 'px'
+  }
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
+
+  return (
+    <div className="absolute inset-0 overflow-hidden">
+      {[...Array(60)].map((_, i) => {
+        const originX = Math.random() * 100;
+        const originY = Math.random() * 100;
+
+        const size = getRandomSize();
+        return (
+          <div
+            key={i}
+            className="absolute blur-sm bg-rose-400/30 dark:bg-rose-600/30 rounded-full"
+            style={{
+              left: `${originX}%`,
+              top: `${originY}%`,
+              width: size,
+              height: size,
+              animation: `float 6s ease-in-out infinite`,
+              animationDelay: `${i * 0.05}s`,
+            }}
+          />
+        );
+      })}
+      <style jsx>{`
+        @keyframes float {
+          0%,
+          100% {
+            transform: translate(0, 0);
+          }
+          25% {
+            ${getRandomTransform()};
+          }
+          50% {
+            ${getRandomTransform()};
+          }
+          75% {
+            ${getRandomTransform()};
+          }
+        }
+      `}</style>
+    </div>
+  );
+}

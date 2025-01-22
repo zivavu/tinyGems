@@ -1,67 +1,70 @@
-import { WrappedBackgroundCanvas } from '@/features/shared/components/BackgroundCanvas';
 import { Icons } from '@/features/shared/components/Icons';
+import ParticlesBackground from '@/features/shared/components/ParticlesBackground';
 import { Typography } from '@/features/shared/components/Typography';
 import NextLink from 'next/link';
 
 export default function Home() {
   return (
-    <main className="relative overflow-hidden min-h-screen bg-rose-50 dark:bg-gray-950">
-      <WrappedBackgroundCanvas />
+    <main className="bg-stone-50 dark:bg-[#0a0a0a]">
+      <ParticlesBackground />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-24 px-6 text-center">
-        <div className="max-w-4xl mx-auto">
-          <Typography
-            variant="h2"
-            className="mb-8 flex flex-col space-y-4 items-center justify-center gap-2 text-center font-bold bg-gradient-to-r from-rose-600 to-purple-500 dark:bg-gradient-to-r dark:from-rose-600 dark:to-purple-500 bg-clip-text text-transparent"
-          >
-            <span>tinyGems</span>
-            <span className="text-2xl md:text-4xl font-normal text-gray-700 dark:text-gray-300">Where Underground Art Shines</span>
+      <section className="min-h-screen flex items-center justify-center">
+        <div className="z-10 max-w-6xl space-y-12 mx-auto flex flex-col items-center justify-center text-center">
+          <div className="relative inline-block">
+            <div className="absolute -z-10 inset-0 bg-gradient-to-r from-rose-400 to-purple-900 blur-3xl opacity-20 rounded-full animate-pulse" />
+            <Typography variant="h2" className="z-10 font-bold">
+              tiny Art, for tiny People
+            </Typography>
+          </div>
+
+          <Typography variant="h6">
+            Welcome to <span className="text-rose-600 dark:text-rose-400">tinyGems</span>, a cozy corner of the internet, created for
+            basement, <span className="text-purple-500 dark:text-purple-400">underground artists</span> that value expression, realness and
+            passion - over algorithm mastering.
+            <br />
           </Typography>
 
-          <Typography variant="p" className="mb-12 text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            A sanctuary for basement dreamers, bedroom poets, and creators who craft magic in the shadows. No algorithms, no trends - just
-            raw, unfiltered artistry.
-          </Typography>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-wrap gap-6 justify-center items-center">
             <NextLink
               href="/discover"
-              className="px-8 py-4 flex items-center gap-2 text-lg font-medium text-white bg-rose-500 rounded-full shadow-lg transition-all hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-500 hover:shadow-xl hover:scale-105"
+              className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-white bg-gradient-to-br from-rose-600 to-purple-700 rounded-[2rem] shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all group"
             >
-              <Icons.Compass className="w-5 h-5" />
-              Explore Hidden Treasures
+              <Icons.Compass className="w-6 h-6 animate-spin-slow group-hover:animate-none" />
+              Seek for gems
             </NextLink>
             <NextLink
               href="/share"
-              className="px-8 py-4 flex items-center gap-2 text-lg font-medium text-rose-600 bg-transparent rounded-full border-2 border-rose-300 transition-all dark:text-rose-400 dark:border-rose-700 hover:bg-rose-50 dark:hover:bg-gray-800 hover:scale-105"
+              className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-stone-900 dark:text-stone-100 bg-white/90 dark:bg-stone-800/90 backdrop-blur-md border-2 border-stone-200 dark:border-stone-700 rounded-[2rem] shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all"
             >
-              <Icons.Upload className="w-5 h-5" />
-              Share Your Gem
+              <Icons.Upload className="w-6 h-6" />
+              Share your favorite music
             </NextLink>
           </div>
         </div>
       </section>
 
-      {/* Featured Artists Carousel */}
-      <section className="py-16 px-6 bg-white/50 dark:bg-gray-900/50 backdrop-blur-lg">
+      <section className=" px-6 relative pb-32">
         <div className="max-w-7xl mx-auto">
-          <Typography variant="h2" className="mb-12 text-3xl font-bold text-center">
-            Recently Discovered Gems
+          <Typography variant="h2" className="text-4xl font-bold text-center mb-12">
+            Discover the Hidden Gems
           </Typography>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((item) => (
-              <div
-                key={item}
-                className="group relative aspect-square bg-gray-100 dark:bg-gray-800 rounded-2xl overflow-hidden transition-transform hover:scale-105"
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-0 p-4 text-white">
-                  <h3 className="font-medium">Artist Name</h3>
-                  <p className="text-sm opacity-80">Experimental Folk</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div key={item} className="relative group aspect-square bg-stone-100 dark:bg-stone-900 rounded-3xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80"></div>
+                <div className="absolute bottom-0 left-0 p-6">
+                  <Typography variant="h3" className="text-2xl font-bold text-white mb-2">
+                    Artist Name
+                    <span className="block text-base font-normal text-rose-300">Experimental Jazz</span>
+                  </Typography>
+                  <Typography variant="p" className="text-purple-200">
+                    Pushing the boundaries of jazz with haunting melodies and primal rhythms.
+                  </Typography>
                 </div>
-                <div className="absolute top-2 right-2">
-                  <Icons.Heart className="w-6 h-6 text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute top-4 right-4 flex gap-2">
+                  <button className="p-2 bg-stone-900/30 text-white rounded-full backdrop-blur-md hover:bg-rose-500 transition-colors">
+                    <Icons.Heart className="w-6 h-6" />
+                  </button>
                 </div>
               </div>
             ))}
@@ -69,41 +72,72 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Philosophy Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-5xl mx-auto space-y-24">
-          <div className="relative flex flex-col md:flex-row items-center gap-10 group">
-            <div className="md:w-1/2">
-              <div className="relative -rotate-1 transform hover:rotate-0 transition-transform">
-                <div className="absolute inset-0 bg-rose-500/10 rounded-3xl transform -translate-x-4 -translate-y-4" />
-                <Icons.Sparkles className="w-full h-48 text-rose-500 dark:text-rose-400 p-8 bg-rose-100 dark:bg-gray-800 rounded-3xl" />
+      {/* Interactive Manifesto */}
+      <section className="py-32 px-6 bg-gradient-to-br from-rose-50 to-purple-50 dark:from-stone-900 dark:to-stone-800">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div className="space-y-12">
+              <div className="relative group">
+                <div className="absolute -inset-2 bg-rose-500/10 rounded-3xl" />
+                <div className="relative p-8 bg-white dark:bg-stone-900 rounded-3xl shadow-lg">
+                  <Icons.Users className="w-12 h-12 text-rose-600 dark:text-rose-400 mb-6" />
+                  <Typography variant="h3" className="text-3xl font-bold mb-4">
+                    No Algorithms, Just Humans
+                  </Typography>
+                  <Typography variant="p" className="text-stone-600 dark:text-stone-400">
+                    We&apos;ve replaced recommendation engines with real human passion. Every gem is hand-picked by our community of
+                    underground enthusiasts.
+                  </Typography>
+                </div>
+              </div>
+
+              <div className="relative group">
+                <div className="absolute -inset-2 bg-purple-500/10 rounded-3xl" />
+                <div className="relative p-8 bg-white dark:bg-stone-900 rounded-3xl shadow-lg">
+                  <Icons.Mic2 className="w-12 h-12 text-purple-600 dark:text-purple-400 mb-6" />
+                  <Typography variant="h3" className="text-3xl font-bold mb-4">
+                    Amplify the Unheard
+                  </Typography>
+                  <Typography variant="p" className="text-stone-600 dark:text-stone-400">
+                    Our platform gives voice to artists who dare to be different. No labels, no middlemen - just pure creative expression.
+                  </Typography>
+                </div>
               </div>
             </div>
-            <div className="md:w-1/2 space-y-4">
-              <Typography variant="h2" className="text-3xl font-bold">
-                Raw Beauty in Imperfection
-              </Typography>
-              <Typography variant="p" className="text-gray-600 dark:text-gray-400 text-lg">
-                We celebrate the crack in the voice, the slightly out-of-tune guitar, the handwritten lyric sheet. These are not flaws -
-                they&apos;re fingerprints of authenticity.
-              </Typography>
+
+            <div className="flex items-center">
+              <div className="relative w-full  bg-gradient-to-br from-rose-600 to-purple-500 rounded-[3rem] shadow-2xl">
+                <div className="absolute inset-0 bg-noise opacity-10" />
+                <div className="absolute inset-0 flex flex-col justify-center text-white">
+                  <Typography variant="p" className="text-lg leading-relaxed">
+                    We believe in art that&apos;s raw, unfiltered, and brave enough to exist outside the mainstream. Art that screams the
+                    unspoken truths, that dances to the rhythm of the unheard. Art that shatters illusions and awakens the soul. Our
+                    community thrives on discovering and nurturing these rare flames of genius. Join us in igniting a creative rebellion!
+                  </Typography>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Add similar blocks for other philosophy points with different layouts */}
         </div>
       </section>
 
-      {/* Interactive Manifesto */}
-      <section className="py-24 px-6 bg-rose-500/5 dark:bg-gray-800/50">
-        <div className="max-w-4xl mx-auto text-center">
-          <Icons.ScrollText className="w-16 h-16 mx-auto mb-8 text-rose-500 dark:text-rose-400" />
-          <div className="space-y-8 text-lg italic text-gray-700 dark:text-gray-300">
-            <p>We believe in music that leaves fingerprints on your soul</p>
-            <p>In art that values goosebumps over clickbait</p>
-            <p>In creators who trade perfection for passion</p>
-            <p className="text-2xl font-bold text-rose-600 dark:text-rose-400 not-italic">Join the Underground Renaissance</p>
-          </div>
+      {/* Glowing CTA */}
+      <section className="py-32 px-6 relative bg-stone-900 dark:bg-stone-950 text-center">
+        <div className="absolute inset-0 bg-noise opacity-10" />
+        <div className="relative max-w-4xl mx-auto">
+          <Typography variant="h2" className="text-5xl font-black text-white mb-8">
+            The Art of Rebellion
+          </Typography>
+          <Typography variant="p" className="text-xl text-stone-300 mb-12">
+            We are the misfits, the dreamers, the visionaries. We create to shatter illusions and ignite revolutions. Join us in forging a
+            new reality through the power of raw, untamed art.
+          </Typography>
+          <NextLink
+            href="/join"
+            className="inline-block px-12 py-4 text  bg-gradient-to-r from-rose-600 to-purple-700 rounded-[2rem] shadow-2xl hover:shadow-3xl hover:scale-105 transition-all animate-pulse-slow"
+          >
+            <Typography variant="h6">Show me the gems</Typography>
+          </NextLink>
         </div>
       </section>
     </main>

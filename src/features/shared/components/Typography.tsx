@@ -1,30 +1,30 @@
-import { type HTMLAttributes } from 'react';
+import { HTMLAttributes } from 'react';
 import { cn } from '../utils/dummy/utils';
 
 const variants = {
   h1: {
     tag: 'h1',
-    className: 'text-7xl font-bold text-gray-900 dark:text-gray-100',
+    className: 'text-6xl font-bold text-gray-900 dark:text-gray-100',
   },
   h2: {
     tag: 'h2',
-    className: 'text-6xl font-semibold text-gray-900 dark:text-gray-100',
+    className: 'text-5xl font-semibold text-gray-900 dark:text-gray-100',
   },
   h3: {
     tag: 'h3',
-    className: 'text-5xl font-medium text-gray-900 dark:text-gray-100',
+    className: 'text-4xl font-medium text-gray-900 dark:text-gray-100',
   },
   h4: {
     tag: 'h4',
-    className: 'text-4xl font-medium text-gray-900 dark:text-gray-100',
+    className: 'text-3xl font-medium text-gray-900 dark:text-gray-100',
   },
   h5: {
     tag: 'h5',
-    className: 'text-3xl font-medium text-gray-900 dark:text-gray-100',
+    className: 'text-2xl font-medium text-gray-900 dark:text-gray-100',
   },
   h6: {
     tag: 'h6',
-    className: 'text-2xl font-medium text-gray-900 dark:text-gray-100',
+    className: 'text-xl font-medium text-gray-900 dark:text-gray-100',
   },
 
   p: {
