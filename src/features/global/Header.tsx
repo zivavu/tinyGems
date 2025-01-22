@@ -1,6 +1,5 @@
 'use client';
 
-import { HEADER_HEIGHT } from '@/consts';
 import { ThemeToggle } from '@/features/global/ThemeToggle';
 import { Icons } from '@/features/shared/components/Icons';
 import { Button, Menu, MenuItems } from '@headlessui/react';
@@ -14,7 +13,7 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b border-rose-100 backdrop-blur-sm h-${HEADER_HEIGHT} dark:border-rose-900 bg-white/80 dark:bg-gray-950/80`}
+      className={`sticky top-0 z-50 py-2 w-full border-b border-rose-100 backdrop-blur-sm dark:border-rose-900 bg-white/80 dark:bg-gray-950/80`}
       role="banner"
       aria-label="Main navigation"
     >

@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { cn } from '../utils/dummy/utils';
 
-export default function ParticlesBackground() {
+export default function ParticlesBackground({ className }: { className?: string }) {
   const [isMounted, setIsMounted] = useState(false);
   function getRandomTransform() {
     const MAX_OFFSET = 20;
@@ -23,8 +24,8 @@ export default function ParticlesBackground() {
   if (!isMounted) return null;
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
-      {[...Array(60)].map((_, i) => {
+    <div className={cn('absolute inset-0 h-full overflow-hidden', className)}>
+      {[...Array(300)].map((_, i) => {
         const originX = Math.random() * 100;
         const originY = Math.random() * 100;
 
