@@ -15,6 +15,7 @@ const eslintConfig = [
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-unused-vars': 'warn',
       'no-console': 'warn',
+      '@typescript-eslint/no-namespace': 'off',
     },
   },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),

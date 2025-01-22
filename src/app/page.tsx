@@ -1,4 +1,4 @@
-import { BackgroundParticles } from '@/features/shared/components/BackgroundParticles';
+import { WrappedBackgroundCanvas } from '@/features/shared/components/BackgroundCanvas';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import NextLink from 'next/link';
@@ -6,7 +6,7 @@ import NextLink from 'next/link';
 export default function Home() {
   return (
     <main className="relative overflow-hidden min-h-screen bg-rose-50 dark:bg-gray-950">
-      <BackgroundParticles />
+      <WrappedBackgroundCanvas />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 px-6 text-center">
