@@ -5,8 +5,12 @@ import { GemBase, MusicGem } from '@/features/gems/types/gemsTypes';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faBandcamp, faSoundcloud, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { GemSource } from '../types/gems';
 
 interface GemCardProps {
   gem: GemBase;
@@ -68,11 +72,19 @@ export function GemCard({ gem, className }: GemCardProps) {
     if (gem.type !== 'music') return null;
     const musicGem = gem as MusicGem;
 
+    const iconsMap: Record<GemSource, IconProp> = {
+      bandcamp: faBandcamp,
+      soundcloud: faSoundcloud,
+      spotify: faSpotify,
+      youtube: faYoutube,
+      other: faLink,
+    } as const;
+
     return (
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex gap-2" role="list" aria-label="Available platforms">
           {musicGem.properties.platforms.map((platform) => (
-            <FontAwesomeIcon key={platform.url} icon={platform.platformIcon} />
+            <FontAwesomeIcon key={platform.url} icon={iconsMap[platform.name]} />
           ))}
         </div>
 

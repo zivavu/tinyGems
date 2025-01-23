@@ -1,10 +1,7 @@
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-
 export type GemCategory = 'music';
 
 export interface GemPlatform {
   name: string;
-  platformIcon: IconProp;
   url: string;
 }
 

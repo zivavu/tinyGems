@@ -86,7 +86,7 @@ function generateMusicProperties(): MusicGemProperties {
     const platformName = faker.helpers.arrayElement(MUSIC_PLATFORMS);
     return {
       name: platformName,
-      platformIcon: { iconName: 'bandcamp', prefix: 'fab' },
+      platformImage: `/${platformName}-logo.png`, // Assuming we have these images
       url: `https://${platformName}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
     };
   });
