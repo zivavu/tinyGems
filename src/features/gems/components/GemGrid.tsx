@@ -1,6 +1,6 @@
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
-import { GemBase } from '../types/gems';
+import { GemBase } from '../types/gemsTypes';
 import { GemCard } from './GemCard';
 
 interface GemGridProps {

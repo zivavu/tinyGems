@@ -2,10 +2,10 @@
 
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
-import { GemBase, MusicGem } from '../types/gems';
+import { BaseGem, MusicGem } from '../types/gems';
 
 interface GemMetadataProps {
-  gem: GemBase;
+  gem: BaseGem;
   className?: string;
 }
 

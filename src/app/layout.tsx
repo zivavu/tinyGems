@@ -5,6 +5,13 @@ import { ThemeProvider } from 'next-themes';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
+import { config, library } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+library.add(fab);
+
+config.autoAddCss = false;
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

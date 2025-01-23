@@ -1,6 +1,6 @@
 import { GemMedia } from '@/features/gems/components/GemMedia';
 import { GemMetadata } from '@/features/gems/components/GemMetadata';
-import { GemBase } from '@/features/gems/types/gems';
+import { GemBase } from '@/features/gems/types/gemsTypes';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';

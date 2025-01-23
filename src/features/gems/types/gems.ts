@@ -1,10 +1,8 @@
-import { Category } from '../../shared/utils/dummy/categories';
-
 export type GemSource = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
 
 export type GemType = 'music';
 
-export interface GemProperties {
+export interface GemBase {
   media: {
     images?: string[];
     coverImage?: string;
@@ -12,12 +10,12 @@ export interface GemProperties {
   };
 }
 
-export interface GemBase {
+export interface BaseGem {
   id: string;
   type: GemType;
   title: string;
   description?: string;
-  category: Category;
+  category: string;
   artist: {
     id: string;
     name: string;
@@ -33,17 +31,14 @@ export interface GemBase {
     name: string;
     avatar?: string;
   };
-  properties: GemProperties;
+  properties: GemBase;
 }
 
-export interface MusicGemProperties extends GemProperties {
-  source: 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube';
+// Specific properties for each type
+export interface MusicGem extends GemBase {
+  source: 'GemProperties' | 'spotify' | 'soundcloud' | 'youtube';
   sourceUrl: string;
   duration: string;
   releaseDate: string;
   genres: string[];
-}
-
-export interface MusicGem extends GemBase {
-  properties: MusicGemProperties;
 }

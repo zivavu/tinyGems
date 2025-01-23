@@ -1,22 +1,23 @@
 import { faker } from '@faker-js/faker';
-import { Artist } from '../../../artists/types/artist';
-import { categories } from './categories';
+import { Artist } from '../../../artists/types/artistTypes';
 
 // Set a consistent seed for reproducible data
 faker.seed(42);
 
 export function generateDummyArtists(count = 100): Artist[] {
-  return Array.from({ length: count }, (_, index) => {
-    // Use the index in the seed calculation to ensure each artist is unique but consistent
-    faker.seed(42 + index);
+  const artistsArray: Artist[] = [];
+
+  for (let i = 0; i < count; i++) {
+    faker.seed(42 + i);
 
     const name = faker.person.firstName() + ' ' + faker.helpers.arrayElement(['Project', 'Collective', 'Experience', '']);
-    const hasAvatar = faker.datatype.boolean(0.8); // 80% chance to have avatar
-    const hasBanner = faker.datatype.boolean(0.6); // 60% chance to have banner
-    const primaryCategory = faker.helpers.arrayElement(categories.filter((c) => c.slug !== 'all')).slug;
+    const hasAvatar = faker.datatype.boolean(0.9);
+    const hasBanner = faker.datatype.boolean(0.7);
 
-    return {
+    const artist: Artist = {
       id: faker.string.uuid(),
+      primaryCategory: 'music',
+      tags: [],
       name,
       ...(hasAvatar && {
         avatar: `https://i.pravatar.cc/300?u=${faker.string.uuid()}`,
@@ -41,10 +42,12 @@ export function generateDummyArtists(count = 100): Artist[] {
         following: faker.number.int({ min: 0, max: 200 }),
         gems: faker.number.int({ min: 1, max: 50 }),
       },
-      tags: faker.helpers.arrayElements(categories.find((c) => c.slug === primaryCategory)?.options || [], { min: 1, max: 4 }),
-      primaryCategory,
     };
-  });
+
+    artistsArray.push(artist);
+  }
+
+  return artistsArray;
 }
 
 // Export a constant set of dummy artists

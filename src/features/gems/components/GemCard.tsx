@@ -1,6 +1,7 @@
 'use client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { GemBase } from '@/features/gems/types/gems';
+import { GemBase, MusicGem } from '@/features/gems/types/gemsTypes';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
@@ -16,14 +17,14 @@ function GemPlaceholder({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'flex flex-col justify-center items-center w-full aspect-[3/2]',
+        'flex flex-col justify-center items-center w-full h-full',
         'bg-gradient-to-br from-gray-50/50 to-gray-100/50 dark:from-gray-900/20 dark:to-gray-800/20',
         className,
       )}
       role="img"
       aria-label="No preview available"
     >
-      <Icons.Image className="w-10 h-10 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+      <Icons.Sparkles size={120} className="text-gray-400 dark:text-gray-500" aria-hidden="true" />
       <Typography variant="small" className="mt-2 text-gray-500 dark:text-gray-400">
         No preview
       </Typography>
@@ -63,6 +64,61 @@ export function GemCard({ gem, className }: GemCardProps) {
 
   const mainImage = gem.properties.media.coverImage || gem.properties.media.images?.[0];
 
+  function MusicProperties() {
+    if (gem.type !== 'music') return null;
+    const musicGem = gem as MusicGem;
+
+    return (
+      <div className="flex flex-col gap-2 mb-4">
+        <div className="flex gap-2" role="list" aria-label="Available platforms">
+          {musicGem.properties.platforms.map((platform) => (
+            <FontAwesomeIcon key={platform.url} icon={platform.platformIcon} />
+          ))}
+        </div>
+
+        {/* Properties tags section */}
+        <div className="flex flex-wrap gap-1.5" role="list" aria-label="Music properties">
+          {musicGem.properties.genres.map((genre) => (
+            <span
+              key={genre}
+              className="px-2 py-0.5 text-xs text-indigo-600 bg-indigo-50 rounded-full dark:bg-indigo-900/30 dark:text-indigo-300"
+              role="listitem"
+            >
+              {genre}
+            </span>
+          ))}
+          {musicGem.properties.languages?.map((language) => (
+            <span
+              key={language}
+              className="px-2 py-0.5 text-xs text-emerald-600 bg-emerald-50 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300"
+              role="listitem"
+            >
+              {language}
+            </span>
+          ))}
+          {musicGem.properties.moods?.map((mood) => (
+            <span
+              key={mood}
+              className="px-2 py-0.5 text-xs text-amber-600 bg-amber-50 rounded-full dark:bg-amber-900/30 dark:text-amber-300"
+              role="listitem"
+            >
+              {mood}
+            </span>
+          ))}
+          {musicGem.properties.lyrics?.map((lyric) => (
+            <span
+              key={lyric}
+              className="px-2 py-0.5 text-xs text-rose-600 bg-rose-50 rounded-full dark:bg-rose-900/30 dark:text-rose-300"
+              role="listitem"
+            >
+              {lyric}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <CardWrapper>
       <div
@@ -95,6 +151,8 @@ export function GemCard({ gem, className }: GemCardProps) {
           </Typography>
         </div>
 
+        <MusicProperties />
+
         <div className="flex flex-wrap gap-1 mb-4" role="list" aria-label="Tags">
           {gem.tags.map((tag) => (
             <span
@@ -108,8 +166,6 @@ export function GemCard({ gem, className }: GemCardProps) {
         </div>
 
         <StatsSection />
-
-        {gem.artist.avatar && <Image src={gem.artist.avatar} alt="" width={64} height={64} className="object-cover" />}
       </div>
     </CardWrapper>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { GemBase, GemType } from '@/features/gems/types/gems';
+import { GemBase } from '@/features/gems/types/gemsTypes';
 import { Icons } from '@/features/shared/components/Icons';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import Image from 'next/image';
@@ -18,7 +18,7 @@ export function GemMedia({ gem, className }: GemMediaProps) {
     return (
       <div className={cn('bg-gray-900 aspect-[2/1]', className)} role="img" aria-label={`${gem.type} placeholder`}>
         <div className="flex justify-center items-center h-full">
-          <GemTypeIcon type={gem.type} className="w-20 h-20 text-white/20" aria-hidden="true" />
+          <Icons.Sparkles className="w-20 h-20 text-white/20" aria-hidden="true" />
         </div>
       </div>
     );
@@ -29,23 +29,4 @@ export function GemMedia({ gem, className }: GemMediaProps) {
       <Image src={mainImage} alt={`${gem.title} by ${gem.artist.name}`} fill className="object-cover" />
     </div>
   );
-}
-
-// Helper component for type-specific icons
-function GemTypeIcon({ type, className }: { type: GemType; className?: string }) {
-  const Icon = {
-    music: Icons.Music,
-    art: Icons.Image,
-    craft: Icons.Hammer,
-    'content-creation': Icons.FileText,
-    words: Icons.FileText,
-    video: Icons.Video,
-    photography: Icons.Camera,
-    'mixed-media': Icons.Image,
-    other: Icons.FileText,
-    'fiber-arts': Icons.Scissors,
-    'digital-art': Icons.Monitor,
-  }[type];
-
-  return <Icon className={className} aria-hidden="true" />;
 }
