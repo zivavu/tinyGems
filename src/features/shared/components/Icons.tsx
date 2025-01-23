@@ -2,6 +2,7 @@ import {
   Album,
   Anvil,
   ArrowRight,
+  AudioLines,
   Bookmark,
   BookOpen,
   Box,
@@ -60,6 +61,7 @@ import {
   Shirt,
   Siren,
   SlidersHorizontal,
+  Smile,
   Sparkles,
   Stars,
   Sun,
@@ -74,6 +76,8 @@ import {
 
 export const Icons = {
   Menu,
+  Smile,
+  AudioLines,
   Search,
   ChevronUp,
   Album,

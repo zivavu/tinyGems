@@ -101,10 +101,10 @@ export const languages = [
 export type FilterOption = {
   id: string;
   label: string;
-  description: string;
+  description?: string;
 };
 
-export const artistSizes = [
+export const audienceSizes = [
   {
     id: 'microscopic',
     label: 'Microscopic',
@@ -120,12 +120,6 @@ export const artistSizes = [
   },
   { id: 'giant', label: 'Giant', description: 'More than 100k followers' },
 ] as FilterOption[];
-
-export type MusicGenre = FilterOption & {
-  id: string;
-  label: string;
-  description: string;
-};
 
 export const musicGenres: FilterOptionsGroup[] = [
   {
@@ -326,6 +320,58 @@ export const musicGenres: FilterOptionsGroup[] = [
   },
 ] as const;
 
+export const genderOptions: FilterOption[] = [
+  { id: 'male', label: 'Male' },
+  { id: 'female', label: 'Female' },
+  { id: 'non-binary', label: 'Non-Binary' },
+  { id: 'other', label: 'Other' },
+  { id: 'group', label: 'Group' },
+] as const;
+
+export const platformOptions: FilterOption[] = [
+  { id: 'youtube', label: 'YouTube' },
+  { id: 'tiktok', label: 'TikTok' },
+  { id: 'soundcloud', label: 'SoundCloud' },
+  { id: 'streaming-platforms', label: 'Streaming Platforms' },
+  { id: 'bandcamp', label: 'Bandcamp' },
+  { id: 'instagram', label: 'Instagram' },
+] as const;
+
+export const bpmOptions: FilterOption[] = [
+  { id: '60-90', label: '60-90 BPM', description: 'Downtempo' },
+  { id: '90-120', label: '90-120 BPM', description: 'Mid-tempo' },
+  { id: '120-160', label: '120-160 BPM', description: 'Danceable' },
+  { id: '160+', label: '160+ BPM', description: 'High energy' },
+] as const;
+
+export const moodOptions: FilterOption[] = [
+  { id: 'euphoric', label: 'Euphoric', description: 'Transcendent waves of joy' },
+  { id: 'melancholic', label: 'Melancholic', description: 'Beautiful shades of sadness' },
+  { id: 'ethereal', label: 'Ethereal', description: 'Dreamy and otherworldly' },
+  { id: 'nostalgic', label: 'Nostalgic', description: 'Bittersweet memories and longing' },
+  { id: 'cathartic', label: 'Cathartic', description: 'Raw emotional release' },
+  { id: 'ecstatic', label: 'Ecstatic', description: 'Pure uninhibited bliss' },
+  { id: 'energetic', label: 'Energetic', description: 'High-powered and dynamic' },
+  { id: 'dark', label: 'Dark', description: 'Brooding and mysterious' },
+  { id: 'peaceful', label: 'Peaceful', description: 'Calming and serene' },
+  { id: 'aggressive', label: 'Aggressive', description: 'Intense and powerful' },
+  { id: 'playful', label: 'Playful', description: 'Fun and lighthearted' },
+  { id: 'atmospheric', label: 'Atmospheric', description: 'Immersive soundscapes' },
+  { id: 'hypnotic', label: 'Hypnotic', description: 'Mesmerizing and trance-like' },
+  { id: 'uplifting', label: 'Uplifting', description: 'Inspiring and motivational' },
+] as const;
+
+export const lyricsOptions: FilterOption[] = [
+  { id: 'no-lyrics', label: 'No Lyrics', description: 'Instrumental tracks' },
+  { id: 'social-issues', label: 'Social Issues', description: 'Lyrics addressing social topics' },
+  { id: 'meme', label: 'Meme', description: 'Irony and sarcasm' },
+  { id: 'existential', label: 'Existential', description: 'Deep philosophical lyrics' },
+  { id: 'party', label: 'Party', description: 'Lyrics suitable for celebrations and gatherings' },
+  { id: 'love', label: 'Love', description: 'Lyrics about love and relationships' },
+  { id: 'storytelling', label: 'Storytelling', description: 'Lyrics that tell a narrative or story' },
+  { id: 'personal-growth', label: 'Personal Growth', description: 'Lyrics about self-improvement and introspection' },
+] as const;
+
 export const musicFilters: FilterInputProps[] = [
   {
     title: 'Genre',
@@ -336,10 +382,43 @@ export const musicFilters: FilterInputProps[] = [
     showFilterChips: true,
   },
   {
-    title: 'Artist Size',
-    options: artistSizes,
-    param: 'artist-size',
+    title: 'BPM',
+    options: bpmOptions,
+    param: 'bpm',
+    icon: 'AudioLines',
+    isSearchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Artist Gender',
+    options: genderOptions,
+    param: 'gender',
+    icon: 'User',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Audience Size',
+    options: audienceSizes,
+    param: 'audience-size',
     icon: 'Users',
+    isSearchable: true,
+    showFilterChips: true,
+  },
+
+  {
+    title: 'Mood',
+    options: moodOptions,
+    param: 'mood',
+    icon: 'Smile',
+    isSearchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Lyrics',
+    options: lyricsOptions,
+    param: 'lyrics',
+    icon: 'ScrollText',
     isSearchable: true,
     showFilterChips: true,
   },

@@ -5,6 +5,7 @@ import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { cn } from '@/features/shared/utils/dummy/utils';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -23,14 +24,11 @@ export default async function GemPage({ params }: GemPageProps) {
   return (
     <main className="container px-4 py-8 mx-auto" role="main" aria-label={`Viewing ${gem.title}`}>
       <div className="grid gap-8 lg:grid-cols-[2fr,1fr]">
-        {/* Left Column - Media and Description */}
         <div className="space-y-8">
-          {/* Media Section */}
           <div className="overflow-hidden bg-gray-100 rounded-2xl dark:bg-gray-900">
             <GemMedia gem={gem} />
           </div>
 
-          {/* Description Section */}
           <div className="space-y-6">
             <Typography variant="h1" className="break-words">
               {gem.title}
@@ -56,7 +54,6 @@ export default async function GemPage({ params }: GemPageProps) {
           </div>
         </div>
 
-        {/* Right Column - Artist Info and Stats */}
         <div className="space-y-8">
           {/* Artist Card */}
           <div className="p-6 bg-white rounded-2xl shadow-sm dark:bg-gray-900 dark:border dark:border-gray-800">
@@ -66,10 +63,7 @@ export default async function GemPage({ params }: GemPageProps) {
               aria-label={`View ${gem.artist.name}'s profile`}
             >
               <div className="overflow-hidden relative w-16 h-16 bg-gray-200 rounded-full dark:bg-gray-800">
-                {gem.artist.avatar && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={gem.artist.avatar} alt="" className="object-cover" />
-                )}
+                {gem.artist.avatar && <Image fill src={gem.artist.avatar} alt="" className="object-cover" />}
               </div>
               <div>
                 <Typography variant="h3" className="group-hover:text-rose-500">
