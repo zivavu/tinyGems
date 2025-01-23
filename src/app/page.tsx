@@ -8,7 +8,7 @@ export default function Home() {
     <main className="relative bg-stone-50 dark:bg-[#0a0a0a]">
       <ParticlesBackground />
 
-      <section className="min-h-screen bg-gradient-to-b from-rose-50 to-purple-50 dark:from-black/90 dark:to-stone-950 flex items-center justify-center">
+      <section className="min-h-screen bg-gradient-to-b from-rose-50 to-purple-50 dark:from-black/100 dark:to-stone-950 flex items-center justify-center">
         <div className="z-10 max-w-6xl space-y-12 mx-auto flex flex-col items-center justify-center text-center">
           <div className="relative inline-block">
             <div className="absolute -z-10 inset-0 bg-gradient-to-r from-rose-400 to-purple-900 blur-3xl opacity-20 rounded-full animate-pulse" />
@@ -26,7 +26,7 @@ export default function Home() {
 
           <div className="flex flex-wrap gap-6 justify-center items-center">
             <NextLink
-              href="/discover"
+              href="/seek?category=music"
               className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-white bg-gradient-to-br from-rose-600 to-purple-700 rounded-[2rem] shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all group"
             >
               <Icons.Compass className="w-6 h-6 animate-spin-slow group-hover:animate-none" />
@@ -97,8 +97,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative w-full shadow-2xl p-8">
-            <div className="absolute inset-0 bg-noise opacity-10" />
+          <div className="p-8">
             <Typography variant="p" className="text-lg leading-relaxed text-white relative">
               We believe in art that&apos;s raw, unfiltered, and brave enough to exist outside the mainstream. Art that screams the unspoken
               truths, that dances to the rhythm of the unheard. Art that shatters illusions and awakens the soul. Our community thrives on
@@ -107,8 +106,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="py-32 px-6 relative text-center bg-gradient-to-b from-rose-50/90 via-rose-50/50 to-purple-50/30 dark:from-black/100 dark:via-black/50 dark:to-black/100">
-        <div className="relative max-w-4xl mx-auto">
+
+      <section className="py-32 px-6 text-center bg-gradient-to-b from-rose-50/90 via-rose-50/50 to-purple-50/30 dark:from-black dark:via-black/50 dark:to-black/100">
+        <div className="max-w-4xl mx-auto">
           <Typography variant="h2" className="text-5xl font-black text-white mb-8">
             The Art of Rebellion
           </Typography>

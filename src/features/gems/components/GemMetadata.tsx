@@ -1,40 +1,22 @@
 'use client';
 
-import { Gem, isArtGem, isCraftGem, isMusicGem } from '@/features/gems/types/gems';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
+import { GemBase, MusicGem } from '../types/gems';
 
 interface GemMetadataProps {
-  gem: Gem;
+  gem: GemBase;
   className?: string;
 }
 
 export function GemMetadata({ gem, className }: GemMetadataProps) {
-  if (isMusicGem(gem)) {
+  if (gem.type === 'music') {
+    const musicGem = gem as MusicGem;
     return (
       <div className={cn('grid gap-4 sm:grid-cols-2', className)} role="complementary" aria-label="Music details">
-        <MetadataItem label="Duration" value={gem.properties.duration} />
-        <MetadataItem label="Release Date" value={new Date(gem.properties.releaseDate).toLocaleDateString()} />
-        <MetadataItem label="Genres" value={gem.properties.genres.join(', ')} className="sm:col-span-2" />
-      </div>
-    );
-  }
-
-  if (isArtGem(gem)) {
-    return (
-      <div className={cn('grid gap-4 sm:grid-cols-2', className)} role="complementary" aria-label="Artwork details">
-        <MetadataItem label="Medium" value={gem.properties.medium.join(', ')} className="sm:col-span-2" />
-        {gem.properties.dimensions && <MetadataItem label="Dimensions" value={gem.properties.dimensions} />}
-      </div>
-    );
-  }
-
-  if (isCraftGem(gem)) {
-    return (
-      <div className={cn('grid gap-4 sm:grid-cols-2', className)} role="complementary" aria-label="Craft details">
-        <MetadataItem label="Materials" value={gem.properties.materials.join(', ')} className="sm:col-span-2" />
-        {gem.properties.dimensions && <MetadataItem label="Dimensions" value={gem.properties.dimensions} />}
-        {gem.properties.timeToMake && <MetadataItem label="Time to Make" value={gem.properties.timeToMake} />}
+        <MetadataItem label="Duration" value={musicGem.properties.duration} />
+        <MetadataItem label="Release Date" value={new Date(musicGem.properties.releaseDate).toLocaleDateString()} />
+        <MetadataItem label="Genres" value={musicGem.properties.genres.join(', ')} className="sm:col-span-2" />
       </div>
     );
   }

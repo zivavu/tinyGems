@@ -1,6 +1,6 @@
 'use client';
 
-import { Gem } from '@/features/gems/types/gems';
+import { GemBase } from '@/features/gems/types/gems';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface GemCardProps {
-  gem: Gem;
+  gem: GemBase;
   className?: string;
 }
 
@@ -68,9 +68,6 @@ export function GemCard({ gem, className }: GemCardProps) {
       <div
         className={cn('overflow-hidden', {
           'aspect-square': gem.type === 'music' || gem.type === 'craft',
-          'aspect-video': gem.type === 'video',
-          'aspect-[4/3]': gem.type === 'art',
-          'aspect-[3/2]': gem.type === 'content-creation' || gem.type === 'words',
         })}
         role="img"
         aria-label={`Preview image for ${gem.title}`}
@@ -111,6 +108,8 @@ export function GemCard({ gem, className }: GemCardProps) {
         </div>
 
         <StatsSection />
+
+        {gem.artist.avatar && <Image src={gem.artist.avatar} alt="" width={64} height={64} className="object-cover" />}
       </div>
     </CardWrapper>
   );

@@ -1,5 +1,6 @@
 import { GemMedia } from '@/features/gems/components/GemMedia';
 import { GemMetadata } from '@/features/gems/components/GemMetadata';
+import { GemBase } from '@/features/gems/types/gems';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
@@ -13,7 +14,7 @@ interface GemPageProps {
 
 export default async function GemPage({ params }: GemPageProps) {
   const resolvedParams = await params;
-  const gem = dummyGems.find((g) => g.id === resolvedParams.id);
+  const gem: GemBase | undefined = dummyGems.find((g) => g.id === resolvedParams.id);
 
   if (!gem) {
     notFound();

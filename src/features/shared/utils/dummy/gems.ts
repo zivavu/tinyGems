@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { BaseGemProperties, Gem, GemType, MusicGemProperties } from '../../../gems/types/gems';
+import { GemBase, GemProperties, GemType, MusicGemProperties } from '../../../gems/types/gems';
 import { dummyArtists } from './artists';
 import { Category } from './categories';
 
@@ -24,7 +24,7 @@ const MUSIC_GENRES = [
 ] as const;
 
 // Generate base gem properties
-function generateBaseGem(type: GemType): Omit<Gem, 'properties'> {
+function generateBaseGem(type: GemType): Omit<GemBase, 'properties'> {
   const randomArtist = faker.helpers.arrayElement(dummyArtists);
 
   return {
@@ -53,7 +53,7 @@ function generateBaseGem(type: GemType): Omit<Gem, 'properties'> {
   };
 }
 
-function generateBaseGemProperties(): BaseGemProperties {
+function generateBaseGemProperties(): GemProperties {
   return {
     media: {
       images: faker.datatype.boolean(0.8)
@@ -76,17 +76,9 @@ function generateMusicProperties(): MusicGemProperties {
   };
 }
 
-function generateGem(type: GemType): Gem {
+function generateGem(type: GemType): GemBase {
   const baseGem = generateBaseGem(type);
-  let properties;
-
-  switch (type) {
-    case 'music':
-      properties = generateMusicProperties();
-      break;
-    default:
-      throw new Error(`Unsupported gem type: ${type}`);
-  }
+  const properties = generateMusicProperties();
 
   return {
     ...baseGem,
@@ -94,7 +86,7 @@ function generateGem(type: GemType): Gem {
   };
 }
 
-export function generateDummyGems(count = 100): Gem[] {
+export function generateDummyGems(count = 100): GemBase[] {
   return Array.from({ length: count }, (_, index) => {
     faker.seed(42 + index);
     return generateGem('music');

@@ -1,32 +1,31 @@
 'use client';
 
-import { Button } from '@/features/shared/components/buttons/Button';
-import { Icons } from '@/features/shared/components/Icons';
-import { Select } from '@/features/shared/components/Select';
-import { Typography } from '@/features/shared/components/Typography';
+import { useParamFilters } from '@/features/gems/components/TagSelector/hooks';
 import { useState } from 'react';
 import { cn } from '../utils/dummy/utils';
+import { Icons } from './Icons';
+import { Select } from './Select';
+import { Typography } from './Typography';
+import { Button } from './buttons/Button';
 
-interface FilterOption {
+export interface FilterOption {
   id: string;
   label: string;
   description?: string;
   Icon?: React.ComponentType<{ className?: string }>;
 }
 
-interface FilterGroup {
+export interface FilterOptionsGroup {
+  id: string;
   name: string;
   options: FilterOption[];
 }
 
-interface FilterInputProps {
+export interface FilterInputProps {
   title: string;
   icon?: keyof typeof Icons;
-  options: FilterOption[] | FilterGroup[];
-  selected: string[];
-  setSelected: (value: string[]) => void;
-  count?: number;
-  isGrouped?: boolean;
+  options: FilterOption[] | FilterOptionsGroup[];
+  param: string;
   isSearchable?: boolean;
   showFilterChips?: boolean;
   className?: string;
@@ -104,45 +103,47 @@ function SelectedChips({
   );
 }
 
-export function FilterSelect({
-  title,
-  icon,
-  options,
-  selected,
-  setSelected,
-  count,
-  isGrouped = false,
-  isSearchable = false,
-  showFilterChips = false,
-  className,
-}: FilterInputProps) {
+export function FilterSelect({ title, icon, options, param, isSearchable = false, showFilterChips = false, className }: FilterInputProps) {
   const [query, setQuery] = useState('');
+  const { getSelectedParams, handleParamChange } = useParamFilters();
+
+  const count = getSelectedParams(param).length;
+
+  const selected = getSelectedParams(param);
+  function setSelected(newValues: string[]) {
+    handleParamChange(param, newValues);
+  }
 
   const toggleFilter = (option: FilterOption) => {
     const newSelection = selected.includes(option.id) ? selected.filter((id) => id !== option.id) : [...selected, option.id];
     setSelected(newSelection);
   };
 
+  const isGrouped = (options as FilterOptionsGroup[]).some((option) => option?.options?.length > 0);
+
   const filteredOptions = isGrouped
-    ? (options as FilterGroup[])
+    ? (options as FilterOptionsGroup[])
         .map((group) => ({
+          id: group.id,
           name: group.name,
           options: group.options.filter(
             (option) =>
-              option.label?.toLowerCase().includes(query.toLowerCase()) ||
-              (option.description?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
+              option?.label?.toLowerCase().includes(query.toLowerCase()) ||
+              (option?.description?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
               !query,
           ),
         }))
         .filter((group) => group.options.length > 0)
     : (options as FilterOption[]).filter(
         (option) =>
-          option.label?.toLowerCase().includes(query.toLowerCase()) ||
-          (option.description?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
+          option?.label?.toLowerCase().includes(query.toLowerCase()) ||
+          (option?.description?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
           !query,
       );
 
-  const allOptions: FilterOption[] = isGrouped ? (options as FilterGroup[]).flatMap((group) => group.options) : (options as FilterOption[]);
+  const allOptions: FilterOption[] = isGrouped
+    ? (options as FilterOptionsGroup[]).flatMap((group) => group.options)
+    : (options as FilterOption[]);
 
   const selectedOptions = allOptions.filter((option) => selected.includes(option.id));
 
@@ -175,8 +176,8 @@ export function FilterSelect({
 
         <div className="overflow-auto max-h-[400px] space-y-2">
           {isGrouped ? (
-            (filteredOptions as FilterGroup[]).map((group) => (
-              <div key={group.name} className="space-y-1">
+            (filteredOptions as FilterOptionsGroup[]).map((group) => (
+              <div key={group.id} className="space-y-1">
                 <div className="sticky top-0 px-2 py-1 text-xs font-semibold text-gray-500 backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 dark:text-gray-400">
                   {group.name}
                 </div>
@@ -209,5 +210,3 @@ export function FilterSelect({
     </Select>
   );
 }
-
-export type { FilterGroup, FilterInputProps, FilterOption };

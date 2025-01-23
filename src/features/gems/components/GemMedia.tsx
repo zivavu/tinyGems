@@ -1,12 +1,12 @@
 'use client';
 
-import { Gem, GemType } from '@/features/gems/types/gems';
+import { GemBase, GemType } from '@/features/gems/types/gems';
 import { Icons } from '@/features/shared/components/Icons';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import Image from 'next/image';
 
 interface GemMediaProps {
-  gem: Gem;
+  gem: GemBase;
   className?: string;
 }
 

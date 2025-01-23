@@ -11,10 +11,10 @@ export default function ParticlesBackground({ className }: { className?: string 
   }
 
   function getRandomSize() {
-    const MIN_SIZE = 7; // Minimum size of the particle
-    const MAX_SIZE = 20; // Maximum size of the particle
-    const size = Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE; // Random size between MIN_SIZE and MAX_SIZE
-    return `${size}px`; // Return size as a string with 'px'
+    const MIN_SIZE = 7;
+    const MAX_SIZE = 20;
+    const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
+    return `${size}px`;
   }
 
   useEffect(() => {

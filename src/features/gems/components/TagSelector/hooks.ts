@@ -27,5 +27,15 @@ export function useParamFilters() {
     router.push(`/seek?${params.toString()}`, { scroll: false });
   };
 
-  return { handleParamChange, getSelectedParams, clearAllParams };
+  const getAllParams = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    return params;
+  };
+
+  const isAnyParamSelected = () => {
+    const params = getAllParams();
+    return Object.values(params).some((value) => value.length > 0);
+  };
+
+  return { handleParamChange, getSelectedParams, clearAllParams, getAllParams, isAnyParamSelected };
 }
