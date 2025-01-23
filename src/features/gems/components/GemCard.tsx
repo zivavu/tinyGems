@@ -1,7 +1,7 @@
 'use client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { GemBase, MusicGem } from '@/features/gems/types/gemsTypes';
+import { GemBase, GemPlatformName, MusicGem } from '@/features/gems/types/gemsTypes';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
@@ -10,7 +10,6 @@ import { faBandcamp, faSoundcloud, faSpotify, faYoutube } from '@fortawesome/fre
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
-import { GemSource } from '../types/gems';
 
 interface GemCardProps {
   gem: GemBase;
@@ -72,7 +71,7 @@ export function GemCard({ gem, className }: GemCardProps) {
     if (gem.type !== 'music') return null;
     const musicGem = gem as MusicGem;
 
-    const iconsMap: Record<GemSource, IconProp> = {
+    const iconsMap: Record<GemPlatformName, IconProp> = {
       bandcamp: faBandcamp,
       soundcloud: faSoundcloud,
       spotify: faSpotify,

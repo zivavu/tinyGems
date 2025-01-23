@@ -1,5 +1,3 @@
-export type GemSource = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
-
 export type GemType = 'music';
 
 export interface GemBase {

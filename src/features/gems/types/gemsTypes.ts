@@ -1,7 +1,9 @@
+export type GemPlatformName = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
+
 export type GemCategory = 'music';
 
 export interface GemPlatform {
-  name: string;
+  name: GemPlatformName;
   url: string;
 }
 

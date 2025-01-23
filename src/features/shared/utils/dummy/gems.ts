@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { GemBase, GemCategory, GemPlatform, GemProperties, MusicGemProperties } from '../../../gems/types/gemsTypes';
+import { GemBase, GemCategory, GemPlatform, GemPlatformName, GemProperties, MusicGemProperties } from '../../../gems/types/gemsTypes';
 import { dummyArtists } from './artists';
 
 faker.seed(42);
@@ -83,10 +83,9 @@ function generateBaseGemProperties(): GemProperties {
 function generateMusicProperties(): MusicGemProperties {
   const platformCount = faker.number.int({ min: 1, max: 3 });
   const platforms: GemPlatform[] = Array.from({ length: platformCount }, () => {
-    const platformName = faker.helpers.arrayElement(MUSIC_PLATFORMS);
+    const platformName = faker.helpers.arrayElement(MUSIC_PLATFORMS) as GemPlatformName;
     return {
       name: platformName,
-      platformImage: `/${platformName}-logo.png`, // Assuming we have these images
       url: `https://${platformName}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
     };
   });
