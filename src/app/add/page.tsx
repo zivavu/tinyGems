@@ -7,6 +7,9 @@ import { Typography } from '@/features/shared/components/Typography';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -101,6 +104,8 @@ export default function AddGemPage() {
   };
 
   const onSubmit = async () => {};
+
+  const [showCalendar, setShowCalendar] = useState(false);
 
   return (
     <main className="container px-4 py-8 mx-auto max-w-4xl" role="main">
@@ -273,15 +278,41 @@ export default function AddGemPage() {
                 <label htmlFor="releaseDate" className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                   Release Date
                 </label>
-                <input
-                  {...register('releaseDate')}
-                  type="date"
-                  id="releaseDate"
-                  className={cn(
-                    'w-full px-4 py-2 rounded-lg border-gray-300 focus:ring-rose-500 focus:border-rose-500 dark:bg-gray-700 dark:border-gray-600',
-                    errors.releaseDate && 'border-red-500 focus:ring-red-500 focus:border-red-500',
+                <div className="relative">
+                  <input
+                    {...register('releaseDate')}
+                    type="text"
+                    id="releaseDate"
+                    readOnly
+                    placeholder="Select a date"
+                    className={cn(
+                      'w-full px-4 py-2 rounded-lg border-gray-300 focus:ring-rose-500 focus:border-rose-500 dark:bg-gray-700 dark:border-gray-600 cursor-pointer',
+                      errors.releaseDate && 'border-red-500 focus:ring-red-500 focus:border-red-500',
+                    )}
+                    onClick={() => setShowCalendar(!showCalendar)}
+                  />
+                  {showCalendar && (
+                    <div className="absolute z-10 mt-1">
+                      <Calendar
+                        onChange={(date) => {
+                          if (date instanceof Date) {
+                            const formattedDate = date.toISOString().split('T')[0];
+                            setValue('releaseDate', formattedDate, {
+                              shouldValidate: false,
+                              shouldTouch: false,
+                              shouldDirty: true,
+                            });
+                            setShowCalendar(false);
+                          }
+                        }}
+                        value={watch('releaseDate') ? new Date(watch('releaseDate') as string) : null}
+                        maxDate={new Date()}
+                        minDate={new Date('1900-01-01')}
+                        className="border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700"
+                      />
+                    </div>
                   )}
-                />
+                </div>
                 {errors.releaseDate && <p className="mt-1 text-sm text-red-500">{errors.releaseDate.message}</p>}
               </div>
             </div>
