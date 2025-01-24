@@ -1,12 +1,13 @@
 'use client';
 
 import { MusicFiltersId } from '@/features/gems/components/FiltersInputBar/filterOptions';
-import { Button as HeadlesUiButton } from '@headlessui/react';
+import { Button as HeadlessUiButton } from '@headlessui/react';
 import { useState } from 'react';
 import { cn } from '../utils/dummy/utils';
 import { IconName, Icons } from './Icons';
 import { Select } from './Select';
 import { Typography } from './Typography';
+import { Button } from './buttons/Button';
 
 export interface FilterOption {
   id: string;
@@ -39,7 +40,7 @@ export interface FilterSelectProps {
 
 function FilterOption({ option, selected, onClick }: { option: FilterOption; selected: boolean; onClick: () => void }) {
   return (
-    <HeadlesUiButton
+    <HeadlessUiButton
       onClick={onClick}
       className={cn(
         'flex items-center w-full gap-2 px-2 py-1.5 text-sm rounded-lg transition-colors',
@@ -54,7 +55,7 @@ function FilterOption({ option, selected, onClick }: { option: FilterOption; sel
         </span>
       </div>
       {selected && <Icons.Check className="flex-shrink-0 w-4 h-4" />}
-    </HeadlesUiButton>
+    </HeadlessUiButton>
   );
 }
 
@@ -76,7 +77,7 @@ function SelectedChips({
   return (
     <div className="flex flex-wrap gap-1 p-2 bg-gray-50 rounded-lg dark:bg-gray-700/50">
       {visibleOptions.map((option) => (
-        <HeadlesUiButton
+        <HeadlessUiButton
           key={option.id}
           onClick={() => onRemove(option)}
           className="flex gap-1 items-center px-2 py-1 text-xs font-medium text-rose-600 bg-rose-50 rounded-full border-2 border-rose-200 hover:bg-rose-100 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20 dark:hover:bg-rose-500/20"
@@ -84,11 +85,11 @@ function SelectedChips({
           {option.Icon && <option.Icon className="w-4 h-3" />}
           <span>{option.label}</span>
           <Icons.X className="w-3 h-3" />
-        </HeadlesUiButton>
+        </HeadlessUiButton>
       ))}
 
       {shouldCollapse && (
-        <HeadlesUiButton
+        <HeadlessUiButton
           onClick={() => setIsExpanded(!isExpanded)}
           className="flex gap-1 items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
         >
@@ -103,7 +104,7 @@ function SelectedChips({
               <Icons.ChevronDown className="w-3 h-3" />
             </>
           )}
-        </HeadlesUiButton>
+        </HeadlessUiButton>
       )}
     </div>
   );
@@ -172,9 +173,9 @@ export function FilterSelect({
           <Typography variant="h4" className="text-base">
             {title}
           </Typography>
-          <HeadlesUiButton disabled={selectedValues?.length === 0} variant="ghost" onClick={() => onSelectionChange([])}>
+          <Button disabled={selectedValues?.length === 0} variant="ghost" onClick={() => onSelectionChange([])}>
             Clear all
-          </HeadlesUiButton>
+          </Button>
         </div>
 
         {isSearchable && (

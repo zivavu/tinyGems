@@ -12,8 +12,11 @@ export default async function SeekPage() {
     <div className="flex flex-col pb-16 space-y-16">
       <Suspense
         fallback={
-          <div className="w-full h-12 bg-gray-200 animate-pulse rounded-full dark:bg-gray-700">
-            <span className="sr-only">Loading filters...</span>
+          <div className="w-full h-12 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-2">
+              <Icons.Loader className="w-5 h-5 animate-spin" />
+              <span className="text-gray-600 dark:text-gray-300">Loading filters...</span>
+            </div>
           </div>
         }
       >
