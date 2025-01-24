@@ -392,7 +392,7 @@ export const additionalOptions: FilterOption[] = [
   },
 ] as const;
 
-export const musicFilters: FilterSelectProps[] = [
+export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange'>[] = [
   {
     title: 'Gender',
     options: genderOptions,
