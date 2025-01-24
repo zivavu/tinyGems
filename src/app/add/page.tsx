@@ -1,13 +1,13 @@
 'use client';
 
-import { languages, musicFilters } from '@/features/gems/components/FiltersInputBar/filterOptions';
+import { musicFilters } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { FilterSelect } from '@/features/shared/components/FilterSelect';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
@@ -42,10 +42,15 @@ const addGemSchema = z.object({
       .optional()
       .or(z.literal('')),
   }),
-  languages: z.array(z.string()).min(1, 'Select at least one language'),
-  genres: z.array(z.string()).min(1, 'Select at least one genre'),
-  moods: z.array(z.string()).optional(),
+  language: z.array(z.string()).min(1, 'Select at least one language'),
+  genre: z.array(z.string()).min(1, 'Select at least one genre'),
+  mood: z.array(z.string()).optional(),
   lyrics: z.string().optional().or(z.literal('')),
+  gender: z.array(z.string()).optional(),
+  audienceSize: z.array(z.string()).optional(),
+  lyricsStyle: z.array(z.string()).optional(),
+  additional: z.array(z.string()).optional(),
+  bpm: z.array(z.string()).optional(),
   duration: z
     .string()
     .regex(/^\d{1,2}:\d{2}$/, 'Must be in format MM:SS')
@@ -62,16 +67,17 @@ type AddGemForm = z.infer<typeof addGemSchema>;
 
 export default function AddGemPage() {
   const {
-    control,
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<AddGemForm>({
     resolver: zodResolver(addGemSchema),
     defaultValues: {
-      languages: [],
-      genres: [],
-      moods: [],
+      language: [],
+      genre: [],
+      mood: [],
       platforms: {
         spotify: '',
         youtube: '',
@@ -80,6 +86,17 @@ export default function AddGemPage() {
       },
     },
   });
+
+  const selectFiltersMap = {
+    lang: watch('language'),
+    genre: watch('genre'),
+    mood: watch('mood'),
+    gender: watch('gender'),
+    audienceSize: watch('audienceSize'),
+    additional: watch('additional'),
+    bpm: watch('bpm'),
+    lyricsStyle: watch('lyricsStyle'),
+  };
 
   const onSubmit = async () => {};
 
@@ -183,44 +200,25 @@ export default function AddGemPage() {
             Categories
           </Typography>
 
-          <div className="space-y-4">
-            <Controller
-              name="languages"
-              control={control}
-              render={({ field }) => (
-                <>
-                  <FilterSelect
-                    title="Languages"
-                    icon="Globe"
-                    options={languages}
-                    selectedValues={Array.isArray(field.value) ? field.value : []}
-                    onSelectionChange={field.onChange}
-                    isSearchable
-                    showFilterChips
-                  />
-                  {errors.languages && <p className="mt-1 text-sm text-red-500">{errors.languages.message}</p>}
-                </>
-              )}
-            />
-
-            {musicFilters.map((filter) => (
-              <Controller
-                key={filter.param}
-                name={filter.param as keyof AddGemForm}
-                control={control}
-                render={({ field }) => (
-                  <FilterSelect
-                    title={filter.title}
-                    icon={filter.icon}
-                    options={filter.options}
-                    selectedValues={Array.isArray(field.value) ? field.value : []}
-                    onSelectionChange={field.onChange}
-                    isSearchable={filter.isSearchable}
-                    showFilterChips={filter.showFilterChips}
-                  />
-                )}
-              />
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {musicFilters
+              .filter((filter) => !filter.isHiddenInAddPage)
+              .map((filter) => (
+                <FilterSelect
+                  pageType="add"
+                  key={filter.id}
+                  title={filter.title}
+                  options={filter.options}
+                  id={filter.id}
+                  icon={filter.icon}
+                  isSearchable={filter.isSearchable}
+                  showFilterChips={filter.showFilterChips}
+                  selectedValues={selectFiltersMap[filter.id as keyof typeof selectFiltersMap]}
+                  onSelectionChange={(values) => {
+                    setValue(filter.id === 'lang' ? 'language' : (filter.id as keyof AddGemForm), values, { shouldValidate: true });
+                  }}
+                />
+              ))}
           </div>
         </div>
 

@@ -102,6 +102,7 @@ export type FilterOption = {
   id: string;
   label: string;
   description?: string;
+  isHiddenInAddPage?: boolean;
 };
 
 export const audienceSizes = [
@@ -389,14 +390,17 @@ export const additionalOptions: FilterOption[] = [
     id: 'has-lyrics',
     label: 'Has Lyrics',
     description: 'Lyrics of this track are available on the page',
+    isHiddenInAddPage: true,
   },
 ] as const;
 
-export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange'>[] = [
+export type MusicFiltersId = 'lang'| 'gender' | 'genre' | 'audienceSize' | 'platform' | 'bpm' | 'mood' | 'lyricsStyle' | 'additional';
+
+export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
   {
     title: 'Gender',
     options: genderOptions,
-    param: 'gender',
+    id: 'gender',
     icon: 'User',
     isSearchable: false,
     showFilterChips: false,
@@ -404,7 +408,7 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
   {
     title: 'Genre',
     options: musicGenres,
-    param: 'genre',
+    id: 'genre',
     icon: 'Music',
     isSearchable: true,
     showFilterChips: true,
@@ -412,7 +416,7 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
   {
     title: 'Audience Size',
     options: audienceSizes,
-    param: 'audience-size',
+    id: 'audienceSize',
     icon: 'Users',
     isSearchable: false,
     showFilterChips: false,
@@ -420,15 +424,16 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
   {
     title: 'Platform',
     options: platformOptions,
-    param: 'platform',
+    id: 'platform',
     icon: 'Globe',
     isSearchable: false,
     showFilterChips: false,
+    isHiddenInAddPage: true,
   },
   {
     title: 'BPM',
     options: bpmOptions,
-    param: 'bpm',
+    id: 'bpm',
     icon: 'AudioLines',
     isSearchable: false,
     showFilterChips: false,
@@ -436,15 +441,15 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
   {
     title: 'Mood',
     options: moodOptions,
-    param: 'mood',
+    id: 'mood',
     icon: 'Smile',
     isSearchable: true,
     showFilterChips: true,
   },
   {
-    title: 'Lyrics',
+    title: 'Lyrics Style',
     options: lyricsOptions,
-    param: 'lyrics',
+    id: 'lyricsStyle',
     icon: 'ScrollText',
     isSearchable: false,
     showFilterChips: false,
@@ -452,9 +457,9 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
   {
     title: 'Additional',
     options: additionalOptions,
-    param: 'additional',
+    id: 'additional',
     icon: 'Plus',
     isSearchable: false,
     showFilterChips: false,
   },
-];
+] as const;

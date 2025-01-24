@@ -7,30 +7,34 @@ import { languages, musicFilters } from './filterOptions';
 import { useParamFilters } from './hooks';
 
 export function FiltersInputBar() {
-  const { getSelectedParams, handleParamChange, clearAllParams, isAnyParamSelected } = useParamFilters();
+  const { clearAllParams, isAnyParamSelected, handleParamChange, getSelectedParams } = useParamFilters();
 
   return (
     <div className="z-40 bg-white border-b dark:bg-gray-900 dark:border-gray-800">
       <div className="flex flex-wrap gap-2 items-center justify-center px-4 py-4">
         <FilterSelect
-          title="Language"
+          id="lang"
           icon="Globe"
           options={languages}
-          selectedValues={getSelectedParams('lang')}
-          onSelectionChange={(newValues) => handleParamChange('lang', newValues)}
           isSearchable
           showFilterChips
+          title="Language"
+          onSelectionChange={(newValues) => handleParamChange('lang', newValues)}
+          selectedValues={getSelectedParams('lang')}
+          pageType="add"
         />
-        {musicFilters.map(({ title, options, param, icon, isSearchable, showFilterChips }) => (
+        {musicFilters.map(({ title, options, id, icon, isSearchable, showFilterChips }) => (
           <FilterSelect
-            key={title}
+            key={id}
             title={title}
+            id={id}
             icon={icon}
             options={options}
-            selectedValues={getSelectedParams(param)}
-            onSelectionChange={(newValues) => handleParamChange(param, newValues)}
             isSearchable={isSearchable}
             showFilterChips={showFilterChips}
+            onSelectionChange={(newValues) => handleParamChange(id, newValues)}
+            selectedValues={getSelectedParams(id)}
+            pageType="add"
           />
         ))}
         {isAnyParamSelected() && (

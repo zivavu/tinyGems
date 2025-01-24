@@ -6,18 +6,21 @@ import { IconName, Icons } from './Icons';
 import { Select } from './Select';
 import { Typography } from './Typography';
 import { Button } from './buttons/Button';
+import { MusicFiltersId } from '@/features/gems/components/FiltersInputBar/filterOptions';
 
 export interface FilterOption {
   id: string;
   label: string;
   description?: string;
   Icon?: React.ComponentType<{ className?: string }>;
+  isHiddenInAddPage?: boolean;
 }
 
 export interface FilterOptionsGroup {
   id: string;
   name: string;
   options: FilterOption[];
+  isHiddenInAddPage?: boolean;
 }
 
 export interface FilterSelectProps {
@@ -27,9 +30,11 @@ export interface FilterSelectProps {
   isSearchable?: boolean;
   showFilterChips?: boolean;
   className?: string;
-  selectedValues: string[];
+  selectedValues: string[] | undefined;
   onSelectionChange: (newValues: string[]) => void;
-  param?: string;
+  id?: MusicFiltersId;
+  isHiddenInAddPage?: boolean;
+  pageType: 'add' | 'seek';
 }
 
 function FilterOption({ option, selected, onClick }: { option: FilterOption; selected: boolean; onClick: () => void }) {
@@ -113,20 +118,23 @@ export function FilterSelect({
   isSearchable = false,
   showFilterChips = false,
   className,
+  pageType,
 }: FilterSelectProps) {
   const [query, setQuery] = useState('');
 
   const toggleFilter = (option: FilterOption) => {
-    const newSelection = selectedValues.includes(option.id)
-      ? selectedValues.filter((id) => id !== option.id)
-      : [...selectedValues, option.id];
+    const newSelection = selectedValues?.includes(option.id)
+      ? selectedValues?.filter((id) => id !== option.id)
+      : [...(selectedValues || []), option.id];
     onSelectionChange(newSelection);
   };
 
   const isGrouped = (options as FilterOptionsGroup[]).some((option) => option?.options?.length > 0);
 
+  const siteSpecificOptions = pageType === 'add' ? options.filter((option) => !option.isHiddenInAddPage) : options;
+
   const filteredOptions = isGrouped
-    ? (options as FilterOptionsGroup[])
+    ? (siteSpecificOptions as FilterOptionsGroup[])
         .map((group) => ({
           id: group.id,
           name: group.name,
@@ -138,7 +146,7 @@ export function FilterSelect({
           ),
         }))
         .filter((group) => group.options.length > 0)
-    : (options as FilterOption[]).filter(
+    : (siteSpecificOptions as FilterOption[]).filter(
         (option) =>
           option?.label?.toLowerCase().includes(query.toLowerCase()) ||
           (option?.description?.toLowerCase().includes(query.toLowerCase()) ?? false) ||
@@ -149,16 +157,22 @@ export function FilterSelect({
     ? (options as FilterOptionsGroup[]).flatMap((group) => group.options)
     : (options as FilterOption[]);
 
-  const selectedOptions = allOptions.filter((option) => selectedValues.includes(option.id));
+  const selectedOptions = allOptions.filter((option) => selectedValues?.includes(option.id));
 
   return (
-    <Select title={title} icon={icon} selected={selectedValues.length > 0} count={selectedValues.length || undefined} className={className}>
+    <Select
+      title={title}
+      icon={icon}
+      selected={selectedValues && selectedOptions.length > 0}
+      count={selectedValues?.length || undefined}
+      className={className}
+    >
       <div className="p-3 space-y-3">
         <div className="flex justify-between items-center">
           <Typography variant="h4" className="text-base">
             {title}
           </Typography>
-          <Button disabled={selectedValues.length === 0} variant="ghost" onClick={() => onSelectionChange([])}>
+          <Button disabled={selectedValues?.length === 0} variant="ghost" onClick={() => onSelectionChange([])}>
             Clear all
           </Button>
         </div>
@@ -190,7 +204,7 @@ export function FilterSelect({
                     <FilterOption
                       key={option.id}
                       option={option}
-                      selected={selectedValues.includes(option.id)}
+                      selected={selectedValues?.includes(option.id) ?? false}
                       onClick={() => toggleFilter(option)}
                     />
                   ))}
@@ -203,7 +217,7 @@ export function FilterSelect({
                 <FilterOption
                   key={option.id}
                   option={option}
-                  selected={selectedValues.includes(option.id)}
+                  selected={selectedValues?.includes(option.id) ?? false}
                   onClick={() => toggleFilter(option)}
                 />
               ))}

@@ -1,27 +1,28 @@
 import { useRouter, useSearchParams } from 'next/navigation';
+import { MusicFiltersId } from './filterOptions';
 
 export function useParamFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const handleParamChange = (param: string | undefined, values: string[]) => {
-    if (!param) return;
+  const handleParamChange = (id: MusicFiltersId | undefined, values: string[]) => {
+    if (!id) return;
 
     const params = new URLSearchParams(searchParams.toString());
 
     if (values.length > 0) {
-      params.set(param, values.join(','));
+      params.set(id, values.join(','));
     } else {
-      params.delete(param);
+      params.delete(id);
     }
 
     router.push(`/seek?${params.toString()}`, { scroll: false });
   };
 
-  const getSelectedParams = (param: string | undefined) => {
-    if (!param) return [];
+  const getSelectedParams = (id: MusicFiltersId | undefined) => {
+    if (!id) return [];
 
-    const value = searchParams.get(param);
+    const value = searchParams.get(id);
     return value ? value.split(',') : [];
   };
 
