@@ -1,4 +1,4 @@
-import { FilterInputProps, FilterOptionsGroup } from '@/features/shared/components/FilterSelect';
+import { FilterOptionsGroup, FilterSelectProps } from '@/features/shared/components/FilterSelect';
 import {
   AU,
   BR,
@@ -392,7 +392,7 @@ export const additionalOptions: FilterOption[] = [
   },
 ] as const;
 
-export const musicFilters: FilterInputProps[] = [
+export const musicFilters: FilterSelectProps[] = [
   {
     title: 'Gender',
     options: genderOptions,

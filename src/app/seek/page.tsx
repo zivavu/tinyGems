@@ -1,5 +1,5 @@
+import { FiltersInputBar } from '@/features/gems/components/FiltersInputBar';
 import { GemGrid } from '@/features/gems/components/GemGrid';
-import { TagSelector } from '@/features/gems/components/TagSelector';
 import { Icons } from '@/features/shared/components/Icons';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { Button } from '@headlessui/react';
@@ -9,7 +9,7 @@ export default async function SeekPage() {
 
   return (
     <div className="flex flex-col pb-16 space-y-16">
-      <TagSelector />
+      <FiltersInputBar />
 
       <main className="container flex px-4 mx-auto" role="main" aria-label="Search gems">
         <section aria-label="Gems grid">

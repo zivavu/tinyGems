@@ -1,8 +1,9 @@
 import { iconsMap } from '@/features/gems/utils/platformIconsMap';
-import { Icons } from '@/features/shared/components/Icons';
+import { IconName, Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -21,9 +22,40 @@ export default async function GemPage({ params }: GemPageProps) {
 
   const coverImage = gem.properties.media.coverImage || gem.properties.media.images?.[0];
 
+  const sectionsArr: {
+    title: string;
+    items?: string[];
+    icon: IconName;
+    colorClass: string;
+  }[] = [
+    {
+      title: 'Genre',
+      items: gem.properties.genre,
+      icon: 'Music',
+      colorClass: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
+    },
+    {
+      title: 'Mood',
+      items: gem.properties.mood,
+      icon: 'Smile',
+      colorClass: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
+    },
+    {
+      title: 'Language',
+      items: gem.properties.language,
+      icon: 'Globe',
+      colorClass: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
+    },
+    {
+      title: 'Lyrics Themes',
+      items: gem.properties.lyricsTopic,
+      icon: 'ScrollText',
+      colorClass: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
+    },
+  ];
   return (
-    <main className="container px-4 py-8 mx-auto max-w-7xl flex gap-8" role="main" aria-label={`Viewing ${gem.title}`}>
-      <div className="w-96 h-fit space-y-4">
+    <main className="container px-4 py-8 mx-auto max-w-7xl flex gap-8 lg:flex-row flex-col" role="main" aria-label={`Viewing ${gem.title}`}>
+      <div className="w-[30rem] h-fit space-y-4">
         <div className="relative aspect-square rounded-2xl bg-gray-100 overflow-hidden dark:bg-gray-900">
           {coverImage ? (
             <Image fill src={coverImage} alt={`Cover art for ${gem.title}`} className="object-cover" />
@@ -55,6 +87,24 @@ export default async function GemPage({ params }: GemPageProps) {
             ))}
           </div>
         </div>
+        {gem.properties.lyrics && (
+          <div className="p-6 bg-white rounded-xl dark:bg-gray-900">
+            <Disclosure defaultOpen={false}>
+              <DisclosureButton className="flex w-full items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Icons.ScrollText className="w-5 h-5" />
+                  <Typography variant="h3" className="text-lg font-semibold">
+                    Lyrics
+                  </Typography>
+                </div>
+                <Icons.ChevronDown className="w-5 h-5 transition-transform ui-open:transform ui-open:rotate-180" />
+              </DisclosureButton>
+              <DisclosurePanel className="mt-4">
+                <pre className="whitespace-pre-wrap font-sans text-gray-700 dark:text-gray-300">{gem.properties.lyrics}</pre>
+              </DisclosurePanel>
+            </Disclosure>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 space-y-6">
@@ -70,69 +120,62 @@ export default async function GemPage({ params }: GemPageProps) {
         </div>
 
         <div className="space-y-6" role="region" aria-label="Music details">
-          {/* Platforms with Icons */}
-          <div className="flex gap-4 items-center">
+          {/* Platforms Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {gem.properties.platforms.map((platform) => (
               <a
                 key={platform.url}
                 href={platform.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-3 bg-white shadow-sm rounded-xl hover:scale-105 transition-transform dark:bg-gray-800"
+                className="p-4 bg-white dark:bg-gray-800 rounded-xl hover:shadow-md transition-all group"
                 aria-label={`Listen on ${platform.name}`}
               >
-                <FontAwesomeIcon icon={iconsMap[platform.name]} className="w-6 h-6 text-gray-700 dark:text-gray-300" />
+                <div className="flex flex-col items-center gap-3">
+                  <FontAwesomeIcon
+                    icon={iconsMap[platform.name]}
+                    className="w-8 h-8 text-gray-700 dark:text-gray-300 group-hover:text-rose-500 transition-colors"
+                  />
+                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    {platform.name.charAt(0).toUpperCase() + platform.name.slice(1)}
+                  </span>
+                </div>
               </a>
             ))}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
-            <div className="p-4 bg-gray-50 rounded-xl dark:bg-gray-800/50">
-              <Typography variant="small" className="text-gray-500 uppercase tracking-wide mb-2">
+          {/* Details Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-6 bg-white dark:bg-gray-800/50 rounded-xl shadow-sm">
+              <Typography variant="h3" className="text-lg font-semibold mb-4">
                 Release Details
               </Typography>
-              <div className="flex gap-4 text-gray-700 dark:text-gray-300">
-                <div className="flex items-center gap-2">
-                  <Icons.Clock className="w-4 h-4" />
+              <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                <div className="flex items-center gap-3">
+                  <Icons.Clock className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-medium">Duration:</span>
                   <span>{gem.properties.duration}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Icons.Calendar className="w-4 h-4" />
-                  <span>{new Date(gem.properties.releaseDate).toDateString()}</span>
+                <div className="flex items-center gap-3">
+                  <Icons.Calendar className="w-5 h-5 flex-shrink-0" />
+                  <span className="font-medium">Released:</span>
+                  <span>{new Date(gem.properties.releaseDate).toLocaleDateString()}</span>
                 </div>
               </div>
             </div>
 
-            {[
-              {
-                title: 'Genre',
-                items: gem.properties.genre,
-                colorClass: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 dark:text-indigo-300',
-              },
-              {
-                title: 'Mood',
-                items: gem.properties.mood,
-                colorClass: 'text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-300',
-              },
-              {
-                title: 'Language',
-                items: gem.properties.language,
-                colorClass: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-300',
-              },
-              {
-                title: 'Lyrics',
-                items: gem.properties.lyricsTopic,
-                colorClass: 'text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-300',
-              },
-            ].map((section) =>
+            {/* Genre/Mood/Language Sections */}
+            {sectionsArr.map((section) =>
               section.items?.length ? (
-                <div key={section.title} className="p-4 bg-gray-50 rounded-xl dark:bg-gray-800/50">
-                  <Typography variant="small" className="text-gray-500 uppercase tracking-wide mb-2">
-                    {section.title}
-                  </Typography>
+                <div key={section.title} className="p-6 bg-white dark:bg-gray-800/50 rounded-xl shadow-sm">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Typography variant="h3" className="text-lg font-semibold">
+                      {section.title}
+                    </Typography>
+                  </div>
                   <div className="flex flex-wrap gap-2">
                     {section.items.map((item) => (
-                      <span key={item} className={`px-3 py-1 text-sm rounded-full ${section.colorClass}`}>
+                      <span key={item} className={`px-3 py-1.5 text-sm rounded-full font-medium ${section.colorClass}`}>
                         {item.charAt(0).toUpperCase() + item.slice(1)}
                       </span>
                     ))}

@@ -4,7 +4,9 @@ export function useParamFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const handleParamChange = (param: string, values: string[]) => {
+  const handleParamChange = (param: string | undefined, values: string[]) => {
+    if (!param) return;
+
     const params = new URLSearchParams(searchParams.toString());
 
     if (values.length > 0) {
@@ -16,7 +18,9 @@ export function useParamFilters() {
     router.push(`/seek?${params.toString()}`, { scroll: false });
   };
 
-  const getSelectedParams = (param: string) => {
+  const getSelectedParams = (param: string | undefined) => {
+    if (!param) return [];
+
     const value = searchParams.get(param);
     return value ? value.split(',') : [];
   };

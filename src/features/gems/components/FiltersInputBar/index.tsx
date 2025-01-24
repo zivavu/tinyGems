@@ -6,20 +6,29 @@ import { FilterSelect } from '../../../shared/components/FilterSelect';
 import { languages, musicFilters } from './filterOptions';
 import { useParamFilters } from './hooks';
 
-export function TagSelector() {
-  const { clearAllParams, isAnyParamSelected } = useParamFilters();
+export function FiltersInputBar() {
+  const { getSelectedParams, handleParamChange, clearAllParams, isAnyParamSelected } = useParamFilters();
 
   return (
     <div className="z-40 bg-white border-b dark:bg-gray-900 dark:border-gray-800">
       <div className="flex flex-wrap gap-2 items-center justify-center px-4 py-4">
-        <FilterSelect title="Language" icon="Globe" options={languages} param="lang" isSearchable showFilterChips />
+        <FilterSelect
+          title="Language"
+          icon="Globe"
+          options={languages}
+          selectedValues={getSelectedParams('lang')}
+          onSelectionChange={(newValues) => handleParamChange('lang', newValues)}
+          isSearchable
+          showFilterChips
+        />
         {musicFilters.map(({ title, options, param, icon, isSearchable, showFilterChips }) => (
           <FilterSelect
             key={title}
             title={title}
             icon={icon}
-            param={param}
             options={options}
+            selectedValues={getSelectedParams(param)}
+            onSelectionChange={(newValues) => handleParamChange(param, newValues)}
             isSearchable={isSearchable}
             showFilterChips={showFilterChips}
           />
