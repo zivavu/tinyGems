@@ -6,7 +6,7 @@ import { Link } from '../shared/components/Link';
 
 export function Footer() {
   return (
-    <footer className="w-full bg-white border-t border-rose-100 dark:bg-gray-950 dark:border-rose-900">
+    <footer className="w-full bg-white border-t border-rose-100 dark:bg-gray-950 dark:border-rose-950">
       <div className="container px-4 py-8 mx-auto">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand Column */}
@@ -67,7 +67,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 justify-between items-center pt-8 mt-8 border-t border-rose-100 dark:border-rose-900 md:flex-row">
+        <div className="flex flex-col gap-4 justify-between items-center pt-8 mt-8 border-t border-rose-100 dark:border-rose-950 md:flex-row">
           <Typography variant="muted">© {new Date().getFullYear()} tinyGems. No rights reserved.</Typography>
           <div className="flex gap-6">
             <Link href="https://github.com">

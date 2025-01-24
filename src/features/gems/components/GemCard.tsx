@@ -1,18 +1,16 @@
 'use client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { GemBase, GemPlatformName, MusicGem } from '@/features/gems/types/gemsTypes';
+import { MusicGem } from '@/features/gems/types/gemsTypes';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faBandcamp, faSoundcloud, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { faLink } from '@fortawesome/free-solid-svg-icons';
 import Image from 'next/image';
 import Link from 'next/link';
+import { iconsMap } from '../utils/platformIconsMap';
 
 interface GemCardProps {
-  gem: GemBase;
+  gem: MusicGem;
   className?: string;
 }
 
@@ -71,14 +69,6 @@ export function GemCard({ gem, className }: GemCardProps) {
     if (gem.type !== 'music') return null;
     const musicGem = gem as MusicGem;
 
-    const iconsMap: Record<GemPlatformName, IconProp> = {
-      bandcamp: faBandcamp,
-      soundcloud: faSoundcloud,
-      spotify: faSpotify,
-      youtube: faYoutube,
-      other: faLink,
-    } as const;
-
     return (
       <div className="flex flex-col gap-2 mb-4">
         <div className="flex gap-2" role="list" aria-label="Available platforms">
@@ -87,9 +77,8 @@ export function GemCard({ gem, className }: GemCardProps) {
           ))}
         </div>
 
-        {/* Properties tags section */}
         <div className="flex flex-wrap gap-1.5" role="list" aria-label="Music properties">
-          {musicGem.properties.genres.map((genre) => (
+          {musicGem.properties.genre.map((genre) => (
             <span
               key={genre}
               className="px-2 py-0.5 text-xs text-indigo-600 bg-indigo-50 rounded-full dark:bg-indigo-900/30 dark:text-indigo-300"
@@ -98,7 +87,7 @@ export function GemCard({ gem, className }: GemCardProps) {
               {genre}
             </span>
           ))}
-          {musicGem.properties.languages?.map((language) => (
+          {musicGem.properties.language?.map((language) => (
             <span
               key={language}
               className="px-2 py-0.5 text-xs text-emerald-600 bg-emerald-50 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300"
@@ -107,7 +96,7 @@ export function GemCard({ gem, className }: GemCardProps) {
               {language}
             </span>
           ))}
-          {musicGem.properties.moods?.map((mood) => (
+          {musicGem.properties.mood?.map((mood) => (
             <span
               key={mood}
               className="px-2 py-0.5 text-xs text-amber-600 bg-amber-50 rounded-full dark:bg-amber-900/30 dark:text-amber-300"
@@ -116,7 +105,7 @@ export function GemCard({ gem, className }: GemCardProps) {
               {mood}
             </span>
           ))}
-          {musicGem.properties.lyrics?.map((lyric) => (
+          {musicGem.properties.lyricsTopic?.map((lyric) => (
             <span
               key={lyric}
               className="px-2 py-0.5 text-xs text-rose-600 bg-rose-50 rounded-full dark:bg-rose-900/30 dark:text-rose-300"

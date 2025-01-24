@@ -379,6 +379,19 @@ export const lyricsOptions: FilterOption[] = [
   { id: 'personal-growth', label: 'Personal Growth', description: 'Lyrics about self-improvement and introspection' },
 ] as const;
 
+export const additionalOptions: FilterOption[] = [
+  {
+    id: 'has-music-video',
+    label: 'Has Music Video',
+    description: 'Track with a music video',
+  },
+  {
+    id: 'has-lyrics',
+    label: 'Has Lyrics',
+    description: 'Lyrics of this track are available on the page',
+  },
+] as const;
+
 export const musicFilters: FilterInputProps[] = [
   {
     title: 'Gender',
@@ -433,6 +446,14 @@ export const musicFilters: FilterInputProps[] = [
     options: lyricsOptions,
     param: 'lyrics',
     icon: 'ScrollText',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Additional',
+    options: additionalOptions,
+    param: 'additional',
+    icon: 'Plus',
     isSearchable: false,
     showFilterChips: false,
   },

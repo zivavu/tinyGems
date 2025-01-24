@@ -1,10 +1,10 @@
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
-import { GemBase } from '../types/gemsTypes';
+import { MusicGem } from '../types/gemsTypes';
 import { GemCard } from './GemCard';
 
 interface GemGridProps {
-  gems: GemBase[];
+  gems: MusicGem[];
   className?: string;
 }
 

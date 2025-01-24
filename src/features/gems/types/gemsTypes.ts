@@ -1,6 +1,7 @@
-export type GemPlatformName = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
-
 export type GemCategory = 'music';
+
+export type GemType = 'music';
+export type GemPlatformName = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
 
 export interface GemPlatform {
   name: GemPlatformName;
@@ -15,7 +16,7 @@ export interface GemProperties {
   };
 }
 
-export interface GemBase {
+export interface BaseGem {
   id: string;
   type: GemCategory;
   title: string;
@@ -43,12 +44,15 @@ export interface MusicGemProperties extends GemProperties {
   platforms: GemPlatform[];
   duration: string;
   releaseDate: string;
-  genres: string[];
-  languages?: string[];
-  moods?: string[];
-  lyrics?: string[];
+  genre: string[];
+  language?: string[];
+  mood?: string[];
+  hasMusicVideo?: boolean;
+  lyrics?: string;
+  lyricsTopic?: string[];
 }
 
-export interface MusicGem extends GemBase {
+export interface MusicGem extends BaseGem {
+  type: 'music';
   properties: MusicGemProperties;
 }

@@ -40,7 +40,7 @@ export default function ParticlesBackground({ className }: { className?: string 
               width: size,
               height: size,
               animation: `float 6s ease-in-out infinite`,
-              animationDelay: `${i * 0.05}s`,
+              animationDelay: `${i * 0.02}s`,
             }}
           />
         );

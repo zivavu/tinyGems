@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { GemBase, GemCategory, GemPlatform, GemPlatformName, GemProperties, MusicGemProperties } from '../../../gems/types/gemsTypes';
+import { GemCategory, GemPlatform, GemPlatformName, GemProperties, MusicGem, MusicGemProperties } from '../../../gems/types/gemsTypes';
 import { dummyArtists } from './artists';
 
 faker.seed(42);
@@ -39,7 +39,7 @@ const MUSIC_GENRES = [
   'drone',
   'industrial',
 ] as const; // Generate base gem properties
-function generateBaseGem(type: GemCategory): Omit<GemBase, 'properties'> {
+function generateBaseGem(type: GemCategory) {
   const randomArtist = faker.helpers.arrayElement(dummyArtists);
 
   return {
@@ -95,24 +95,29 @@ function generateMusicProperties(): MusicGemProperties {
     platforms,
     duration: `${faker.number.int({ min: 1, max: 10 })}:${faker.number.int({ min: 10, max: 59 })}`,
     releaseDate: faker.date.past().toISOString(),
-    genres: faker.helpers.arrayElements(MUSIC_GENRES, { min: 1, max: 3 }),
-    languages: faker.helpers.arrayElements(MUSIC_LANGUAGES, { min: 1, max: 2 }),
-    moods: faker.helpers.arrayElements(MUSIC_MOODS, { min: 1, max: 3 }),
-    lyrics: faker.helpers.arrayElements(LYRICS_TYPES, { min: 1, max: 2 }),
+    genre: faker.helpers.arrayElements(MUSIC_GENRES, { min: 1, max: 3 }),
+    language: faker.helpers.arrayElements(MUSIC_LANGUAGES, { min: 1, max: 2 }),
+    mood: faker.helpers.arrayElements(MUSIC_MOODS, { min: 1, max: 3 }),
+    lyricsTopic: faker.helpers.arrayElements(LYRICS_TYPES, { min: 1, max: 2 }),
+    lyrics: faker.lorem.sentences({ min: 5, max: 40 }),
+    hasMusicVideo: faker.datatype.boolean(),
   };
 }
 
-function generateGem(type: GemCategory): GemBase {
+function generateGem(type: GemCategory) {
   const baseGem = generateBaseGem(type);
   const properties = generateMusicProperties();
 
-  return {
+  const musicGem: MusicGem = {
     ...baseGem,
+    type: 'music',
     properties,
   };
+
+  return musicGem;
 }
 
-export function generateDummyGems(count = 100): GemBase[] {
+export function generateDummyGems(count = 100) {
   return Array.from({ length: count }, (_, index) => {
     faker.seed(42 + index);
     return generateGem('music');
