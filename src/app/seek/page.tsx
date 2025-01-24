@@ -3,13 +3,22 @@ import { GemGrid } from '@/features/gems/components/GemGrid';
 import { Icons } from '@/features/shared/components/Icons';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { Button } from '@headlessui/react';
+import { Suspense } from 'react';
 
 export default async function SeekPage() {
   const sortedGems = [...dummyGems].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   return (
     <div className="flex flex-col pb-16 space-y-16">
-      <FiltersInputBar />
+      <Suspense
+        fallback={
+          <div className="w-full h-12 bg-gray-200 animate-pulse rounded-full dark:bg-gray-700">
+            <span className="sr-only">Loading filters...</span>
+          </div>
+        }
+      >
+        <FiltersInputBar />
+      </Suspense>
 
       <main className="container flex px-4 mx-auto" role="main" aria-label="Search gems">
         <section aria-label="Gems grid">

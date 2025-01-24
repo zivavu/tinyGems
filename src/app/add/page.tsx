@@ -85,6 +85,8 @@ export default function AddGemPage() {
         bandcamp: '',
       },
     },
+    mode: 'onSubmit',
+    reValidateMode: 'onSubmit',
   });
 
   const selectFiltersMap = {
@@ -215,7 +217,11 @@ export default function AddGemPage() {
                   showFilterChips={filter.showFilterChips}
                   selectedValues={selectFiltersMap[filter.id as keyof typeof selectFiltersMap]}
                   onSelectionChange={(values) => {
-                    setValue(filter.id === 'lang' ? 'language' : (filter.id as keyof AddGemForm), values, { shouldValidate: true });
+                    setValue(filter.id === 'lang' ? 'language' : (filter.id as keyof AddGemForm), values, {
+                      shouldValidate: false,
+                      shouldTouch: true,
+                      shouldDirty: true,
+                    });
                   }}
                 />
               ))}
