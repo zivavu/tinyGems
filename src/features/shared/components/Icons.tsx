@@ -75,13 +75,19 @@ import {
   Users,
   Video,
   Waves,
+  Mail,
+  MessageSquare,
+  Coffee,
   X,
   type LucideIcon,
 } from 'lucide-react';
 
 export const Icons = {
+  Mail,
   Menu,
+  MessageSquare,
   Smile,
+  Coffee,
   Filter,
   Calendar,
   Loader,

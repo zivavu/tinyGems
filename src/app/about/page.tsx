@@ -8,7 +8,8 @@ export default function AboutPage() {
         <Typography variant="large">
           The idea of tinyGems was born out of a love for underground music(and art in general) and the lack of good ways to discover it.
           <br></br>I know a good amount of artists who, for me, are some of the best, most real, and most meaningful ones, but I
-          wouldn&apos;t have known about them if I hadn&apos;t known them personally, or just pure luck of finding them in random ways.
+          wouldn&apos;t be able to discover them if I hadn&apos;t known them personally, or just pure luck of stumbling upon them in the
+          most random way.
         </Typography>
       </section>
 
@@ -24,7 +25,7 @@ export default function AboutPage() {
       <section className="bg-gray-950 py-16">
         <div className="container mx-auto px-4">
           <Typography variant="h2" className="text-3xl font-bold mb-8 text-center">
-            Why TinyGems?
+            Why tinyGems?
           </Typography>
           <hr className="border-gray-700 border-1 my-8" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
