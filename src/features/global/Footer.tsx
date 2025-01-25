@@ -40,7 +40,7 @@ export function Footer() {
               <Link href="/privacy-policy" variant="muted">
                 Privacy Policy
               </Link>
-              <Link href="/terms" variant="muted">
+              <Link href="/terms-of-use" variant="muted">
                 Terms of Service
               </Link>
               <Link href="/cookies" variant="muted">
