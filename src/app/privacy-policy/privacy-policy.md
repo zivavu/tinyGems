@@ -1,4 +1,4 @@
-# LEGAL BULLSHIT
+# PRIVACY POLICY
 
 _Last updated January 25, 2025_
 
