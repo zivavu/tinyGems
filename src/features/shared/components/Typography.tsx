@@ -27,6 +27,11 @@ const variants = {
     className: 'text-xl font-medium text-gray-900 dark:text-gray-100',
   },
 
+  large: {
+    tag: 'p',
+    className: 'text-lg text-gray-800 dark:text-gray-300',
+  },
+
   p: {
     tag: 'p',
     className: 'text-base text-gray-800 dark:text-gray-300',
