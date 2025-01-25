@@ -21,7 +21,7 @@ export const LegalMarkdown = ({ content }: LegalMarkdownProps) => {
             </li>
           ),
           a: ({ href, children }) => (
-            <a href={href} className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">
+            <a href={href} className="text-blue-400 hover:text-blue-300 underline" rel="noopener noreferrer">
               {children}
             </a>
           ),
