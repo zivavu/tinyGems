@@ -1,4 +1,5 @@
 import { Typography } from '@/features/shared/components/Typography';
+import Link from 'next/link';
 
 export default function AboutPage() {
   return (
@@ -102,14 +103,10 @@ export default function AboutPage() {
           <Typography variant="large">
             Well, for now, there&apos;s not much you can do besides sharing your favorite artists here.
             <br />
-            If you have any suggestions regarding the website, feel free to email me at{' '}
-            <a href="mailto:zivavu@gmail.com" className="text-rose-600 hover:text-rose-700 transition duration-300">
-              zivavu@gmail.com
-            </a>
-            , or file an issue on GitHub at{' '}
-            <a href="https://github.com/zivavu/tinyGems/issues" className="text-rose-600 hover:text-rose-700 transition duration-300">
-              https://github.com/zivavu/tinyGems/issues
-            </a>
+            If you have any suggestions regarding the website, feel free to{' '}
+            <Link href="/contact" className="text-rose-600 hover:text-rose-700 transition duration-300">
+              contact me
+            </Link>
             <br />
             <br />
             If the page gets any traffic, I plan to create a Discord server where you can become a part of the community and enrich it even

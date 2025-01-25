@@ -9,8 +9,8 @@ export default function ContactPage() {
       <section className="py-24 px-4 lg:px-72 text-white text-center bg-gray-950 space-y-4">
         <Typography variant="h2">Get in Touch</Typography>
         <Typography variant="large">
-          Have questions, suggestions, or want to contribute? I'd love to hear from you! As a solo developer, I'm always open to feedback
-          and collaboration.
+          Have questions, suggestions, or want to contribute? I&apos;d love to hear from you! As a solo developer, I&apos;m always open to
+          feedback and collaboration.
         </Typography>
       </section>
 
@@ -94,12 +94,12 @@ export default function ContactPage() {
           Want to Contribute to the repo?
         </Typography>
         <Typography variant="large">
-          tinyGems is an open-source project, and contributions are always welcome! Whether you're a developer, designer, or music
+          tinyGems is an open-source project, and contributions are always welcome! Whether you&apos;re a developer, designer, or music
           enthusiast, there are many ways to help improve the platform.
           <br />
           <br />
-          You are welcome even if you would simply like to make your first contribution ever, and just edit some text, so it's fitting the
-          vibe better, and make it not as AI sloppy, as it is now, cause some lazy ass person was lazy :3.
+          You are welcome even if you would simply like to make your first contribution ever, and just edit some text, so it&apos;s fitting
+          the vibe better, and make it not as AI sloppy, as it is now, cause some lazy ass person was lazy :3.
         </Typography>
       </section>
     </main>
