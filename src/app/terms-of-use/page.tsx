@@ -18,6 +18,10 @@ export default async function TermsOfUsePage() {
         </Link>{' '}
         for providing the terms of use template, some smart people in suits tell me that it&apos;s necessary, and I want to be legit. Also
         sorry termly for converting the thing into .md, but I couldn&apos;t get it to work :(( .
+        <br />
+        <br />
+        And the terms of use in my terms is to: don&apos;t do illegal stuff, don&apos;t spam some weird stuff, if you successfully hack the
+        page - let me know if possible, you can steal as much content as you want. Yeah.
       </Typography>
 
       <TermlyLogo />

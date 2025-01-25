@@ -44,11 +44,7 @@ The information provided when using the Services is not intended for distributio
 
 ### Our intellectual property
 
-We are the owner or the licensee of all intellectual property rights in our Services, including all source code, databases, functionality, software, website designs, audio, video, text, photographs, and graphics in the Services (collectively, the "Content"), as well as the trademarks, service marks, and logos contained therein (the "Marks").
-
-Our Content and Marks are protected by copyright and trademark laws and treaties around the world.
-
-The Content and Marks are provided in or through the Services "AS IS" for your personal, non-commercial use or internal business purpose only.
+Do whatever.
 
 ### Your use of our Services
 
@@ -97,7 +93,6 @@ You may not access or use the Services for any purpose other than that for which
 
 As a user of the Services, you agree not to:
 
-- Systematically retrieve data or other content from the Services to create or compile, directly or indirectly, a collection, compilation, database, or directory without written permission from us.
 - Trick, defraud, or mislead us and other users, especially in any attempt to learn sensitive account information such as user passwords.
 - Circumvent, disable, or otherwise interfere with security-related features of the Services, including features that prevent or restrict the use or copying of any Content or enforce limitations on the use of the Services and/or the Content contained therein.
 - Disparage, tarnish, or otherwise harm, in our opinion, us and/or the Services.
@@ -106,7 +101,6 @@ As a user of the Services, you agree not to:
 - Use the Services in a manner inconsistent with any applicable laws or regulations.
 - Engage in unauthorized framing of or linking to the Services.
 - Upload or transmit (or attempt to upload or to transmit) viruses, Trojan horses, or other material, including excessive use of capital letters and spamming (continuous posting of repetitive text), that interferes with any party's uninterrupted use and enjoyment of the Services or modifies, impairs, disrupts, alters, or interferes with the use, features, functions, operation, or maintenance of the Services.
-- Engage in any automated use of the system, such as using scripts to send comments or messages, or using any data mining, robots, or similar data gathering and extraction tools.
 - Delete the copyright or other proprietary rights notice from any Content.
 - Attempt to impersonate another user or person or use the username of another user.
 - Upload or transmit (or attempt to upload or to transmit) any material that acts as a passive or active information collection or transmission mechanism, including without limitation, clear graphics interchange formats ("gifs"), 1×1 pixels, web bugs, cookies, or other similar devices (sometimes referred to as "spyware" or "passive collection mechanisms" or "pcms").
