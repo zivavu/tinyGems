@@ -5,7 +5,7 @@ import { promises as fs } from 'fs';
 import Link from 'next/link';
 import path from 'path';
 export default async function PrivacyPolicyPage() {
-  const markdownPath = path.join(process.cwd(), 'src/app/privacy-policy/privacy-policy.md');
+  const markdownPath = path.join(process.cwd(), 'src/features/shared/markdown/privacy-policy.md');
   const markdownContent = await fs.readFile(markdownPath, 'utf8');
 
   return (
