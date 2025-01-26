@@ -1,4 +1,4 @@
-import { FiltersInputBar } from '@/features/gems/components/FiltersInputBar';
+import { FiltersInputBar } from '@/features/gems/components/FiltersInputBar/FiltersInputBar';
 import { GemGrid } from '@/features/gems/components/GemGrid';
 import { Icons } from '@/features/shared/components/Icons';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';

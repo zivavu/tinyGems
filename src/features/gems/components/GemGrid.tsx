@@ -1,7 +1,7 @@
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import { MusicGem } from '../types/gemsTypes';
-import { GemCard } from './GemCard';
+import { GemCard } from './GemCard/GemCard';
 
 interface GemGridProps {
   gems: MusicGem[];

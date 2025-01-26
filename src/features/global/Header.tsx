@@ -27,7 +27,7 @@ export function Header() {
 
         <div className="flex gap-12 items-center">
           <NextLink
-            href="/add"
+            href="/add-gem"
             className="flex items-center gap-2 text-gray-500 hover:text-rose-500 transition-colors"
             aria-label="Add your gem"
           >

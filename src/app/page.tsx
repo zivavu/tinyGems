@@ -33,7 +33,7 @@ export default function Home() {
               Seek for gems
             </NextLink>
             <NextLink
-              href="/share"
+              href="/add-gem"
               className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-stone-900 dark:text-stone-100 bg-white/90 dark:bg-stone-800/90 backdrop-blur-md border-2 border-stone-200 dark:border-stone-700 rounded-[2rem] shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all"
             >
               <Icons.Upload className="w-6 h-6" />
@@ -98,7 +98,7 @@ export default function Home() {
           </div>
 
           <div className="p-8">
-            <Typography variant="p" className="text-lg leading-relaxed text-white relative">
+            <Typography variant="p" className="text-lg leading-relaxed">
               We believe in art that&apos;s raw, unfiltered, and brave enough to exist outside the mainstream. Art that screams the unspoken
               truths, that dances to the rhythm of the unheard. Art that shatters illusions and awakens the soul. Our community thrives on
               discovering and nurturing these rare flames of genius. Join us in igniting a creative rebellion!
@@ -109,12 +109,11 @@ export default function Home() {
 
       <section className="py-32 px-6 text-center bg-gradient-to-b from-rose-50/90 via-rose-50/50 to-purple-50/30 dark:from-black dark:via-black/50 dark:to-black/100">
         <div className="max-w-4xl mx-auto">
-          <Typography variant="h2" className="text-5xl font-black text-white mb-8">
-            The Art of Rebellion
+          <Typography variant="h2" className="text-5xl font-black  mb-8">
+            Base of the Underground
           </Typography>
-          <Typography variant="p" className="text-xl text-stone-300 mb-12">
-            We are the misfits, the dreamers, the visionaries. We create to shatter illusions and ignite revolutions. Join us in forging a
-            new reality through the power of raw, untamed art.
+          <Typography variant="p" className="text-xl  mb-12">
+            Take, a look, check if you like it. If you do, and would like to share with us some more, create an account, and let us see.
           </Typography>
           <NextLink
             href="/join"
