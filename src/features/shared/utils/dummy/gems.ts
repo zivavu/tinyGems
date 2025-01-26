@@ -46,6 +46,7 @@ const SAMPLE_PLATFORM_URLS = {
     'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     'https://www.youtube.com/watch?v=SGBGOfZiRds',
     'https://www.youtube.com/watch?v=gz05MgcBLoM',
+    'https://www.youtube.com/watch?v=su0zi_VxLU0',
   ],
   soundcloud: [
     'https://soundcloud.com/eteras/anihilacja-istot-nadwornych',
@@ -100,7 +101,6 @@ function generateBaseGemProperties(): GemProperties {
         ? Array.from({ length: faker.number.int({ min: 1, max: 5 }) }, () => `https://picsum.photos/seed/${faker.string.uuid()}/800/600`)
         : undefined,
       coverImage: faker.datatype.boolean(0.6) ? `https://picsum.photos/seed/${faker.string.uuid()}/1200/630` : undefined,
-      aspectRatio: faker.helpers.arrayElement(['1:1', '16:9', '4:3', '3:2']),
     },
   };
 }

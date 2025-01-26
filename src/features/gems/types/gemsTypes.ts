@@ -12,7 +12,6 @@ export interface GemProperties {
   media: {
     images?: string[];
     coverImage?: string;
-    aspectRatio?: string;
   };
 }
 

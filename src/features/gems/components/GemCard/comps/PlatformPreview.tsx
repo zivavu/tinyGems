@@ -1,4 +1,5 @@
 import { MusicGem } from '@/features/gems/types/gemsTypes';
+import { cn } from '@/features/shared/utils/dummy/utils';
 import { useState } from 'react';
 
 interface Platform {
@@ -31,10 +32,10 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
         const videoId = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
 
         if (!videoId) return null;
-        return `https://www.youtube.com/embed/${videoId}?autoplay=0&modestbranding=1&rel=0`;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0&mute=0`;
       }
       case 'soundcloud': {
-        return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
+        return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
       }
       case 'bandcamp': {
         return `https://bandcamp.com/EmbeddedPlayer/album=1282391830/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/`;
@@ -63,25 +64,27 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
       case 'youtube':
         return '315';
       case 'soundcloud':
-        return '166';
+        return '315';
       case 'bandcamp':
         return '470';
       case 'spotify':
-        return '152'; // Compact player height
+        return '352'; // Compact player height
       default:
         return '166';
     }
   };
 
   const getIframeClassName = (platform: string) => {
-    const baseClasses = 'transition-opacity duration-300';
+    const baseClasses = 'transition-opacity duration-300 border-0';
     const visibilityClasses = isLoaded ? 'opacity-100' : 'opacity-0';
 
     switch (platform.toLowerCase()) {
       case 'youtube':
-        return `${baseClasses} ${visibilityClasses} w-full aspect-video`;
+        return `${baseClasses} ${visibilityClasses}`;
+      case 'spotify':
+        return `${baseClasses} ${visibilityClasses} bg-transparent rounded-xl`;
       default:
-        return `${baseClasses} ${visibilityClasses} w-full`;
+        return `${baseClasses} ${visibilityClasses}`;
     }
   };
 
@@ -92,19 +95,23 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
           Loading {preferredPlatform}...
         </div>
       )}
-      <iframe
-        className={getIframeClassName(preferredPlatform)}
-        height={getIframeHeight(preferredPlatform)}
-        src={embedUrl}
-        frameBorder="0"
-        scrolling="no"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        onLoad={() => {
-          setIsLoaded(true);
-          onLoad?.();
-        }}
-      />
+      <div className="relative">
+        {/* Dark overlay to mask white background */}
+        {preferredPlatform === 'spotify' && <div className="absolute inset-0 bg-black/40 pointer-events-none" />}
+        <iframe
+          className={cn(getIframeClassName(preferredPlatform), 'overflow-hidden, w-full')}
+          height={getIframeHeight(preferredPlatform)}
+          src={embedUrl}
+          frameBorder="0"
+          scrolling="no"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          onLoad={() => {
+            setIsLoaded(true);
+            onLoad?.();
+          }}
+        />
+      </div>
     </div>
   );
 }

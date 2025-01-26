@@ -29,7 +29,11 @@ export function GemCard({ gem, className }: GemCardProps) {
         className,
       )}
     >
-      <div className={cn(`${showPreview ? '' : 'aspect-square'} relative`)} role="img" aria-label={`Preview image for ${gem.title}`}>
+      <div
+        className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}
+        role="img"
+        aria-label={`Preview image for ${gem.title}`}
+      >
         {showPreview ? (
           <PlatformPreview gem={gem} />
         ) : (
