@@ -43,9 +43,9 @@ const MUSIC_GENRES = [
 // Real-world examples that actually work in embeds
 const SAMPLE_PLATFORM_URLS = {
   youtube: [
-    'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Rick Astley - Never Gonna Give You Up
-    'https://www.youtube.com/watch?v=jfKfPfyJRdk', // lofi hip hop radio
-    'https://www.youtube.com/watch?v=5qap5aO4i9A', // ChilledCow
+    'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    'https://www.youtube.com/watch?v=SGBGOfZiRds',
+    'https://www.youtube.com/watch?v=gz05MgcBLoM',
   ],
   soundcloud: [
     'https://soundcloud.com/eteras/anihilacja-istot-nadwornych',

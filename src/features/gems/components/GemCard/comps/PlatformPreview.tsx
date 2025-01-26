@@ -27,13 +27,22 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
 
   const getEmbedUrl = (platform: string, url: string) => {
     switch (platform.toLowerCase()) {
+      case 'youtube': {
+        const videoId = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
+
+        if (!videoId) return null;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=0&modestbranding=1&rel=0`;
+      }
       case 'soundcloud': {
         return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
       }
       case 'bandcamp': {
-        // Extract album/track ID from URL and create embed URL
-        // This will need to be adjusted based on your Bandcamp URLs
-        return url.replace('bandcamp.com', 'bandcamp.com/embed');
+        return `https://bandcamp.com/EmbeddedPlayer/album=1282391830/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/`;
+      }
+      case 'spotify': {
+        const trackId = url.match(/spotify\.com\/track\/([a-zA-Z0-9]+)/)?.[1];
+        if (!trackId) return null;
+        return `https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0`;
       }
       default:
         return null;
@@ -51,12 +60,28 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
 
   const getIframeHeight = (platform: string) => {
     switch (platform.toLowerCase()) {
+      case 'youtube':
+        return '315';
       case 'soundcloud':
         return '166';
       case 'bandcamp':
-        return '120';
+        return '470';
+      case 'spotify':
+        return '152'; // Compact player height
       default:
         return '166';
+    }
+  };
+
+  const getIframeClassName = (platform: string) => {
+    const baseClasses = 'transition-opacity duration-300';
+    const visibilityClasses = isLoaded ? 'opacity-100' : 'opacity-0';
+
+    switch (platform.toLowerCase()) {
+      case 'youtube':
+        return `${baseClasses} ${visibilityClasses} w-full aspect-video`;
+      default:
+        return `${baseClasses} ${visibilityClasses} w-full`;
     }
   };
 
@@ -68,12 +93,13 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
         </div>
       )}
       <iframe
-        className={`w-full transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        className={getIframeClassName(preferredPlatform)}
         height={getIframeHeight(preferredPlatform)}
         src={embedUrl}
         frameBorder="0"
         scrolling="no"
-        allow="autoplay"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
         onLoad={() => {
           setIsLoaded(true);
           onLoad?.();
