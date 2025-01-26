@@ -17,7 +17,10 @@ interface GemCardProps {
   className?: string;
 }
 
-function CardWrapper({ children, className, gem }: { children: React.ReactNode; className?: string; gem: MusicGem }) {
+export function GemCard({ gem, className }: GemCardProps) {
+  const mainImage = gem.properties.media.coverImage || gem.properties.media.images?.[0];
+  const [showPreview, setShowPreview] = useState(false);
+
   return (
     <div
       className={cn(
@@ -25,21 +28,6 @@ function CardWrapper({ children, className, gem }: { children: React.ReactNode; 
         className,
       )}
     >
-      {children}
-      <Link href={`/gem/${gem.id}`} className="absolute inset-0">
-        <span className="sr-only">View details for {gem.title}</span>
-      </Link>
-    </div>
-  );
-}
-
-export function GemCard({ gem, className }: GemCardProps) {
-  const mainImage = gem.properties.media.coverImage || gem.properties.media.images?.[0];
-  console.log(gem);
-  const [showPreview, setShowPreview] = useState(false);
-
-  return (
-    <CardWrapper className={className} gem={gem}>
       <div
         className={cn('overflow-hidden relative', {
           'aspect-square': gem.type === 'music' || gem.type === 'craft',
@@ -65,10 +53,9 @@ export function GemCard({ gem, className }: GemCardProps) {
             {gem.type === 'music' && gem.properties.platforms.length > 0 && (
               <button
                 onClick={(e) => {
-                  e.preventDefault();
                   setShowPreview(true);
                 }}
-                className="absolute inset-0 flex items-center z-10 justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity"
+                className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity"
                 aria-label="Play preview"
               >
                 <Icons.Play className="w-12 h-12 text-white" />
@@ -78,7 +65,7 @@ export function GemCard({ gem, className }: GemCardProps) {
         )}
       </div>
 
-      <div className="p-4">
+      <Link href={`/gem/${gem.id}`} className="block p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
         <div className="mb-2 space-y-1">
           <Typography variant="h4" className="line-clamp-1">
             {gem.title}
@@ -103,7 +90,7 @@ export function GemCard({ gem, className }: GemCardProps) {
         </div>
 
         <StatsSection likes={gem.likes} saves={gem.saves} />
-      </div>
-    </CardWrapper>
+      </Link>
+    </div>
   );
 }

@@ -39,6 +39,31 @@ const MUSIC_GENRES = [
   'drone',
   'industrial',
 ] as const; // Generate base gem properties
+
+// Real-world examples that actually work in embeds
+const SAMPLE_PLATFORM_URLS = {
+  youtube: [
+    'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Rick Astley - Never Gonna Give You Up
+    'https://www.youtube.com/watch?v=jfKfPfyJRdk', // lofi hip hop radio
+    'https://www.youtube.com/watch?v=5qap5aO4i9A', // ChilledCow
+  ],
+  soundcloud: [
+    'https://soundcloud.com/eteras/anihilacja-istot-nadwornych',
+    'https://soundcloud.com/magikdyspozytor/ponyvoid-hellokitty-ladny-kotek-ale-w-sumie-szatan',
+    'https://soundcloud.com/kezi782/niki-lauda-prod-kezi?in=kezi782/sets/corner-store-music',
+  ],
+  bandcamp: [
+    'https://dmg96.bandcamp.com/album/ii-duch-martwego-gracza-2019',
+    'https://fine-sir-1584660650.bandcamp.com/album/1584660650',
+    'https://newworldofmine.bandcamp.com/album/after-ovid',
+  ],
+  spotify: [
+    'https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT',
+    'https://open.spotify.com/track/0HUTL8i4y4MiGCPId7M7wb',
+    'https://open.spotify.com/track/7eJMfftS33KTjuF7lTsMCx',
+  ],
+} as const;
+
 function generateBaseGem(type: GemCategory) {
   const randomArtist = faker.helpers.arrayElement(dummyArtists);
 
@@ -80,15 +105,22 @@ function generateBaseGemProperties(): GemProperties {
   };
 }
 
+function generatePlatformUrl(platform: GemPlatformName): string {
+  if (platform === 'other') {
+    return `https://music.example.com/${faker.helpers.slugify(faker.lorem.words(2))}`;
+  }
+
+  return faker.helpers.arrayElement(SAMPLE_PLATFORM_URLS[platform as keyof typeof SAMPLE_PLATFORM_URLS] || []);
+}
+
 function generateMusicProperties(): MusicGemProperties {
   const platformCount = faker.number.int({ min: 1, max: 3 });
-  const platforms: GemPlatform[] = Array.from({ length: platformCount }, () => {
-    const platformName = faker.helpers.arrayElement(MUSIC_PLATFORMS) as GemPlatformName;
-    return {
-      name: platformName,
-      url: `https://${platformName}.com/${faker.helpers.slugify(faker.lorem.words(2))}`,
-    };
-  });
+  const selectedPlatforms = faker.helpers.arrayElements(MUSIC_PLATFORMS, platformCount) as GemPlatformName[];
+
+  const platforms: GemPlatform[] = selectedPlatforms.map((platformName) => ({
+    name: platformName,
+    url: generatePlatformUrl(platformName),
+  }));
 
   return {
     ...generateBaseGemProperties(),
