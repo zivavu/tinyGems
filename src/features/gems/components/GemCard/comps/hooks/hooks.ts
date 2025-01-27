@@ -186,36 +186,8 @@ export function useInitEmbededPlayerControls({ playerId, playerType }: { playerI
   function createBandcampHandler(playerId: string): PlayerHandler {
     return {
       connectWithIFrame: async (iframe) => {
-        // Listen for all possible events
-        const events = ['play', 'playing', 'pause', 'timeupdate', 'loadstart', 'loadeddata', 'canplay', 'volumechange', 'durationchange'];
-
-        events.forEach((eventName) => {
-          iframe.addEventListener(eventName, (event) => {
-            console.log(`Bandcamp ${eventName} event:`, event);
-          });
-        });
-
-        // Also listen for iframe load and content changes
         iframe.addEventListener('load', () => {
-          console.log('Bandcamp iframe loaded');
-        });
-
-        iframe.addEventListener('resize', () => {
-          console.log('Bandcamp iframe resized');
-        });
-
-        window.addEventListener('message', (event) => {
-          if (event.source === iframe.contentWindow) {
-            console.log('Bandcamp message:', event);
-          }
-        });
-
-        registerPlayerInTheStore({
-          id: playerId,
-          pauseHandler: () => {
-            if (currentPlayerId === playerId) return;
-            console.log('Attempting to pause Bandcamp player:', playerId);
-          },
+          setCurrentPlayer(playerId);
         });
       },
     };

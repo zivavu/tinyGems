@@ -2,6 +2,7 @@ import { MusicGem } from '@/features/gems/types/gemsTypes';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import { useEffect, useRef, useState } from 'react';
 import { useInitEmbededPlayerControls } from './hooks/hooks';
+import { usePlayerStore } from './stores/playerStore';
 import { getEmbedUrl, getPlatformUrl, getPreferredPlatform } from './utils';
 
 export interface PlatformPreviewProps {
@@ -10,7 +11,9 @@ export interface PlatformPreviewProps {
 }
 
 export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
+  const { setCurrentPlayer } = usePlayerStore();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [allowIframeInteraction, setAllowIframeInteraction] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const { connectWithIFrame: initialize } = useInitEmbededPlayerControls({
@@ -69,18 +72,31 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
         </div>
       )}
       <div className="relative">
-        {/* Dark overlay to mask white background */}
-        {preferredPlatform === 'spotify' && <div className="absolute inset-0 bg-black/40 pointer-events-none" />}
+        {preferredPlatform.toLowerCase() === 'bandcamp' && !allowIframeInteraction && (
+          <div
+            className="absolute inset-0 z-10 cursor-pointer"
+            onClick={() => {
+              setCurrentPlayer(playerId);
+              setAllowIframeInteraction(true);
+            }}
+          />
+        )}
         <iframe
           id={playerId}
           ref={iframeRef}
-          className={cn(getIframeClassName(preferredPlatform), 'overflow-hidden, w-full')}
+          className={cn(getIframeClassName(preferredPlatform), 'overflow-hidden w-full')}
           height={getIframeHeight(preferredPlatform)}
           src={embedUrl}
           frameBorder="0"
           scrolling="no"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
+          style={
+            (preferredPlatform === 'bandcamp' && {
+              pointerEvents: allowIframeInteraction ? 'auto' : 'none',
+            }) ||
+            {}
+          }
           onLoad={() => {
             setIsLoaded(true);
             onLoad?.();
