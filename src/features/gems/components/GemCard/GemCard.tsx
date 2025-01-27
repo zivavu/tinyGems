@@ -29,6 +29,7 @@ export function GemCard({ gem, className }: GemCardProps) {
         className,
       )}
     >
+      <Typography variant="h4">{gem.id}</Typography>
       <div
         className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}
         role="img"

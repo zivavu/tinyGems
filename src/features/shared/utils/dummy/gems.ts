@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { GemCategory, GemPlatform, GemPlatformName, GemProperties, MusicGem, MusicGemProperties } from '../../../gems/types/gemsTypes';
 import { dummyArtists } from './artists';
 
-faker.seed(42);
+faker.seed(333);
 
 export const MUSIC_PLATFORMS = ['bandcamp', 'spotify', 'soundcloud', 'youtube', 'other'];
 
@@ -43,8 +43,8 @@ const MUSIC_GENRES = [
 // Real-world examples that actually work in embeds
 const SAMPLE_PLATFORM_URLS = {
   youtube: [
-    'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    'https://www.youtube.com/watch?v=SGBGOfZiRds',
+    'https://www.youtube.com/watch?v=samdIzlNBv8',
+    'https://www.youtube.com/watch?v=uPskJjSlUow&l',
     'https://www.youtube.com/watch?v=gz05MgcBLoM',
     'https://www.youtube.com/watch?v=su0zi_VxLU0',
   ],
@@ -59,7 +59,7 @@ const SAMPLE_PLATFORM_URLS = {
     'https://newworldofmine.bandcamp.com/album/after-ovid',
   ],
   spotify: [
-    'https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT',
+    'https://open.spotify.com/track/1AmAFaRELIqcrtCI230csp',
     'https://open.spotify.com/track/0HUTL8i4y4MiGCPId7M7wb',
     'https://open.spotify.com/track/7eJMfftS33KTjuF7lTsMCx',
   ],
@@ -151,7 +151,7 @@ function generateGem(type: GemCategory) {
 
 export function generateDummyGems(count = 100) {
   return Array.from({ length: count }, (_, index) => {
-    faker.seed(42 + index);
+    faker.seed(144 + index);
     return generateGem('music');
   });
 }

@@ -3,9 +3,8 @@ import { create } from 'zustand';
 interface PlayerState {
   currentPlayerId: string | null;
   players: Record<string, { pause: () => void }>;
-  registerPlayer: (id: string, pauseHandler: () => void) => void;
-  unregisterPlayer: (id: string) => void;
-  play: (id: string) => void;
+  registerPlayerInTheStore: ({ id, pauseHandler }: { id: string; pauseHandler: () => void }) => void;
+  setCurrentPlayer: (id: string) => void;
   pauseAll: (excludeId?: string) => void;
 }
 
@@ -13,31 +12,28 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   currentPlayerId: null,
   players: {},
 
-  registerPlayer: (id, pauseHandler) => {
+  registerPlayerInTheStore: ({ id, pauseHandler }) => {
     set((state) => ({
       players: { ...state.players, [id]: { pause: pauseHandler } },
     }));
   },
 
-  unregisterPlayer: (id) => {
-    set((state) => {
-      const { [id]: _, ...remaining } = state.players;
-      return { players: remaining };
-    });
-  },
-
-  play: (id) => {
+  setCurrentPlayer: (newPlayerId) => {
     const { pauseAll, currentPlayerId } = get();
-    if (currentPlayerId !== id) {
-      pauseAll(id);
-      set({ currentPlayerId: id });
-    }
+    if (currentPlayerId === newPlayerId) return;
+
+    console.log('setting new player id', newPlayerId);
+    pauseAll(newPlayerId);
+    set({ currentPlayerId: newPlayerId });
   },
 
   pauseAll: (excludeId) => {
     const { players } = get();
+    console.log('pauseAll', players, excludeId);
     Object.entries(players).forEach(([id, player]) => {
-      if (id !== excludeId) player.pause();
+      if (id === excludeId) return;
+      console.log('pausing player', id, excludeId);
+      player.pause();
     });
   },
 }));
