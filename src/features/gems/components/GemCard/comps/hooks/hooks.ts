@@ -12,7 +12,6 @@ interface SoundCloudWidget {
   pause: () => void;
   play: () => void;
   seekTo: (milliseconds: number) => void;
-  getCurrentSound: (callback: (sound: any) => void) => void;
   getVolume: (callback: (volume: number) => void) => void;
   setVolume: (volume: number) => void;
   getDuration: (callback: (duration: number) => void) => void;
