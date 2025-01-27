@@ -4,7 +4,39 @@ import { usePlayerStore } from '@/features/gems/components/GemCard/comps/stores/
 import { GemPlatformName } from '@/features/gems/types/gemsTypes';
 
 interface PlayerHandler {
-  connectWithIFrame: (iframe: HTMLIFrameElement) => Promise<void>;
+  connectWithIFrame: (iframe: HTMLIFrameElement) => Promise<void | (() => void)>;
+}
+
+interface SoundCloudWidget {
+  bind: (event: string, callback: () => void) => void;
+  pause: () => void;
+  play: () => void;
+  seekTo: (milliseconds: number) => void;
+  getCurrentSound: (callback: (sound: any) => void) => void;
+  getVolume: (callback: (volume: number) => void) => void;
+  setVolume: (volume: number) => void;
+  getDuration: (callback: (duration: number) => void) => void;
+  getCurrentPosition: (callback: (position: number) => void) => void;
+}
+
+interface SoundCloudWidgetAPI {
+  Widget: {
+    (iframe: HTMLIFrameElement): SoundCloudWidget;
+    Events: {
+      PLAY: string;
+      PAUSE: string;
+      FINISH: string;
+      LOAD_PROGRESS: string;
+      SEEK: string;
+      READY: string;
+    };
+  };
+}
+
+declare global {
+  interface Window {
+    SC?: SoundCloudWidgetAPI;
+  }
 }
 
 export function useInitEmbededPlayerControls({ playerId, playerType }: { playerId: string; playerType: GemPlatformName | undefined }) {
@@ -67,10 +99,10 @@ export function useInitEmbededPlayerControls({ playerId, playerType }: { playerI
   }
 
   function createSoundCloudHandler(playerId: string): PlayerHandler {
-    let widget: any = null;
+    let widget: SoundCloudWidget | null = null;
 
     const loadSoundCloudAPI = async () => {
-      return new Promise((resolve) => {
+      return new Promise<SoundCloudWidgetAPI>((resolve) => {
         if (window.SC) {
           resolve(window.SC);
           return;
@@ -78,7 +110,7 @@ export function useInitEmbededPlayerControls({ playerId, playerType }: { playerI
 
         const script = document.createElement('script');
         script.src = 'https://w.soundcloud.com/player/api.js';
-        script.onload = () => resolve(window.SC);
+        script.onload = () => resolve(window.SC!);
         document.body.appendChild(script);
       });
     };
@@ -153,8 +185,38 @@ export function useInitEmbededPlayerControls({ playerId, playerType }: { playerI
 
   function createBandcampHandler(playerId: string): PlayerHandler {
     return {
-      connectWithIFrame: async () => {
-        // Will be implemented when you provide the iframe structure
+      connectWithIFrame: async (iframe) => {
+        // Listen for all possible events
+        const events = ['play', 'playing', 'pause', 'timeupdate', 'loadstart', 'loadeddata', 'canplay', 'volumechange', 'durationchange'];
+
+        events.forEach((eventName) => {
+          iframe.addEventListener(eventName, (event) => {
+            console.log(`Bandcamp ${eventName} event:`, event);
+          });
+        });
+
+        // Also listen for iframe load and content changes
+        iframe.addEventListener('load', () => {
+          console.log('Bandcamp iframe loaded');
+        });
+
+        iframe.addEventListener('resize', () => {
+          console.log('Bandcamp iframe resized');
+        });
+
+        window.addEventListener('message', (event) => {
+          if (event.source === iframe.contentWindow) {
+            console.log('Bandcamp message:', event);
+          }
+        });
+
+        registerPlayerInTheStore({
+          id: playerId,
+          pauseHandler: () => {
+            if (currentPlayerId === playerId) return;
+            console.log('Attempting to pause Bandcamp player:', playerId);
+          },
+        });
       },
     };
   }
