@@ -67,8 +67,47 @@ export function useInitEmbededPlayerControls({ playerId, playerType }: { playerI
   }
 
   function createSoundCloudHandler(playerId: string): PlayerHandler {
+    let widget: any = null;
+
+    const loadSoundCloudAPI = async () => {
+      return new Promise((resolve) => {
+        if (window.SC) {
+          resolve(window.SC);
+          return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://w.soundcloud.com/player/api.js';
+        script.onload = () => resolve(window.SC);
+        document.body.appendChild(script);
+      });
+    };
+
     return {
-      connectWithIFrame: async () => {},
+      connectWithIFrame: async (iframe) => {
+        try {
+          await loadSoundCloudAPI();
+
+          // Need to wait a bit after the API loads before initializing the widget
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
+          widget = window.SC!.Widget(iframe);
+
+          widget.bind(window.SC!.Widget.Events.PLAY, () => {
+            setCurrentPlayer(playerId);
+          });
+
+          registerPlayerInTheStore({
+            id: playerId,
+            pauseHandler: () => {
+              if (!widget || currentPlayerId === playerId) return;
+              widget.pause();
+            },
+          });
+        } catch (error) {
+          console.error('Error initializing SoundCloud widget:', error);
+        }
+      },
     };
   }
 
@@ -86,6 +125,22 @@ export function useInitEmbededPlayerControls({ playerId, playerType }: { playerI
           } catch (error) {
             console.error(error);
           }
+        });
+
+        registerPlayerInTheStore({
+          id: playerId,
+          pauseHandler: () => {
+            if (!iframe) return;
+            if (currentPlayerId === playerId) return;
+
+            iframe.contentWindow?.postMessage(
+              {
+                type: 'command',
+                command: 'pause',
+              },
+              'https://open.spotify.com',
+            );
+          },
         });
 
         const currentSrc = iframe.src;
