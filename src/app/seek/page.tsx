@@ -1,12 +1,15 @@
+'use client';
+
 import { FiltersInputBar } from '@/features/gems/components/FiltersInputBar/FiltersInputBar';
-import { GemGrid } from '@/features/gems/components/GemGrid';
+import { GemCard } from '@/features/gems/components/GemCard/GemCard';
+import { useFilteredGems } from '@/features/gems/hooks/useFilteredGems';
 import { Icons } from '@/features/shared/components/Icons';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { Button } from '@headlessui/react';
 import { Suspense } from 'react';
 
-export default async function SeekPage() {
-  const sortedGems = [...dummyGems].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+export default function SeekPage() {
+  const filteredGems = useFilteredGems(dummyGems);
 
   return (
     <div className="flex flex-col pb-16 space-y-16">
@@ -25,7 +28,11 @@ export default async function SeekPage() {
 
       <main className="container flex px-4 mx-auto" role="main" aria-label="Search gems">
         <section aria-label="Gems grid">
-          <GemGrid gems={sortedGems} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+            {filteredGems.map((gem) => (
+              <GemCard key={gem.id} gem={gem} />
+            ))}
+          </div>
         </section>
       </main>
 

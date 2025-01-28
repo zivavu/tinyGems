@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { GemCategory, GemPlatform, GemPlatformName, GemProperties, MusicGem, MusicGemProperties } from '../../../gems/types/gemsTypes';
-import { dummyArtists } from './artists';
+import { createArtistSnapshot, dummyArtists } from './artists';
 
 faker.seed(333);
 
@@ -139,10 +139,12 @@ function generateMusicProperties(): MusicGemProperties {
 function generateGem(type: GemCategory) {
   const baseGem = generateBaseGem(type);
   const properties = generateMusicProperties();
+  const randomArtist = faker.helpers.arrayElement(dummyArtists);
 
   const musicGem: MusicGem = {
     ...baseGem,
     type: 'music',
+    artist: createArtistSnapshot(randomArtist),
     properties,
   };
 

@@ -83,7 +83,7 @@ export default function Home() {
       <section className="px-6 relative pb-32 bg-gradient-to-b from-rose-50/90 via-purple-50/50 to-rose-50/50 dark:from-black dark:via-stone-950/50 dark:to-black/100">
         <div className="max-w-7xl mx-auto">
           <Typography variant="h2" className="text-4xl font-bold text-center mb-12">
-            Discover the Hidden Gems
+            Discover Newset Gems
           </Typography>
           <GemGrid gems={dummyGems.slice(0, 8)} />
         </div>

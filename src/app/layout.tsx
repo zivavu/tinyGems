@@ -1,10 +1,10 @@
-import { Footer } from '@/features/global/Footer';
-import { Header } from '@/features/global/Header';
 import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
+import { Footer } from '@/features/global/components/Footer';
+import { Header } from '@/features/global/components/Header';
 import { config, library } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import { fab } from '@fortawesome/free-brands-svg-icons';

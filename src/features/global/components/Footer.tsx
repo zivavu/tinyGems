@@ -2,7 +2,7 @@ import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from '../shared/components/Link';
+import { Link } from '../../shared/components/Link';
 
 export function Footer() {
   return (

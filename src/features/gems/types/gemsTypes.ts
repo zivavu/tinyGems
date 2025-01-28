@@ -1,3 +1,5 @@
+import { ArtistGender, AudienceSize } from '@/features/artists/types/artistTypes';
+
 export type GemCategory = 'music';
 
 export type GemType = 'music';
@@ -15,18 +17,22 @@ export interface GemProperties {
   };
 }
 
+export interface ArtistSnapshot {
+  id: string;
+  name: string;
+  location?: string;
+  avatar?: string;
+  gender?: ArtistGender;
+  audienceSize?: AudienceSize;
+}
+
 export interface BaseGem {
   id: string;
   type: GemCategory;
   title: string;
   description?: string;
   category: GemCategory;
-  artist: {
-    id: string;
-    name: string;
-    location?: string;
-    avatar?: string;
-  };
+  artist: ArtistSnapshot;
   tags: string[];
   createdAt: string;
   updatedAt: string;
