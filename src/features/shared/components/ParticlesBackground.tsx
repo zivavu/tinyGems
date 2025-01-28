@@ -11,8 +11,8 @@ export default function ParticlesBackground({ className }: { className?: string 
   }
 
   function getRandomSize() {
-    const MIN_SIZE = 7;
-    const MAX_SIZE = 20;
+    const MIN_SIZE = 10;
+    const MAX_SIZE = 25;
     const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
     return `${size}px`;
   }
@@ -33,7 +33,7 @@ export default function ParticlesBackground({ className }: { className?: string 
         return (
           <div
             key={i}
-            className="absolute blur-sm bg-rose-400/30 dark:bg-rose-600/30 rounded-full"
+            className="absolute blur-sm bg-violet-400/30 dark:bg-rose-700/50 rounded-full"
             style={{
               left: `${originX}%`,
               top: `${originY}%`,
