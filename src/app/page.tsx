@@ -1,12 +1,12 @@
+import WebGLParticles from '@/features/shared/components/BackgroundParticles2';
 import { Icons } from '@/features/shared/components/Icons';
-import ParticlesBackground from '@/features/shared/components/ParticlesBackground';
 import { Typography } from '@/features/shared/components/Typography';
 import NextLink from 'next/link';
 
 export default function Home() {
   return (
     <main className="relative bg-stone-50 dark:bg-[#0a0a0a]">
-      <ParticlesBackground />
+      <WebGLParticles />
 
       <section className="min-h-screen bg-gradient-to-b from-rose-50 to-purple-50 dark:from-black/100 dark:to-stone-950 flex items-center justify-center">
         <div className="z-10 max-w-6xl space-y-12 mx-auto flex flex-col items-center justify-center text-center">
