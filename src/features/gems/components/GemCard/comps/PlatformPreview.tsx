@@ -53,7 +53,7 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
       case 'youtube':
         return `${baseClasses} ${visibilityClasses}`;
       case 'spotify':
-        return `${baseClasses} ${visibilityClasses} bg-transparent rounded-xl`;
+        return `${baseClasses} ${visibilityClasses} bg-transparent rounded-2xl`;
       default:
         return `${baseClasses} ${visibilityClasses}`;
     }

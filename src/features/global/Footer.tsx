@@ -1,5 +1,3 @@
-'use client';
-
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
@@ -40,7 +38,7 @@ export function Footer() {
               <Link href="/privacy-policy" variant="muted">
                 Privacy Policy
               </Link>
-              <Link href="/terms-of-use" variant="muted">
+              <Link href="/terms-of-service" variant="muted">
                 Terms of Service
               </Link>
               <Link href="/cookies" variant="muted">
