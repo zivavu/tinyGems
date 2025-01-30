@@ -64,7 +64,7 @@ export function GemCard({ gem, className }: GemCardProps) {
         )}
       </div>
 
-      <Link href={`/gem/${gem.id}`} className="block p-4 flex-1 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+      <Link href={`/gem/song/${gem.id}`} className="block p-4 flex-1 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
         <div className="mb-2 space-y-1">
           <Typography variant="h4" className="line-clamp-1">
             {gem.title}

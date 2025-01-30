@@ -33,14 +33,14 @@ export default function ParticlesBackground({ className }: { className?: string 
         return (
           <div
             key={i}
-            className="absolute blur-sm bg-violet-400/30 dark:bg-rose-700/50 rounded-full"
+            className="absolute blur-sm bg-violet-400/30 dark:bg-rose-600/30 rounded-full"
             style={{
               left: `${originX}%`,
               top: `${originY}%`,
               width: size,
               height: size,
-              animation: `float 6s ease-in-out infinite`,
-              animationDelay: `${i * 0.02}s`,
+              animation: `float 12s ease-in-out infinite`,
+              animationDelay: `${i * 0.01}s`,
             }}
           />
         );
@@ -51,13 +51,16 @@ export default function ParticlesBackground({ className }: { className?: string 
           100% {
             transform: translate(0, 0);
           }
-          25% {
+          20% {
             ${getRandomTransform()};
           }
-          50% {
+          40% {
             ${getRandomTransform()};
           }
-          75% {
+          60% {
+            ${getRandomTransform()};
+          }
+          80% {
             ${getRandomTransform()};
           }
         }

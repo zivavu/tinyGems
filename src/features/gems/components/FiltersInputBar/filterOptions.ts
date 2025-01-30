@@ -113,12 +113,8 @@ export const audienceSizes = [
   },
   { id: 'tiny', label: 'Tiny', description: '100 - 1k followers' },
   { id: 'little', label: 'Little', description: '1k - 10k followers' },
-  { id: 'small', label: 'Small', description: '10k - 50k followers' },
-  {
-    id: 'substantial',
-    label: 'Substantial',
-    description: '50k - 100k followers',
-  },
+  { id: 'substantial', label: 'Substantial', description: '10k - 50k followers' },
+  { id: 'big', label: 'Big', description: '50k - 100k followers' },
   { id: 'giant', label: 'Giant', description: 'More than 100k followers' },
 ] as FilterOption[];
 
@@ -394,7 +390,7 @@ export const additionalOptions: FilterOption[] = [
   },
 ] as const;
 
-export type MusicFiltersId = 'lang'| 'gender' | 'genre' | 'audienceSize' | 'platform' | 'bpm' | 'mood' | 'lyricsStyle' | 'additional';
+export type MusicFiltersId = 'lang' | 'gender' | 'genre' | 'audienceSize' | 'platform' | 'bpm' | 'mood' | 'lyricsStyle' | 'additional';
 
 export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
   {
