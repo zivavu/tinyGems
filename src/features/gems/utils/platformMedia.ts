@@ -1,4 +1,5 @@
 import { GemPlatform, GemPlatformName } from '../types/gemsTypes';
+import { getSoundCloudTrackInfo } from './soundcloudClient';
 import { getSpotifyTrackInfo } from './spotifyClient';
 import { getYouTubeVideoInfo } from './youtubeClient';
 
@@ -12,20 +13,6 @@ interface PlatformMediaInfo {
   album?: string;
   releaseDate?: string;
 }
-
-// Helper to extract IDs from platform URLs
-const extractIds = {
-  spotify: (url: string) => {
-    const match = url.match(/track\/([a-zA-Z0-9]+)/);
-    return match ? match[1] : null;
-  },
-  youtube: (url: string) => {
-    const match = url.match(/(?:v=|\/)([\w-]{11})(?:\?|$)/);
-    return match ? match[1] : null;
-  },
-  soundcloud: (url: string) => url, // Soundcloud needs full URL for their API
-  bandcamp: (url: string) => url,
-};
 
 // Platform-specific media fetchers
 const mediaFetchers = {
@@ -69,14 +56,16 @@ const mediaFetchers = {
   },
   soundcloud: async (url: string): Promise<PlatformMediaInfo> => {
     try {
-      // Using SoundCloud API
-      const response = await fetch(`https://api.soundcloud.com/resolve?url=${url}&client_id=${process.env.SOUNDCLOUD_CLIENT_ID}`);
-      const track = await response.json();
+      const trackInfo = await getSoundCloudTrackInfo(url);
+
+      if (!trackInfo) return {};
 
       return {
-        coverImage: track.artwork_url?.replace('large', 't500x500'),
-        images: [track.artwork_url?.replace('large', 't500x500'), track.artwork_url].filter(Boolean),
-        duration: msToMinutesAndSeconds(track.duration),
+        coverImage: trackInfo.coverImage,
+        images: trackInfo.images,
+        duration: msToMinutesAndSeconds(trackInfo.duration),
+        title: trackInfo.title,
+        artist: trackInfo.artist,
       };
     } catch (error) {
       console.error('SoundCloud API error:', error);

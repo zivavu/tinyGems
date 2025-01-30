@@ -327,11 +327,9 @@ export const genderOptions: FilterOption[] = [
 
 export const platformOptions: FilterOption[] = [
   { id: 'youtube', label: 'YouTube' },
-  { id: 'tiktok', label: 'TikTok' },
   { id: 'soundcloud', label: 'SoundCloud' },
-  { id: 'streaming-platforms', label: 'Streaming Platforms' },
   { id: 'bandcamp', label: 'Bandcamp' },
-  { id: 'instagram', label: 'Instagram' },
+  { id: 'spotify', label: 'Spotify' },
 ] as const;
 
 export const bpmOptions: FilterOption[] = [

@@ -5,9 +5,9 @@ export interface Platform {
   url: string;
 }
 
-export function getPreferredPlatform(platforms: Platform[]) {
-  const platformPriority = ['youtube', 'soundcloud', 'bandcamp', 'spotify'] as GemPlatformName[];
+export const platformPriority = ['youtube', 'soundcloud', 'bandcamp', 'spotify'] as GemPlatformName[];
 
+export function getPreferredPlatform(platforms: Platform[]) {
   return platformPriority.find((priority) => platforms.some((p) => p.name.toLowerCase() === priority));
 }
 
