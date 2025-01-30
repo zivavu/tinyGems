@@ -29,7 +29,7 @@ export default function SeekPage() {
       <main className="container flex px-4 mx-auto" role="main" aria-label="Search gems">
         <section aria-label="Gems grid">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
-            {filteredGems.map((gem) => (
+            {filteredGems.slice(0, 20).map((gem) => (
               <GemCard key={gem.id} gem={gem} />
             ))}
           </div>

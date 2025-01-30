@@ -1,3 +1,4 @@
+import { getPlatformMediaInfo } from '@/features/gems/utils/platformMedia';
 import { faker } from '@faker-js/faker';
 import { GemCategory, GemPlatform, GemPlatformName, GemProperties, MusicGem, MusicGemProperties } from '../../../gems/types/gemsTypes';
 import { createArtistSnapshot, dummyArtists } from './artists';
@@ -113,7 +114,7 @@ function generatePlatformUrl(platform: GemPlatformName): string {
   return faker.helpers.arrayElement(SAMPLE_PLATFORM_URLS[platform as keyof typeof SAMPLE_PLATFORM_URLS] || []);
 }
 
-function generateMusicProperties(): MusicGemProperties {
+async function generateMusicProperties(): Promise<MusicGemProperties> {
   const platformCount = faker.number.int({ min: 1, max: 3 });
   const selectedPlatforms = faker.helpers.arrayElements(MUSIC_PLATFORMS, platformCount) as GemPlatformName[];
 
@@ -122,10 +123,17 @@ function generateMusicProperties(): MusicGemProperties {
     url: generatePlatformUrl(platformName),
   }));
 
+  // Get media info from platforms
+  const mediaInfo = await getPlatformMediaInfo(platforms);
+
   return {
     ...generateBaseGemProperties(),
     platforms,
-    duration: `${faker.number.int({ min: 1, max: 10 })}:${faker.number.int({ min: 10, max: 59 })}`,
+    duration: mediaInfo.duration || `${faker.number.int({ min: 1, max: 10 })}:${faker.number.int({ min: 10, max: 59 })}`,
+    media: {
+      coverImage: mediaInfo.coverImage || generateBaseGemProperties().media.coverImage,
+      images: mediaInfo.images || generateBaseGemProperties().media.images,
+    },
     releaseDate: faker.date.past().toISOString(),
     genre: faker.helpers.arrayElements(MUSIC_GENRES, { min: 1, max: 3 }),
     language: faker.helpers.arrayElements(MUSIC_LANGUAGES, { min: 1, max: 2 }),
@@ -136,9 +144,9 @@ function generateMusicProperties(): MusicGemProperties {
   };
 }
 
-function generateGem(type: GemCategory) {
+async function generateGem(type: GemCategory) {
   const baseGem = generateBaseGem(type);
-  const properties = generateMusicProperties();
+  const properties = await generateMusicProperties();
   const randomArtist = faker.helpers.arrayElement(dummyArtists);
 
   const musicGem: MusicGem = {
@@ -151,11 +159,14 @@ function generateGem(type: GemCategory) {
   return musicGem;
 }
 
-export function generateDummyGems(count = 100) {
-  return Array.from({ length: count }, (_, index) => {
-    faker.seed(144 + index);
-    return generateGem('music');
-  });
+export async function generateDummyGems(count = 20) {
+  const gems = await Promise.all(
+    Array.from({ length: count }, async (_, index) => {
+      faker.seed(144 + index);
+      return generateGem('music');
+    }),
+  );
+  return gems;
 }
 
-export const dummyGems = generateDummyGems();
+export const dummyGems = await generateDummyGems();

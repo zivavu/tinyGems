@@ -19,7 +19,7 @@ interface GemCardProps {
 }
 
 export function GemCard({ gem, className }: GemCardProps) {
-  const mainImage = gem.properties.media.coverImage || gem.properties.media.images?.[0];
+  const mainImage = gem.properties.media?.coverImage || gem.properties.media?.images?.[0];
   const [showPreview, setShowPreview] = useState(false);
 
   return (
@@ -49,7 +49,7 @@ export function GemCard({ gem, className }: GemCardProps) {
             ) : (
               <GemPlaceholder />
             )}
-            {gem.type === 'music' && gem.properties.platforms.length > 0 && (
+            {gem.type === 'music' && gem?.properties?.platforms?.length > 0 && (
               <Button
                 onClick={() => {
                   setShowPreview(true);
@@ -77,7 +77,7 @@ export function GemCard({ gem, className }: GemCardProps) {
         <MusicProperties gem={gem} />
 
         <div className="flex flex-wrap gap-1 mb-4" role="list" aria-label="Tags">
-          {gem.tags.map((tag) => (
+          {gem?.tags?.map((tag) => (
             <span
               key={tag}
               className="px-2 py-0.5 text-xs text-gray-600 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-gray-400"
@@ -88,7 +88,7 @@ export function GemCard({ gem, className }: GemCardProps) {
           ))}
         </div>
 
-        <StatsSection likes={gem.likes} saves={gem.saves} />
+        <StatsSection likes={gem?.likes} saves={gem?.saves} />
       </Link>
     </div>
   );
