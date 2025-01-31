@@ -6,6 +6,7 @@ interface YouTubeVideoInfo {
 }
 
 export async function getYouTubeVideoInfo(url: string): Promise<YouTubeVideoInfo | null> {
+  return null;
   try {
     const response = await fetch(`/api/youtube?url=${encodeURIComponent(url)}`);
 

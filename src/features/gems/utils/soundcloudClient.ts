@@ -8,6 +8,7 @@ interface SoundCloudTrackInfo {
 
 export async function getSoundCloudTrackInfo(url: string): Promise<SoundCloudTrackInfo | null> {
   try {
+    return null;
     const response = await fetch(`/api/soundcloud?url=${encodeURIComponent(url)}`);
 
     if (!response.ok) {

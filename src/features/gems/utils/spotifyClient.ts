@@ -9,6 +9,7 @@ interface SpotifyTrackInfo {
 }
 
 export async function getSpotifyTrackInfo(url: string): Promise<SpotifyTrackInfo | null> {
+  return null;
   try {
     const response = await fetch(`/api/spotify?url=${encodeURIComponent(url)}`);
 
