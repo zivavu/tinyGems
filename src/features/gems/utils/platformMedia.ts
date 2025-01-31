@@ -81,22 +81,6 @@ function msToMinutesAndSeconds(ms: number): string {
   return `${minutes}:${Number(seconds) < 10 ? '0' : ''}${seconds}`;
 }
 
-// Helper function to parse YouTube ISO 8601 duration
-function parseDuration(duration: string): string {
-  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-  if (!match) return '00:00';
-  const hours = (match[1] || '').replace('H', '');
-  const minutes = (match[2] || '').replace('M', '');
-  const seconds = (match[3] || '').replace('S', '');
-
-  let result = '';
-  if (hours) result += `${hours}:`;
-  result += `${minutes || '0'}:`;
-  result += seconds.padStart(2, '0');
-
-  return result;
-}
-
 // Main function to get media info from any platform
 export async function getPlatformMediaInfo(platforms: GemPlatform[]): Promise<PlatformMediaInfo> {
   // Try platforms in order of preference
