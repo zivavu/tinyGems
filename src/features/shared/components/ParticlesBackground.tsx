@@ -3,6 +3,7 @@
 import { useTheme } from 'next-themes';
 import { useEffect, useRef } from 'react';
 import colors from 'tailwindcss/colors';
+import { cn } from '../utils/dummy/utils';
 
 const PARTICLE_COUNT: number = 300;
 const PERIOD: number = 12 * 1000;
@@ -77,7 +78,7 @@ function computeOffset(keyframes: Keyframe[], normalizedTime: number): { offsetX
   return { offsetX: 0, offsetY: 0 };
 }
 
-function ParticlesBackground({ theme }: { theme: string | undefined }) {
+function ParticlesBackground({ theme, className }: { theme: string | undefined; className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const particlesRef = useRef<Particle[]>([]);
@@ -162,10 +163,10 @@ function ParticlesBackground({ theme }: { theme: string | undefined }) {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute blur-sm inset-0 overflow-hidden opacity-50" />;
+  return <canvas ref={canvasRef} className={cn('absolute blur-sm inset-0 overflow-hidden opacity-50', className)} />;
 }
 
-export function ThemedParticlesBackground() {
+export function ThemedParticlesBackground({ className }: { className?: string }) {
   const { theme } = useTheme();
-  return <ParticlesBackground key={theme} theme={theme} />;
+  return <ParticlesBackground key={theme} theme={theme} className={className} />;
 }
