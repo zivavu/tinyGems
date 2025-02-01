@@ -83,6 +83,7 @@ async function generateGem(): Promise<MusicGem> {
       media: {
         coverImage: mediaInfo.coverImage || `https://picsum.photos/seed/${faker.string.uuid()}/800/800`,
       },
+      isSingle: faker.datatype.boolean({ probability: 0.4 }),
       platforms,
       releaseDate: faker.date.past().toISOString(),
       duration: `${faker.number.int({ min: 1, max: 10 })}:${faker.number.int({ min: 10, max: 59 })}`,

@@ -37,13 +37,11 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
   return (
     <main className="min-h-screen" role="main" aria-label={`Artist profile: ${artist.name}`}>
-      {/* Banner */}
       <div className="relative h-48 bg-gray-200 dark:bg-gray-800" aria-label="Artist banner">
         {artist.banner && <Image src={artist.banner} alt="" role="presentation" fill className="object-cover" />}
       </div>
 
       <div className="container px-4 mx-auto">
-        {/* Profile Section */}
         <div className="flex relative gap-6 -mt-12 mb-8">
           <div
             className="overflow-hidden relative flex-shrink-0 w-24 h-24 bg-white rounded-full border-4 border-white dark:border-gray-900"
@@ -101,7 +99,6 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
           )}
         </div>
 
-        {/* Artist's Gems */}
         <div className="space-y-6">
           <Typography variant="h2">Gems</Typography>
           <section aria-label={`${artist.name}'s gems`}>

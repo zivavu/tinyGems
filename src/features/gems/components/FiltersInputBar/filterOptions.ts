@@ -388,7 +388,7 @@ export const additionalOptions: FilterOption[] = [
   },
 ] as const;
 
-export type MusicFiltersId = 'lang' | 'gender' | 'genre' | 'audienceSize' | 'platform' | 'bpm' | 'mood' | 'lyricsStyle' | 'additional';
+export type MusicFiltersId = 'lang' | 'gender' | 'genre' | 'audienceSize' | 'platform' | 'bpm' | 'mood' | 'lyricsTopics' | 'additional';
 
 export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
   {
@@ -441,9 +441,9 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
     showFilterChips: true,
   },
   {
-    title: 'Lyrics Style',
+    title: 'Lyrics Topic',
     options: lyricsTopicOptions,
-    id: 'lyricsStyle',
+    id: 'lyricsTopics',
     icon: 'ScrollText',
     isSearchable: false,
     showFilterChips: false,

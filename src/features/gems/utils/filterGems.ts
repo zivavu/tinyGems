@@ -1,11 +1,11 @@
 import { MusicFiltersId } from '../components/FiltersInputBar/filterOptions';
-import { MusicGem } from '../types/types';
+import { MusicGem } from '../types';
 
 type FilterParams = {
   [key in MusicFiltersId]?: string[];
 };
 
-export function filterGems(gems: MusicGem[], params: FilterParams): MusicGem[] {
+export function filterGems(gems: MusicGem[], params: FilterParams) {
   return gems.filter((gem) => {
     // Helper function to check if any value matches
     const hasMatchingValue = (paramValues: string[] | undefined, itemValues: string | string[] | undefined) => {
@@ -20,7 +20,7 @@ export function filterGems(gems: MusicGem[], params: FilterParams): MusicGem[] {
     for (const [key, values] of Object.entries(params)) {
       switch (key as MusicFiltersId) {
         case 'lang':
-          if (!hasMatchingValue(values, gem.properties.language)) return false;
+          if (!hasMatchingValue(values, gem.properties.languages)) return false;
           break;
 
         case 'gender':
@@ -28,7 +28,7 @@ export function filterGems(gems: MusicGem[], params: FilterParams): MusicGem[] {
           break;
 
         case 'genre':
-          if (!hasMatchingValue(values, gem.properties.genre)) return false;
+          if (!hasMatchingValue(values, gem.properties.genres)) return false;
           break;
 
         case 'audienceSize':
@@ -51,17 +51,17 @@ export function filterGems(gems: MusicGem[], params: FilterParams): MusicGem[] {
           break;
 
         case 'mood':
-          if (!hasMatchingValue(values, gem.properties.mood)) return false;
+          if (!hasMatchingValue(values, gem.properties.moods)) return false;
           break;
 
-        case 'lyricsStyle':
-          if (!hasMatchingValue(values, gem.properties.lyricsTopic)) return false;
+        case 'lyricsTopics':
+          if (!hasMatchingValue(values, gem.properties.lyricsTopics)) return false;
           break;
 
         case 'additional':
           // Handle additional filters
-          if (values.includes('has-music-video') && !gem.properties.hasMusicVideo) return false;
-          if (values.includes('has-lyrics') && !gem.properties.lyrics) return false;
+          if (values.includes('has-music-video') && !gem.properties.features?.hasMusicVideo) return false;
+          if (values.includes('has-lyrics') && !gem.properties.features?.hasLyrics) return false;
           break;
       }
     }

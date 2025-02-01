@@ -40,6 +40,7 @@ export interface MusicGemProperties {
   lyricsTopics?: string[];
   lyrics?: string;
   moods?: string[];
+  isSingle: boolean;
   features?: {
     hasMusicVideo: boolean;
     hasLyrics: boolean;
