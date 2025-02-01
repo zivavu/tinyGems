@@ -1,5 +1,4 @@
-import { ArtistSnapshot } from '../artists/types';
-import { EngagementStats, Platform } from '../gems/types';
+import { MediaBase, Platform } from '../gems/types';
 
 export type AlbumType = 'album' | 'ep' | 'mixtape' | 'compilation';
 
@@ -16,24 +15,13 @@ export interface AlbumProperties {
   totalTracks: number;
 }
 
-export interface Album {
-  id: string;
+export interface Album extends MediaBase {
   type: AlbumType;
-  title: string;
-  artistId: string;
-  artist: ArtistSnapshot;
-
-  metadata: {
-    addedByUserId: string;
-    status: 'active' | 'deleted' | 'hidden';
-  };
-
-  stats: EngagementStats;
 
   tracks: {
     gemId: string;
+    order?: number;
   }[];
 
-  tags: string[];
   properties: AlbumProperties;
 }

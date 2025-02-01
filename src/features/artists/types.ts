@@ -1,3 +1,5 @@
+import { MediaStatus } from '../gems/types';
+
 export type ArtistGender = 'male' | 'female' | 'non-binary' | 'other' | 'group';
 export type AudienceSize = 'microscopic' | 'tiny' | 'little' | 'small' | 'substantial' | 'giant';
 export type VerificationType = 'platform_verified' | 'claimed';
@@ -41,7 +43,7 @@ export interface Artist {
 
   metadata: {
     verificationType: VerificationType;
-    status: 'active' | 'inactive';
+    status: MediaStatus;
   };
 
   tags: string[];
