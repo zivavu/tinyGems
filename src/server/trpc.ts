@@ -2,9 +2,7 @@ import { initTRPC } from '@trpc/server';
 import { connectToDb } from './db';
 
 export async function createContext() {
-  console.log('Creating context');
   const db = await connectToDb();
-  console.log('Context created');
   return { db };
 }
 

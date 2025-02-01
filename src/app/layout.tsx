@@ -1,4 +1,4 @@
-import { TRPCProvider } from '@/utils/trpc-provider';
+import { FetchingLayerProvider } from '@/utils/FetchingLayerProvider';
 import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Geist, Geist_Mono } from 'next/font/google';
@@ -27,11 +27,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <TRPCProvider>
+          <FetchingLayerProvider>
             <Header />
-            <div className="flex-1">{children}</div>
+            {children}
             <Footer />
-          </TRPCProvider>
+          </FetchingLayerProvider>
         </ThemeProvider>
       </body>
     </html>

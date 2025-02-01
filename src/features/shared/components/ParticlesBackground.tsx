@@ -5,35 +5,35 @@ import { useEffect, useRef } from 'react';
 import colors from 'tailwindcss/colors';
 import { cn } from '../utils/dummy/utils';
 
-const PARTICLE_COUNT: number = 300;
-const PERIOD: number = 12 * 1000;
-const KEYFRAME_TIMES: number[] = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
-const MIN_SIZE: number = 10;
-const MAX_SIZE: number = 35;
-const MAX_OFFSET: number = 20;
-const LIGHT_MODE_COLOR: string = colors.violet[400];
-const DARK_MODE_COLOR: string = colors.rose[900];
-
-interface Keyframe {
-  time: number;
-  offsetX: number;
-  offsetY: number;
-}
+const PARTICLE_COUNT = 200;
+const MIN_SIZE = 10;
+const MAX_SIZE = 25;
+const MAX_RADIUS = 100;
+const MIN_SPEED = 0.001;
+const MAX_SPEED = 0.003;
+const LIGHT_MODE_COLOR = colors.violet[400];
+const DARK_MODE_COLOR = colors.rose[900];
 
 interface Particle {
   x: number;
   y: number;
+  originX: number;
+  originY: number;
+  currentTargetX: number;
+  currentTargetY: number;
+  nextTargetX: number;
+  nextTargetY: number;
+  transitionProgress: number;
   size: number;
-  delay: number;
-  keyframes: Keyframe[];
+  speed: number;
   sprite: HTMLCanvasElement;
 }
 
 function createParticleSprite(size: number, color: string): HTMLCanvasElement {
-  const sprite: HTMLCanvasElement = document.createElement('canvas');
+  const sprite = document.createElement('canvas');
   sprite.width = size;
   sprite.height = size;
-  const ctx: CanvasRenderingContext2D | null = sprite.getContext('2d');
+  const ctx = sprite.getContext('2d');
   if (ctx) {
     ctx.beginPath();
     ctx.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI, false);
@@ -43,39 +43,33 @@ function createParticleSprite(size: number, color: string): HTMLCanvasElement {
   return sprite;
 }
 
-function createParticle(canvasWidth: number, canvasHeight: number, index: number, color: string): Particle {
-  const x: number = Math.random() * canvasWidth;
-  const y: number = Math.random() * canvasHeight;
-  const size: number = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
-  const delay: number = index * 10;
-  const keyframes: Keyframe[] = KEYFRAME_TIMES.map(function (t: number): Keyframe {
-    if (t === 0 || t === 1) {
-      return { time: t, offsetX: 0, offsetY: 0 };
-    } else {
-      const offsetX: number = Math.random() * MAX_OFFSET - MAX_OFFSET / 2;
-      const offsetY: number = Math.random() * MAX_OFFSET - MAX_OFFSET / 2;
-      return { time: t, offsetX: offsetX, offsetY: offsetY };
-    }
-  });
-  const sprite: HTMLCanvasElement = createParticleSprite(size, color);
-  return { x: x, y: y, size: size, delay: delay, keyframes: keyframes, sprite: sprite };
+function getRandomTarget(originX: number, originY: number, radius: number): [number, number] {
+  const angle = Math.random() * Math.PI * 2;
+  const distance = Math.random() * radius;
+  return [originX + Math.cos(angle) * distance, originY + Math.sin(angle) * distance];
 }
 
-function lerp(a: number, b: number, t: number): number {
-  return a + (b - a) * t;
-}
+function createParticle(canvasWidth: number, canvasHeight: number, color: string): Particle {
+  const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
+  const originX = Math.random() * canvasWidth;
+  const originY = Math.random() * canvasHeight;
+  const [targetX, targetY] = getRandomTarget(originX, originY, MAX_RADIUS);
+  const [nextTargetX, nextTargetY] = getRandomTarget(originX, originY, MAX_RADIUS);
 
-function computeOffset(keyframes: Keyframe[], normalizedTime: number): { offsetX: number; offsetY: number } {
-  let i: number;
-  for (i = 0; i < keyframes.length - 1; i++) {
-    if (normalizedTime >= keyframes[i].time && normalizedTime <= keyframes[i + 1].time) {
-      const localT: number = (normalizedTime - keyframes[i].time) / (keyframes[i + 1].time - keyframes[i].time);
-      const offsetX: number = lerp(keyframes[i].offsetX, keyframes[i + 1].offsetX, localT);
-      const offsetY: number = lerp(keyframes[i].offsetY, keyframes[i + 1].offsetY, localT);
-      return { offsetX: offsetX, offsetY: offsetY };
-    }
-  }
-  return { offsetX: 0, offsetY: 0 };
+  return {
+    x: originX,
+    y: originY,
+    originX,
+    originY,
+    currentTargetX: targetX,
+    currentTargetY: targetY,
+    nextTargetX,
+    nextTargetY,
+    transitionProgress: 0,
+    size,
+    speed: MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED),
+    sprite: createParticleSprite(size, color),
+  };
 }
 
 function ParticlesBackground({ theme, className }: { theme: string | undefined; className?: string }) {
@@ -84,86 +78,88 @@ function ParticlesBackground({ theme, className }: { theme: string | undefined; 
   const particlesRef = useRef<Particle[]>([]);
   const scrollPositionRef = useRef<number>(0);
 
+  function updateScrollPosition(): void {
+    scrollPositionRef.current = window.scrollY;
+  }
+
+  function isParticleInViewport(particle: Particle): boolean {
+    const viewportTop = scrollPositionRef.current;
+    const viewportBottom = viewportTop + window.innerHeight;
+    const particleTop = particle.y - particle.size / 2;
+    const particleBottom = particle.y + particle.size / 2;
+
+    return particleBottom >= viewportTop && particleTop <= viewportBottom;
+  }
+
   function getCurrentColor(): string {
     return theme === 'dark' ? DARK_MODE_COLOR : LIGHT_MODE_COLOR;
   }
 
   function initCanvas(): void {
-    const canvas: HTMLCanvasElement | null = canvasRef.current;
+    const canvas = canvasRef.current;
     if (!canvas || !canvas.parentElement) return;
-    const width: number = canvas.parentElement.clientWidth;
-    const height: number = canvas.parentElement.clientHeight;
+
+    const width = canvas.parentElement.clientWidth;
+    const height = canvas.parentElement.clientHeight;
     canvas.width = width;
     canvas.height = height;
-    const particles: Particle[] = [];
-    const color: string = getCurrentColor();
-    for (let i: number = 0; i < PARTICLE_COUNT; i++) {
-      particles.push(createParticle(width, height, i, color));
-    }
-    particlesRef.current = particles;
-  }
 
-  function isParticleVisible(particle: Particle): boolean {
-    const padding = MAX_SIZE + MAX_OFFSET;
-    const scrollPosition = scrollPositionRef.current;
-    const viewportTop = scrollPosition - padding;
-    const viewportBottom = scrollPosition + window.innerHeight + padding;
-
-    const isVisible = particle.y >= viewportTop && particle.y <= viewportBottom;
-
-    return isVisible;
+    particlesRef.current = Array.from({ length: PARTICLE_COUNT }, () => createParticle(width, height, getCurrentColor()));
   }
 
   function animate(): void {
-    const canvas: HTMLCanvasElement | null = canvasRef.current;
+    const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    scrollPositionRef.current = window.scrollY;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const now: number = Date.now();
 
-    particlesRef.current
-      .filter((particle) => isParticleVisible(particle))
-      .forEach(function (particle: Particle): void {
-        const elapsed: number = (now + particle.delay) % PERIOD;
-        const normalizedTime: number = elapsed / PERIOD;
-        const offset = computeOffset(particle.keyframes, normalizedTime);
-        const posX: number = particle.x + offset.offsetX;
-        const posY: number = particle.y + offset.offsetY;
-        ctx.drawImage(particle.sprite, posX - particle.size / 2, posY - particle.size / 2);
-      });
+    particlesRef.current.forEach((particle) => {
+      particle.transitionProgress += particle.speed;
+
+      if (particle.transitionProgress >= 1) {
+        particle.currentTargetX = particle.nextTargetX;
+        particle.currentTargetY = particle.nextTargetY;
+        [particle.nextTargetX, particle.nextTargetY] = getRandomTarget(particle.originX, particle.originY, MAX_RADIUS);
+        particle.transitionProgress = 0;
+      }
+
+      const targetX = particle.currentTargetX + (particle.nextTargetX - particle.currentTargetX) * particle.transitionProgress;
+      const targetY = particle.currentTargetY + (particle.nextTargetY - particle.currentTargetY) * particle.transitionProgress;
+
+      const dx = targetX - particle.x;
+      const dy = targetY - particle.y;
+
+      particle.x += dx * particle.speed;
+      particle.y += dy * particle.speed;
+
+      if (isParticleInViewport(particle)) {
+        ctx.drawImage(particle.sprite, particle.x - particle.size / 2, particle.y - particle.size / 2);
+      }
+    });
 
     animationFrameRef.current = requestAnimationFrame(animate);
   }
 
-  useEffect(function (): () => void {
+  useEffect(() => {
     initCanvas();
     animationFrameRef.current = requestAnimationFrame(animate);
 
-    function handleResize(): void {
-      initCanvas();
-    }
-
-    function handleScroll(): void {
-      scrollPositionRef.current = window.scrollY;
-    }
-
+    const handleResize = () => initCanvas();
     window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', updateScrollPosition);
 
-    return function (): void {
+    return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', updateScrollPosition);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
   }, []);
 
-  return <canvas ref={canvasRef} className={cn('absolute blur-sm inset-0 overflow-hidden opacity-50', className)} />;
+  return <canvas ref={canvasRef} style={{ filter: 'blur(8px)' }} className={cn('absolute inset-0 overflow-hidden', className)} />;
 }
 
 export function ThemedParticlesBackground({ className }: { className?: string }) {
