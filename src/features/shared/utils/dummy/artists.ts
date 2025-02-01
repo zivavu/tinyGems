@@ -1,14 +1,11 @@
-import { musicGenres } from '@/features/gems/components/FiltersInputBar/filterOptions';
+import { audienceSizes, genderOptions, languages, musicGenres } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { faker } from '@faker-js/faker';
-import { Artist, ArtistGender, AudienceSize } from '../../../artists/types';
-import { ArtistSnapshot } from '../../../gems/types';
+import { Artist, ArtistGender, ArtistSnapshot, AudienceSize, VerificationType } from '../../../artists/types';
 
-// Set a consistent seed for reproducible data
 faker.seed(42);
 
 const generateGender = (): ArtistGender => {
-  const genders: ArtistGender[] = ['male', 'female', 'non-binary', 'other', 'group'];
-  return faker.helpers.arrayElement(genders);
+  return faker.helpers.arrayElement(genderOptions).id as ArtistGender;
 };
 
 export function generateDummyArtists(count = 100): Artist[] {
@@ -21,26 +18,22 @@ export function generateDummyArtists(count = 100): Artist[] {
     const hasAvatar = faker.datatype.boolean(0.9);
     const hasBanner = faker.datatype.boolean(0.7);
     const followers = faker.number.int({ min: 0, max: 150000 });
+
     const audienceSize: AudienceSize =
-      followers < 100
-        ? 'microscopic'
-        : followers < 1000
-          ? 'tiny'
-          : followers < 10000
-            ? 'little'
-            : followers < 50000
-              ? 'small'
-              : followers < 100000
-                ? 'substantial'
-                : 'giant';
+      (audienceSizes.find((size) => {
+        const [min, max] = size.description?.split(' - ').map((str) => {
+          return parseInt(str.replace(/[^0-9]/g, '')) || 0;
+        }) || [0, 0];
+        return followers >= min && followers <= max;
+      })?.id as AudienceSize) || 'microscopic';
 
     const artist: Artist = {
       id: faker.string.uuid(),
+      name,
       genres: faker.helpers.arrayElements(
-        musicGenres.flatMap((genre) => genre.options.map((option) => option.id)),
+        musicGenres.flatMap((group) => group.options.map((option) => option.id)),
         { min: 1, max: 3 },
       ),
-      name,
       gender: generateGender(),
       audienceSize,
 
@@ -55,6 +48,10 @@ export function generateDummyArtists(count = 100): Artist[] {
         city: faker.helpers.maybe(() => faker.location.city()),
         country: faker.helpers.maybe(() => faker.location.country()),
       },
+      language: faker.helpers.arrayElements(
+        languages.map((lang) => lang.id),
+        { min: 1, max: 3 },
+      ),
 
       links: {
         ...(faker.datatype.boolean(0.3) && { website: `https://${faker.internet.domainName()}` }),
@@ -68,6 +65,13 @@ export function generateDummyArtists(count = 100): Artist[] {
 
       stats: {
         followers,
+        monthlyListeners: faker.number.int({ min: 0, max: followers }),
+        lastSongDate: faker.date.past().toISOString(),
+      },
+
+      metadata: {
+        verificationType: faker.helpers.arrayElement(['platform_verified', 'claimed']) as VerificationType,
+        status: faker.helpers.arrayElement(['active']),
       },
 
       tags: faker.helpers.arrayElements(['underground', 'diy', 'indie', 'alternative', 'experimental', 'emerging'], { min: 1, max: 4 }),
@@ -75,6 +79,7 @@ export function generateDummyArtists(count = 100): Artist[] {
       revisionHistory: Array.from({ length: faker.number.int({ min: 0, max: 5 }) }, () => ({
         timestamp: faker.date.past().toISOString(),
         editorId: faker.string.uuid(),
+        type: faker.helpers.arrayElement(['create', 'update', 'verify', 'claim']),
         changes: {
           field: faker.helpers.arrayElement(['name', 'bio', 'location']),
           oldValue: faker.lorem.word(),

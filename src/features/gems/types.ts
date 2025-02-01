@@ -28,7 +28,7 @@ export interface MediaBase {
   tags?: string[];
 }
 
-export interface GemProperties {
+export interface MusicGemProperties {
   media: {
     coverImage?: string;
   };
@@ -45,6 +45,7 @@ export interface GemProperties {
   };
 }
 
-export interface Gem extends MediaBase {
-  properties: GemProperties;
+export interface MusicGem extends MediaBase {
+  category: GemCategory;
+  properties: MusicGemProperties;
 }
