@@ -1,6 +1,6 @@
 import { GemGrid } from '@/features/gems/components/GemGrid';
 import { Icons } from '@/features/shared/components/Icons';
-import ParticlesBackground from '@/features/shared/components/ParticlesBackground';
+import { ThemedParticlesBackground } from '@/features/shared/components/ParticlesBackground';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import NextLink from 'next/link';
@@ -8,7 +8,7 @@ import NextLink from 'next/link';
 export default function Home() {
   return (
     <main className="relative bg-stone-50 dark:bg-[#0a0a0a]">
-      <ParticlesBackground />
+      <ThemedParticlesBackground />
 
       <section className="min-h-screen bg-gradient-to-b from-rose-50 to-purple-50 dark:from-black/100 dark:to-stone-950 flex items-center justify-center">
         <div className="z-10 max-w-6xl space-y-12 mx-auto flex flex-col items-center justify-center text-center">
