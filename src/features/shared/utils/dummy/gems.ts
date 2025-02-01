@@ -1,4 +1,10 @@
-import { languages, moodOptions, musicGenres, platformOptions } from '@/features/gems/components/FiltersInputBar/filterOptions';
+import {
+  languages,
+  lyricsTopicOptions,
+  moodOptions,
+  musicGenres,
+  platformOptions,
+} from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { MusicGem, Platform, PlatformType } from '@/features/gems/types';
 import { getPlatformMediaInfo } from '@/features/gems/utils/platformMedia';
 import { faker } from '@faker-js/faker';
@@ -84,18 +90,21 @@ async function generateGem(): Promise<MusicGem> {
         musicGenres.flatMap((group) => group.options.map((option) => option.id)),
         { min: 1, max: 3 },
       ),
-      language: faker.helpers.arrayElements(
+      lyricsTopics: faker.helpers.arrayElements(
+        lyricsTopicOptions.map((topic) => topic.id),
+        { min: 1, max: 3 },
+      ),
+      languages: faker.helpers.arrayElements(
         languages.map((lang) => lang.id),
         { min: 1, max: 2 },
       ),
-      mood: faker.helpers.arrayElements(
+      moods: faker.helpers.arrayElements(
         moodOptions.map((mood) => mood.id),
         { min: 1, max: 3 },
       ),
       features: {
         hasMusicVideo: faker.datatype.boolean(),
         hasLyrics: faker.datatype.boolean(),
-        isInstrumental: faker.datatype.boolean(),
       },
     },
   };

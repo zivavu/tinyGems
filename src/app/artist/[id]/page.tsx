@@ -64,38 +64,19 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
             </Typography>
             {artist.location && (
               <Typography variant="muted" aria-label="Artist location">
-                {artist.location}
+                {artist.location.country} {artist.location.city ? `, ${artist.location.city}` : ''}
               </Typography>
             )}
           </div>
         </div>
 
-        {/* Stats & Social Links */}
         <div className="grid gap-6 mb-8 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-6">
-            {artist.bio && (
-              <Typography variant="p" aria-label="Artist biography">
-                {artist.bio}
-              </Typography>
-            )}
-
             <div className="flex gap-6" aria-label="Artist statistics">
-              <div>
-                <Typography variant="h4">{artist.stats.gems}</Typography>
-                <Typography variant="small" className="text-gray-500">
-                  Gems
-                </Typography>
-              </div>
               <div>
                 <Typography variant="h4">{artist.stats.followers}</Typography>
                 <Typography variant="small" className="text-gray-500">
                   Followers
-                </Typography>
-              </div>
-              <div>
-                <Typography variant="h4">{artist.stats.following}</Typography>
-                <Typography variant="small" className="text-gray-500">
-                  Following
                 </Typography>
               </div>
             </div>

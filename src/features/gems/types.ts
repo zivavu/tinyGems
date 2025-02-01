@@ -36,12 +36,13 @@ export interface MusicGemProperties {
   releaseDate: string;
   duration: string;
   genres: string[];
-  language?: string[];
-  mood?: string[];
+  languages?: string[];
+  lyricsTopics?: string[];
+  lyrics?: string;
+  moods?: string[];
   features?: {
     hasMusicVideo: boolean;
     hasLyrics: boolean;
-    isInstrumental: boolean;
   };
 }
 

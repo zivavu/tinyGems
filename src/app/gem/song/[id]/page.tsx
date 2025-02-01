@@ -20,7 +20,7 @@ export default async function GemPage({ params }: GemPageProps) {
     notFound();
   }
 
-  const coverImage = gem.properties.media.coverImage || gem.properties.media.images?.[0];
+  const coverImage = gem.properties.media.coverImage;
 
   const sectionsArr: {
     title: string;
@@ -30,25 +30,25 @@ export default async function GemPage({ params }: GemPageProps) {
   }[] = [
     {
       title: 'Genre',
-      items: gem.properties.genre,
+      items: gem.properties.genres,
       icon: 'Music',
       colorClass: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300',
     },
     {
       title: 'Mood',
-      items: gem.properties.mood,
+      items: gem.properties.moods,
       icon: 'Smile',
       colorClass: 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300',
     },
     {
       title: 'Language',
-      items: gem.properties.language,
+      items: gem.properties.languages,
       icon: 'Globe',
       colorClass: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
     },
     {
       title: 'Lyrics Themes',
-      items: gem.properties.lyricsTopic,
+      items: gem.properties.lyricsTopics,
       icon: 'ScrollText',
       colorClass: 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300',
     },
@@ -67,11 +67,11 @@ export default async function GemPage({ params }: GemPageProps) {
         <div className="flex gap-2">
           <button className="flex-1 flex items-center justify-center gap-2 p-3 bg-white rounded-xl hover:bg-rose-50 dark:bg-gray-900 dark:hover:bg-rose-900/20 transition-colors">
             <Icons.Heart className="w-5 h-5 text-rose-500" />
-            <span className="font-medium">{gem.likes}</span>
+            <span className="font-medium">{gem.stats.likes}</span>
           </button>
           <button className="flex-1 flex items-center justify-center gap-2 p-3 bg-white rounded-xl hover:bg-rose-50 dark:bg-gray-900 dark:hover:bg-rose-900/20 transition-colors">
             <Icons.Bookmark className="w-5 h-5 text-rose-500" />
-            <span className="font-medium">{gem.saves}</span>
+            <span className="font-medium">{gem.stats.saves}</span>
           </button>
         </div>
 
@@ -79,13 +79,15 @@ export default async function GemPage({ params }: GemPageProps) {
           <Typography variant="small" className="text-gray-500 uppercase tracking-wide mb-2">
             Tags
           </Typography>
-          <div className="flex flex-wrap gap-1.5">
-            {gem.tags.map((tag) => (
-              <span key={tag} className="px-2 py-1 text-sm bg-gray-100 rounded-full dark:bg-gray-800">
-                {tag.charAt(0).toUpperCase() + tag.slice(1)}
-              </span>
-            ))}
-          </div>
+          {Array.isArray(gem?.tags) && gem?.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {gem.tags?.map((tag) => (
+                <span key={tag} className="px-2 py-1 text-sm bg-gray-100 rounded-full dark:bg-gray-800">
+                  {tag.charAt(0).toUpperCase() + tag.slice(1)}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
         {gem.properties.lyrics && (
           <div className="p-6 bg-white rounded-xl dark:bg-gray-900">

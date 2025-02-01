@@ -19,7 +19,7 @@ interface GemCardProps {
 }
 
 export function GemCard({ gem, className }: GemCardProps) {
-  const mainImage = gem.properties.media?.coverImage || gem.properties.media?.images?.[0];
+  const mainImage = gem.properties.media?.coverImage || gem.properties.media?.coverImage?.[0];
   const [showPreview, setShowPreview] = useState(false);
 
   return (
@@ -49,7 +49,7 @@ export function GemCard({ gem, className }: GemCardProps) {
             ) : (
               <GemPlaceholder />
             )}
-            {gem.type === 'music' && gem?.properties?.platforms?.length > 0 && (
+            {gem.category === 'music' && gem?.properties?.platforms?.length > 0 && (
               <Button
                 onClick={() => {
                   setShowPreview(true);
@@ -88,7 +88,7 @@ export function GemCard({ gem, className }: GemCardProps) {
           ))}
         </div>
 
-        <StatsSection likes={gem?.likes} saves={gem?.saves} />
+        <StatsSection likes={gem?.stats?.likes} saves={gem?.stats?.saves} />
       </Link>
     </div>
   );

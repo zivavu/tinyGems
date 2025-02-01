@@ -8,7 +8,7 @@ interface MusicPropertiesProps {
 }
 
 export function MusicProperties({ gem }: MusicPropertiesProps) {
-  if (gem.type !== 'music') return null;
+  if (gem.category !== 'music') return null;
 
   return (
     <div className="flex flex-col gap-2 mb-4">
@@ -20,7 +20,7 @@ export function MusicProperties({ gem }: MusicPropertiesProps) {
       </div>
 
       <div className="flex flex-wrap gap-1.5" role="list" aria-label="Music properties">
-        {gem?.properties?.genre?.map((genre) => (
+        {gem?.properties?.genres?.map((genre) => (
           <span
             key={genre}
             className="px-2 py-0.5 text-xs text-indigo-600 bg-indigo-50 rounded-full dark:bg-indigo-900/30 dark:text-indigo-300"
@@ -29,7 +29,7 @@ export function MusicProperties({ gem }: MusicPropertiesProps) {
             {genre}
           </span>
         ))}
-        {gem?.properties?.language?.map((language) => (
+        {gem?.properties?.languages?.map((language) => (
           <span
             key={language}
             className="px-2 py-0.5 text-xs text-emerald-600 bg-emerald-50 rounded-full dark:bg-emerald-900/30 dark:text-emerald-300"
@@ -38,7 +38,7 @@ export function MusicProperties({ gem }: MusicPropertiesProps) {
             {language}
           </span>
         ))}
-        {gem?.properties?.mood?.map((mood) => (
+        {gem?.properties?.moods?.map((mood) => (
           <span
             key={mood}
             className="px-2 py-0.5 text-xs text-amber-600 bg-amber-50 rounded-full dark:bg-amber-900/30 dark:text-amber-300"
@@ -47,13 +47,13 @@ export function MusicProperties({ gem }: MusicPropertiesProps) {
             {mood}
           </span>
         ))}
-        {gem?.properties?.lyricsTopic?.map((lyric) => (
+        {gem?.properties?.lyricsTopics?.map((lyricsTopic) => (
           <span
-            key={lyric}
+            key={lyricsTopic}
             className="px-2 py-0.5 text-xs text-rose-600 bg-rose-50 rounded-full dark:bg-rose-900/30 dark:text-rose-300"
             role="listitem"
           >
-            {lyric}
+            {lyricsTopic}
           </span>
         ))}
       </div>

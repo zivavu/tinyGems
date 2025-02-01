@@ -6,6 +6,8 @@ interface StatsSectionProps {
 }
 
 export function StatsSection({ likes, saves }: StatsSectionProps) {
+  if (!likes && !saves) return null;
+
   return (
     <div className="flex justify-between items-center mt-4 text-sm" aria-label="Engagement stats">
       <div className="flex gap-4 items-center">

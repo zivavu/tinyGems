@@ -356,7 +356,7 @@ export const moodOptions: FilterOption[] = [
   { id: 'uplifting', label: 'Uplifting', description: 'Inspiring and motivational' },
 ] as const;
 
-export const lyricsOptions: FilterOption[] = [
+export const lyricsTopicOptions: FilterOption[] = [
   { id: 'no-lyrics', label: 'No Lyrics', description: 'Instrumental tracks' },
   { id: 'social-issues', label: 'Social Issues', description: 'Lyrics addressing social topics' },
   { id: 'storytelling', label: 'Storytelling', description: 'Lyrics that tell a narrative or story' },
@@ -442,7 +442,7 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
   },
   {
     title: 'Lyrics Style',
-    options: lyricsOptions,
+    options: lyricsTopicOptions,
     id: 'lyricsStyle',
     icon: 'ScrollText',
     isSearchable: false,
