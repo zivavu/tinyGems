@@ -1,6 +1,7 @@
+import { musicGenres } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { faker } from '@faker-js/faker';
-import { Artist, ArtistGender, AudienceSize } from '../../../artists/types/artistTypes';
-import { ArtistSnapshot } from '../../../gems/types/gemsTypes';
+import { Artist, ArtistGender, AudienceSize } from '../../../artists/types';
+import { ArtistSnapshot } from '../../../gems/types';
 
 // Set a consistent seed for reproducible data
 faker.seed(42);
@@ -35,7 +36,10 @@ export function generateDummyArtists(count = 100): Artist[] {
 
     const artist: Artist = {
       id: faker.string.uuid(),
-      primaryCategory: 'music',
+      genres: faker.helpers.arrayElements(
+        musicGenres.flatMap((genre) => genre.options.map((option) => option.id)),
+        { min: 1, max: 3 },
+      ),
       name,
       gender: generateGender(),
       audienceSize,
@@ -47,8 +51,10 @@ export function generateDummyArtists(count = 100): Artist[] {
         banner: `https://picsum.photos/seed/${faker.string.uuid()}/1200/400`,
       }),
 
-      location: faker.helpers.maybe(() => `${faker.location.city()}, ${faker.location.country()}`),
-      bio: faker.helpers.maybe(() => faker.lorem.paragraph()),
+      location: {
+        city: faker.helpers.maybe(() => faker.location.city()),
+        country: faker.helpers.maybe(() => faker.location.country()),
+      },
 
       links: {
         ...(faker.datatype.boolean(0.3) && { website: `https://${faker.internet.domainName()}` }),
@@ -60,13 +66,8 @@ export function generateDummyArtists(count = 100): Artist[] {
         ...(faker.datatype.boolean(0.4) && { twitter: 'https://twitter.com' }),
       },
 
-      joinedAt: faker.date.past({ years: 2 }).toISOString(),
-      lastUpdated: faker.date.recent().toISOString(),
-
       stats: {
         followers,
-        following: faker.number.int({ min: 0, max: 200 }),
-        gems: faker.number.int({ min: 1, max: 50 }),
       },
 
       tags: faker.helpers.arrayElements(['underground', 'diy', 'indie', 'alternative', 'experimental', 'emerging'], { min: 1, max: 4 }),

@@ -1,4 +1,4 @@
-import { GemPlatform, GemPlatformName } from '../types/gemsTypes';
+import { GemPlatform, GemPlatformName } from '../types/types';
 import { getSoundCloudTrackInfo } from './soundcloudClient';
 import { getSpotifyTrackInfo } from './spotifyClient';
 import { getYouTubeVideoInfo } from './youtubeClient';

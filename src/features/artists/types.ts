@@ -1,9 +1,11 @@
 export type ArtistGender = 'male' | 'female' | 'non-binary' | 'other' | 'group';
 export type AudienceSize = 'microscopic' | 'tiny' | 'little' | 'small' | 'substantial' | 'giant';
+export type VerificationType = 'platform_verified' | 'claimed';
 
 export interface ArtistRevision {
   timestamp: string;
   editorId: string;
+  type: 'create' | 'update' | 'verify' | 'claim';
   changes: Record<string, unknown>;
 }
 
@@ -12,9 +14,12 @@ export interface Artist {
   name: string;
   avatar?: string;
   banner?: string;
-  location?: string;
-  bio?: string;
 
+  location?: {
+    country?: string;
+    city?: string;
+  };
+  language?: string[];
   gender?: ArtistGender;
   audienceSize?: AudienceSize;
 
@@ -28,17 +33,21 @@ export interface Artist {
     twitter?: string;
   };
 
-  joinedAt: string;
   stats: {
     followers: number;
-    following: number;
-    gems: number;
+    monthlyListeners?: number;
+    lastSongDate?: string;
+  };
+
+  metadata: {
+    verificationType: VerificationType;
+    status: 'active' | 'inactive';
   };
 
   tags: string[];
-  primaryCategory: string;
+  genres: string[];
 
-  // Metadata for wiki-style editing
-  lastUpdated: string;
   revisionHistory: ArtistRevision[];
 }
+
+export type ArtistSnapshot = Pick<Artist, 'id' | 'name' | 'location' | 'avatar' | 'gender' | 'audienceSize'>;

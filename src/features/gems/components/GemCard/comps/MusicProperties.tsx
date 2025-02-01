@@ -1,4 +1,4 @@
-import { MusicGem } from '@/features/gems/types/gemsTypes';
+import { MusicGem } from '@/features/gems/types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { iconsMap } from '../../../utils/platformIconsMap';
 import { platformPriority } from './utils';

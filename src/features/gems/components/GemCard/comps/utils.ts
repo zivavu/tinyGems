@@ -1,4 +1,4 @@
-import { GemPlatformName } from '@/features/gems/types/gemsTypes';
+import { GemPlatformName } from '@/features/gems/types';
 
 export interface Platform {
   name: string;

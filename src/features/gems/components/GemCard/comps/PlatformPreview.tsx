@@ -1,4 +1,4 @@
-import { MusicGem } from '@/features/gems/types/gemsTypes';
+import { MusicGem } from '@/features/gems/types';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import { useEffect, useRef, useState } from 'react';
 import { useInitEmbededPlayerControls } from './hooks/hooks';
@@ -37,7 +37,7 @@ export function PlatformPreview({ gem, onLoad }: PlatformPreviewProps) {
       case 'soundcloud':
         return '315';
       case 'bandcamp':
-        return '470';
+        return '415';
       case 'spotify':
         return '352'; // Compact player height
       default:

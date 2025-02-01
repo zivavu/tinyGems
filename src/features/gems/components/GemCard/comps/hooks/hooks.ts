@@ -1,7 +1,7 @@
 'use client';
 
 import { usePlayerStore } from '@/features/gems/components/GemCard/comps/stores/playerStore';
-import { GemPlatformName } from '@/features/gems/types/gemsTypes';
+import { GemPlatformName } from '@/features/gems/types';
 
 interface PlayerHandler {
   connectWithIFrame: (iframe: HTMLIFrameElement) => Promise<void | (() => void)>;

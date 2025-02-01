@@ -1,7 +1,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { MusicFiltersId } from '../components/FiltersInputBar/filterOptions';
-import { MusicGem } from '../types/gemsTypes';
+import { MusicGem } from '../types/types';
 import { filterGems } from '../utils/filterGems';
 
 export function useFilteredGems(gems: MusicGem[]) {

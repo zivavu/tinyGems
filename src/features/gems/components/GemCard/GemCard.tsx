@@ -1,6 +1,6 @@
 'use client';
 
-import { MusicGem } from '@/features/gems/types/gemsTypes';
+import { MusicGem } from '@/features/gems/types';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';

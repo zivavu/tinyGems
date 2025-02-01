@@ -1,6 +1,6 @@
 import { getPlatformMediaInfo } from '@/features/gems/utils/platformMedia';
 import { faker } from '@faker-js/faker';
-import { GemCategory, GemPlatform, GemPlatformName, GemProperties, MusicGem, MusicGemProperties } from '../../../gems/types/gemsTypes';
+import { GemCategory, GemPlatformName, GemProperties, MusicGem, MusicGemProperties, Platform } from '../../../gems/types';
 import { createArtistSnapshot, dummyArtists } from './artists';
 
 faker.seed(333);
@@ -24,22 +24,6 @@ export const MUSIC_MOODS = [
 ];
 
 export const LYRICS_TYPES = ['explicit', 'clean', 'instrumental', 'abstract', 'narrative', 'political', 'personal', 'spiritual'];
-const MUSIC_GENRES = [
-  'synthwave',
-  'punk',
-  'indie-folk',
-  'experimental',
-  'ambient',
-  'lo-fi',
-  'electronic',
-  'underground-hip-hop',
-  'post-rock',
-  'darkwave',
-  'bedroom-pop',
-  'noise-rock',
-  'drone',
-  'industrial',
-] as const; // Generate base gem properties
 
 // Real-world examples that actually work in embeds
 const SAMPLE_PLATFORM_URLS = {
@@ -61,8 +45,9 @@ const SAMPLE_PLATFORM_URLS = {
   ],
   spotify: [
     'https://open.spotify.com/track/1AmAFaRELIqcrtCI230csp',
-    'https://open.spotify.com/track/0HUTL8i4y4MiGCPId7M7wb',
-    'https://open.spotify.com/track/7eJMfftS33KTjuF7lTsMCx',
+    'https://open.spotify.com/track/2xnGXs6qDvQDiFthBOvhez',
+    'https://open.spotify.com/track/2HzKBOH9XJkCKDXRKZMpAE',
+    'https://open.spotify.com/track/2x9d65LWwkMT4StX1dOS0o',
   ],
 } as const;
 
@@ -118,7 +103,7 @@ async function generateMusicProperties(): Promise<MusicGemProperties> {
   const platformCount = faker.number.int({ min: 1, max: 3 });
   const selectedPlatforms = faker.helpers.arrayElements(MUSIC_PLATFORMS, platformCount) as GemPlatformName[];
 
-  const platforms: GemPlatform[] = selectedPlatforms.map((platformName) => ({
+  const platforms: Platform[] = selectedPlatforms.map((platformName) => ({
     name: platformName,
     url: generatePlatformUrl(platformName),
   }));

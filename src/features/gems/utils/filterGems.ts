@@ -1,5 +1,5 @@
 import { MusicFiltersId } from '../components/FiltersInputBar/filterOptions';
-import { MusicGem } from '../types/gemsTypes';
+import { MusicGem } from '../types/types';
 
 type FilterParams = {
   [key in MusicFiltersId]?: string[];

@@ -5,10 +5,10 @@ import { useEffect, useRef } from 'react';
 import colors from 'tailwindcss/colors';
 import { cn } from '../utils/dummy/utils';
 
-const PARTICLE_COUNT = 200;
+const PARTICLE_COUNT = 250;
 const MIN_SIZE = 10;
 const MAX_SIZE = 25;
-const MAX_RADIUS = 100;
+const MAX_TARGET_RADIUS = 100;
 const MIN_SPEED = 0.001;
 const MAX_SPEED = 0.003;
 const LIGHT_MODE_COLOR = colors.violet[400];
@@ -53,8 +53,8 @@ function createParticle(canvasWidth: number, canvasHeight: number, color: string
   const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
   const originX = Math.random() * canvasWidth;
   const originY = Math.random() * canvasHeight;
-  const [targetX, targetY] = getRandomTarget(originX, originY, MAX_RADIUS);
-  const [nextTargetX, nextTargetY] = getRandomTarget(originX, originY, MAX_RADIUS);
+  const [targetX, targetY] = getRandomTarget(originX, originY, MAX_TARGET_RADIUS);
+  const [nextTargetX, nextTargetY] = getRandomTarget(originX, originY, MAX_TARGET_RADIUS);
 
   return {
     x: originX,
@@ -76,7 +76,7 @@ function ParticlesBackground({ theme, className }: { theme: string | undefined; 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const particlesRef = useRef<Particle[]>([]);
-  const scrollPositionRef = useRef<number>(0);
+  const scrollPositionRef = useRef<number>(window.scrollY);
 
   function updateScrollPosition(): void {
     scrollPositionRef.current = window.scrollY;
@@ -121,7 +121,7 @@ function ParticlesBackground({ theme, className }: { theme: string | undefined; 
       if (particle.transitionProgress >= 1) {
         particle.currentTargetX = particle.nextTargetX;
         particle.currentTargetY = particle.nextTargetY;
-        [particle.nextTargetX, particle.nextTargetY] = getRandomTarget(particle.originX, particle.originY, MAX_RADIUS);
+        [particle.nextTargetX, particle.nextTargetY] = getRandomTarget(particle.originX, particle.originY, MAX_TARGET_RADIUS);
         particle.transitionProgress = 0;
       }
 
