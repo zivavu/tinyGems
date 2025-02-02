@@ -164,5 +164,7 @@ function ParticlesBackground({ theme, className }: { theme: string | undefined; 
 
 export function ThemedParticlesBackground({ className }: { className?: string }) {
   const { theme } = useTheme();
+
+  if (typeof window === 'undefined') return null;
   return <ParticlesBackground key={theme} theme={theme} className={className} />;
 }

@@ -2,9 +2,9 @@ import { faLink } from '@fortawesome/free-solid-svg-icons';
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faBandcamp, faSoundcloud, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { GemPlatformName } from '../types/types';
+import { PlatformType } from '../types';
 
-export const iconsMap: Record<GemPlatformName, IconProp> = {
+export const iconsMap: Record<PlatformType, IconProp> = {
   bandcamp: faBandcamp,
   soundcloud: faSoundcloud,
   spotify: faSpotify,

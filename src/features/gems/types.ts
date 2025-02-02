@@ -39,6 +39,7 @@ export interface MusicGemProperties {
   genres: string[];
   languages?: string[];
   lyricsTopics?: string[];
+  bpm?: number;
   lyrics?: string;
   moods?: string[];
   isSingle: boolean;

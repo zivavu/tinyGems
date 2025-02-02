@@ -1,4 +1,4 @@
-import { GemPlatform, GemPlatformName } from '../types/types';
+import { Platform, PlatformType } from '../types';
 import { getSoundCloudTrackInfo } from './soundcloudClient';
 import { getSpotifyTrackInfo } from './spotifyClient';
 import { getYouTubeVideoInfo } from './youtubeClient';
@@ -82,9 +82,9 @@ function msToMinutesAndSeconds(ms: number): string {
 }
 
 // Main function to get media info from any platform
-export async function getPlatformMediaInfo(platforms: GemPlatform[]): Promise<PlatformMediaInfo> {
+export async function getPlatformMediaInfo(platforms: Platform[]): Promise<PlatformMediaInfo> {
   // Try platforms in order of preference
-  const preferredOrder: GemPlatformName[] = ['spotify', 'youtube', 'soundcloud', 'bandcamp'];
+  const preferredOrder: PlatformType[] = ['spotify', 'youtube', 'soundcloud', 'bandcamp'];
 
   for (const platformName of preferredOrder) {
     const platform = platforms.find((p) => p.name === platformName);

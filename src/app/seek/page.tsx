@@ -16,11 +16,9 @@ import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { Button } from '@headlessui/react';
 import { Suspense } from 'react';
 
-export default function SeekPage() {
+function SeekContent() {
   const { getContentType } = useParamFilters();
   const contentType = getContentType();
-
-  console.log(contentType);
 
   const contentMap = {
     singles: dummyGems,
@@ -29,23 +27,9 @@ export default function SeekPage() {
   } as const;
 
   const filteredContent = useFilteredContent(contentMap[contentType], contentType);
-  console.log(filteredContent);
 
   return (
-    <div className="flex flex-col pb-16 space-y-16">
-      <Suspense
-        fallback={
-          <div className="w-full h-12 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-lg flex items-center justify-center">
-            <div className="flex items-center gap-2">
-              <Icons.Loader className="w-5 h-5 animate-spin" />
-              <span className="text-gray-600 dark:text-gray-300">Loading filters...</span>
-            </div>
-          </div>
-        }
-      >
-        <FiltersInputBar />
-      </Suspense>
-
+    <>
       <main className="container mx-auto px-4" role="main" aria-label={`Search ${contentType}`}>
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4" aria-label={`${contentType} grid`}>
           {filteredContent.slice(0, 20).map((item) => {
@@ -80,6 +64,38 @@ export default function SeekPage() {
           <span>Edit filters</span>
         </Button>
       </div>
+    </>
+  );
+}
+
+export default function SeekPage() {
+  return (
+    <div className="flex flex-col pb-16 space-y-16">
+      <Suspense
+        fallback={
+          <div className="w-full h-12 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-2">
+              <Icons.Loader className="w-5 h-5 animate-spin" />
+              <span className="text-gray-600 dark:text-gray-300">Loading filters...</span>
+            </div>
+          </div>
+        }
+      >
+        <FiltersInputBar />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <div className="w-full h-96 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-lg flex items-center justify-center">
+            <div className="flex items-center gap-2">
+              <Icons.Loader className="w-5 h-5 animate-spin" />
+              <span className="text-gray-600 dark:text-gray-300">Loading content...</span>
+            </div>
+          </div>
+        }
+      >
+        <SeekContent />
+      </Suspense>
     </div>
   );
 }

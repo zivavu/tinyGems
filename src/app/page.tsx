@@ -10,7 +10,7 @@ type SectionGradient = {
   dark: string;
 };
 
-export const sectionGradients: Record<string, SectionGradient> = {
+const sectionGradients: Record<string, SectionGradient> = {
   hero: {
     light: 'bg-gradient-to-b from-rose-50 to-purple-50',
     dark: 'dark:from-black/100 dark:to-stone-950',
@@ -29,7 +29,7 @@ export const sectionGradients: Record<string, SectionGradient> = {
   },
 };
 
-export function getSectionGradient(section: keyof typeof sectionGradients): string {
+function getSectionGradient(section: keyof typeof sectionGradients): string {
   const gradient = sectionGradients[section];
   return `${gradient.light} ${gradient.dark}`;
 }
@@ -134,6 +134,7 @@ export default function Home() {
           </NextLink>
         </div>
       </section>
+
       <ThemedParticlesBackground className="z-10" />
     </main>
   );

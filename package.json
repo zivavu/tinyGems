@@ -11,9 +11,7 @@
     "docker:up": "docker run -d -p 27017:27017 --name tinygems-mongodb mongo:latest",
     "docker:down": "docker stop tinygems-mongodb && docker rm tinygems-mongodb",
     "docker:status": "docker ps --filter name=tinygems-mongodb",
-    "predev": "docker ps --filter name=tinygems-mongodb -q ||  bun run docker:up",
-    "prebuild": "docker ps --filter name=tinygems-mongodb -q || bun run docker:up",
-    "postbuild": "bun run docker:down"
+    "predev": "docker ps --filter name=tinygems-mongodb -q ||  bun run docker:up"
   },
   "dependencies": {
     "@faker-js/faker": "^9.4.0",

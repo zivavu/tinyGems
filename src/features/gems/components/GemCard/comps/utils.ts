@@ -1,11 +1,11 @@
-import { GemPlatformName } from '@/features/gems/types';
+import { PlatformType } from '@/features/gems/types';
 
 export interface Platform {
   name: string;
   url: string;
 }
 
-export const platformPriority = ['youtube', 'soundcloud', 'bandcamp', 'spotify'] as GemPlatformName[];
+export const platformPriority = ['youtube', 'soundcloud', 'bandcamp', 'spotify'] as PlatformType[];
 
 export function getPreferredPlatform(platforms: Platform[]) {
   return platformPriority.find((priority) => platforms.some((p) => p.name.toLowerCase() === priority));

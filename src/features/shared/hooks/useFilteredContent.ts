@@ -1,9 +1,10 @@
 /* eslint-disable */
+//It's just a placeholder so we don't care bout the types that much
 import { Album } from '@/features/albums/types';
 import { Artist } from '@/features/artists/types';
 import { albumFilterIds, artistFilterIds, singleFilterIds } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { ContentType } from '@/features/gems/components/FiltersInputBar/hooks';
-import { MusicGem } from '@/features/gems/types';
+import { MusicGem, Platform } from '@/features/gems/types';
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
@@ -26,15 +27,13 @@ function createFilterFunction<T>(filterConfig: Record<string, FilterConfig>) {
         if (!values?.length) continue;
 
         const config = filterConfig[key];
-        if (!config) continue;
+        if (!config?.field) continue;
 
-        if (!config.field) continue;
-
-        let fieldValue = item;
+        let fieldValue = item as any;
         const fieldPath = config.field.split('.');
 
         for (const path of fieldPath) {
-          fieldValue = fieldValue?.[path];
+          fieldValue = fieldValue?.[path] as Record<string, unknown>;
           if (fieldValue === undefined) return false;
         }
 
@@ -42,7 +41,7 @@ function createFilterFunction<T>(filterConfig: Record<string, FilterConfig>) {
           fieldValue = config.transform(fieldValue);
         }
 
-        const itemValues = config.isArrayField ? fieldValue : [fieldValue];
+        const itemValues = (config.isArrayField ? fieldValue : [fieldValue]) as unknown[];
         const hasMatch = values.some((value) => itemValues.includes(value));
         if (!hasMatch) return false;
       }
@@ -63,7 +62,7 @@ const baseFilters = {
   platform: {
     field: 'properties.platforms',
     isArrayField: true,
-    transform: (platforms) => platforms.map((p: { name: string }) => p.name),
+    transform: (platforms: Platform[]) => platforms.map((p) => p.name),
   },
   gender: {
     field: 'artist.gender',
@@ -85,6 +84,7 @@ const additionalFilters = {
   bpm: {
     customCheck: (gem: MusicGem, values: string[]) => {
       const bpm = gem.properties.bpm;
+      if (!bpm) return false;
       return values.some((range) => {
         const [min, max] = range.split('-').map(Number);
         return bpm >= min && (max ? bpm <= max : true);
@@ -148,9 +148,9 @@ const filterConfigs = {
 } as const;
 
 const filterFunctions = {
-  singles: createFilterFunction<MusicGem>(filterConfigs.singles),
-  albums: createFilterFunction<Album>(filterConfigs.albums),
-  artists: createFilterFunction<Artist>(filterConfigs.artists),
+  singles: createFilterFunction(filterConfigs.singles),
+  albums: createFilterFunction(filterConfigs.albums),
+  artists: createFilterFunction(filterConfigs.artists),
 } as const;
 
 export function useFilteredContent<T extends ContentType>(content: ContentMap[T], contentType: T) {
@@ -167,5 +167,5 @@ export function useFilteredContent<T extends ContentType>(content: ContentMap[T]
     return filterFunction(content, params);
   }, [content, contentType, searchParams]);
 
-  return filteredContent;
+  return filteredContent as ContentMap[T];
 }

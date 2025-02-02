@@ -1,7 +1,7 @@
 'use client';
 
 import { usePlayerStore } from '@/features/gems/components/GemCard/comps/stores/playerStore';
-import { GemPlatformName } from '@/features/gems/types';
+import { PlatformType } from '@/features/gems/types';
 
 interface PlayerHandler {
   connectWithIFrame: (iframe: HTMLIFrameElement) => Promise<void | (() => void)>;
@@ -38,7 +38,7 @@ declare global {
   }
 }
 
-export function useInitEmbededPlayerControls({ playerId, playerType }: { playerId: string; playerType: GemPlatformName | undefined }) {
+export function useInitEmbededPlayerControls({ playerId, playerType }: { playerId: string; playerType: PlatformType | undefined }) {
   const { registerPlayerInTheStore, setCurrentPlayer, currentPlayerId } = usePlayerStore();
 
   if (!playerType) return { connectWithIFrame: async () => {}, pause: () => {} };
