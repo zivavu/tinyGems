@@ -402,115 +402,9 @@ export type ArtistFilterId = (typeof artistFilterIds)[number];
 
 export type AllFilterId = (typeof allFilterIds)[number];
 
-export const singlesFilter: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
-  {
-    title: 'Genre',
-    options: musicGenres,
-    id: 'genre',
-    icon: 'Music',
-    isSearchable: true,
-    showFilterChips: true,
-  },
-  {
-    title: 'Mood',
-    options: moodOptions,
-    id: 'mood',
-    icon: 'Smile',
-    isSearchable: true,
-    showFilterChips: true,
-  },
-  {
-    title: 'BPM',
-    options: bpmOptions,
-    id: 'bpm',
-    icon: 'AudioLines',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
-    title: 'Lyrics Topic',
-    options: lyricsTopicOptions,
-    id: 'lyricsTopics',
-    icon: 'ScrollText',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
-    title: 'Additional',
-    options: additionalOptions,
-    id: 'additional',
-    icon: 'Plus',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
-    title: 'Release Year',
-    options: [
-      { id: '2024', label: '2024' },
-      { id: '2023', label: '2023' },
-      { id: '2022', label: '2022' },
-      { id: '2021', label: '2021' },
-      { id: '2020', label: '2020' },
-      { id: '2019', label: '2019' },
-      { id: '2018', label: '2018' },
-      { id: '2017', label: '2017' },
-      { id: '2016', label: '2016' },
-      { id: '2015', label: '2015' },
-      { id: '2014', label: '2014' },
-      { id: '2013', label: '2013' },
-      { id: '2012', label: '2012' },
-      { id: '2011', label: '2011' },
-      { id: '2010', label: '2010' },
-      { id: '2009', label: '2009' },
-      { id: '2008', label: '2008' },
-      { id: 'older', label: 'Older' },
-    ],
-    id: 'releaseYear',
-    icon: 'Calendar',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
-    title: 'Gender',
-    options: genderOptions,
-    id: 'gender',
-    icon: 'User',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
-    title: 'Audience Size',
-    options: audienceSizes,
-    id: 'audienceSize',
-    icon: 'Users',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
-    title: 'Platform',
-    options: platformOptions,
-    id: 'platform',
-    icon: 'Globe',
-    isSearchable: false,
-    showFilterChips: false,
-    isHiddenInAddPage: true,
-  },
-] as const;
+export type FilterObject = Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>;
 
-export const albumFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
-  {
-    title: 'Album Type',
-    options: [
-      { id: 'album', label: 'Album' },
-      { id: 'ep', label: 'EP' },
-      { id: 'mixtape', label: 'Mixtape' },
-      { id: 'compilation', label: 'Compilation' },
-    ],
-    id: 'albumType',
-    icon: 'Disc',
-    isSearchable: false,
-    showFilterChips: false,
-  },
+const commonFilters: FilterObject[] = [
   {
     title: 'Genre',
     options: musicGenres,
@@ -526,54 +420,6 @@ export const albumFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
     icon: 'Smile',
     isSearchable: true,
     showFilterChips: true,
-  },
-  {
-    title: 'Lyrics Topic',
-    options: lyricsTopicOptions,
-    id: 'lyricsTopics',
-    icon: 'ScrollText',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
-    title: 'Release Year',
-    options: [
-      { id: '2024', label: '2024' },
-      { id: '2023', label: '2023' },
-      { id: '2022', label: '2022' },
-      { id: '2021', label: '2021' },
-      { id: '2020', label: '2020' },
-      { id: '2019', label: '2019' },
-      { id: '2018', label: '2018' },
-      { id: '2017', label: '2017' },
-      { id: '2016', label: '2016' },
-      { id: '2015', label: '2015' },
-      { id: '2014', label: '2014' },
-      { id: '2013', label: '2013' },
-      { id: '2012', label: '2012' },
-      { id: '2011', label: '2011' },
-      { id: '2010', label: '2010' },
-      { id: '2009', label: '2009' },
-      { id: '2008', label: '2008' },
-      { id: 'older', label: 'Older' },
-    ],
-    id: 'releaseYear',
-    icon: 'Calendar',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
-    title: 'Track Count',
-    options: [
-      { id: '1-5', label: '1-5 tracks' },
-      { id: '6-10', label: '6-10 tracks' },
-      { id: '11-15', label: '11-15 tracks' },
-      { id: '16+', label: '16+ tracks' },
-    ],
-    id: 'trackCount',
-    icon: 'ListMusic',
-    isSearchable: false,
-    showFilterChips: false,
   },
   {
     title: 'Artist Gender',
@@ -600,25 +446,85 @@ export const albumFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
     showFilterChips: false,
     isHiddenInAddPage: true,
   },
-];
-
-export const artistFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
   {
-    title: 'Genre',
-    options: musicGenres,
-    id: 'genre',
-    icon: 'Music',
-    isSearchable: true,
-    showFilterChips: true,
-  },
-  {
-    title: 'Gender',
-    options: genderOptions,
-    id: 'gender',
-    icon: 'User',
+    title: 'Lyrics Topic',
+    options: lyricsTopicOptions,
+    id: 'lyricsTopics',
+    icon: 'ScrollText',
     isSearchable: false,
     showFilterChips: false,
   },
+];
+
+const releaseYearFilter: FilterObject = {
+  title: 'Release Year',
+  options: [
+    { id: '2024', label: '2024' },
+    { id: '2023', label: '2023' },
+    { id: '2022', label: '2022' },
+    { id: '2021', label: '2021' },
+    { id: '2020', label: '2020' },
+    { id: '2019', label: '2019' },
+    { id: '2018', label: '2018' },
+    { id: '2017', label: '2017' },
+    { id: '2016', label: '2016' },
+    { id: '2015', label: '2015' },
+    { id: '2014', label: '2014' },
+    { id: '2013', label: '2013' },
+    { id: '2012', label: '2012' },
+    { id: '2011', label: '2011' },
+    { id: '2010', label: '2010' },
+    { id: '2009', label: '2009' },
+    { id: '2008', label: '2008' },
+    { id: 'older', label: 'Older' },
+  ],
+  id: 'releaseYear',
+  icon: 'Calendar',
+  isSearchable: false,
+  showFilterChips: false,
+};
+
+export const singlesFilter: FilterObject[] = [
+  ...commonFilters,
+  {
+    title: 'BPM',
+    options: bpmOptions,
+    id: 'bpm',
+    icon: 'AudioLines',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Additional',
+    options: additionalOptions,
+    id: 'additional',
+    icon: 'Plus',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  releaseYearFilter,
+];
+
+export const albumFilters: FilterObject[] = [
+  {
+    title: 'Album Type',
+    options: [
+      { id: 'album', label: 'Album' },
+      { id: 'ep', label: 'EP' },
+      { id: 'mixtape', label: 'Mixtape' },
+      { id: 'compilation', label: 'Compilation' },
+    ],
+    id: 'albumType',
+    icon: 'Disc',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  ...commonFilters,
+  releaseYearFilter,
+];
+
+export const artistFilters: FilterObject[] = [
+  ...commonFilters,
   {
     title: 'Location',
     options: [
@@ -633,14 +539,6 @@ export const artistFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelect
     icon: 'MapPin',
     isSearchable: false,
     showFilterChips: true,
-  },
-  {
-    title: 'Audience Size',
-    options: audienceSizes,
-    id: 'audienceSize',
-    icon: 'Users',
-    isSearchable: false,
-    showFilterChips: false,
   },
   {
     title: 'Activity',
@@ -665,14 +563,5 @@ export const artistFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelect
     icon: 'BadgeCheck',
     isSearchable: false,
     showFilterChips: false,
-  },
-  {
-    title: 'Platform',
-    options: platformOptions,
-    id: 'platform',
-    icon: 'Globe',
-    isSearchable: false,
-    showFilterChips: false,
-    isHiddenInAddPage: true,
   },
 ];

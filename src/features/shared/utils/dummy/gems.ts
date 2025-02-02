@@ -84,7 +84,7 @@ async function generateGem(): Promise<MusicGem> {
       media: {
         coverImage: mediaInfo.coverImage || `https://picsum.photos/seed/${faker.string.uuid()}/800/800`,
       },
-      isSingle: faker.datatype.boolean({ probability: 0.4 }),
+      isSingle: faker.datatype.boolean({ probability: 0.2 }),
       platforms,
       releaseDate: faker.date.past().toISOString(),
       duration: `${faker.number.int({ min: 1, max: 10 })}:${faker.number.int({ min: 10, max: 59 })}`,
@@ -112,9 +112,22 @@ async function generateGem(): Promise<MusicGem> {
   };
 }
 
-export async function generateDummyGems(count = 20) {
-  const gems = await Promise.all(Array.from({ length: count }, async () => generateGem()));
-  return gems;
+export async function generateDummyGems(count = 1000) {
+  const gemsPerArtist = Math.ceil(count / dummyArtists.length);
+  const gems: MusicGem[] = [];
+
+  for (const artist of dummyArtists) {
+    const artistGems = await Promise.all(
+      Array.from({ length: gemsPerArtist }, async () => {
+        const gem = await generateGem();
+        gem.artist = createArtistSnapshot(artist);
+        return gem;
+      }),
+    );
+    gems.push(...artistGems);
+  }
+
+  return gems.slice(0, count);
 }
 
 export const dummyGems = await generateDummyGems();

@@ -8,7 +8,7 @@ const generateGender = (): ArtistGender => {
   return faker.helpers.arrayElement(genderOptions).id as ArtistGender;
 };
 
-export function generateDummyArtists(count = 100): Artist[] {
+export function generateDummyArtists(count = 50): Artist[] {
   const artistsArray: Artist[] = [];
 
   for (let i = 0; i < count; i++) {

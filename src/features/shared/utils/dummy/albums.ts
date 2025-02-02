@@ -20,14 +20,18 @@ function calculateAlbumDuration(gems: typeof dummyGems): string {
 export function generateDummyAlbums(count = 20): Album[] {
   return Array.from({ length: count }, () => {
     const randomArtist = faker.helpers.arrayElement(dummyArtists);
-    const albumGemsCount = faker.number.int({ min: 3, max: 12 });
+    const artistGems = dummyGems.filter((gem) => gem.artist?.id === randomArtist.id && !gem.properties.isSingle);
 
-    const albumGems = faker.helpers.arrayElements(
-      dummyGems.filter((gem) => gem.artist?.id === randomArtist.id && !gem.properties.isSingle),
-      Math.min(albumGemsCount, dummyGems.filter((gem) => gem.artist?.id === randomArtist.id && !gem.properties.isSingle).length),
-    );
+    if (artistGems.length === 0) {
+      return null;
+    }
 
-    const albumType: AlbumType = faker.helpers.arrayElement(['album', 'ep', 'mixtape', 'compilation']);
+    const maxTracks = Math.min(12, artistGems.length);
+    const minTracks = Math.min(7, maxTracks);
+    const albumGemsCount = faker.number.int({ min: minTracks, max: maxTracks });
+    const albumGems = faker.helpers.arrayElements(artistGems, albumGemsCount);
+
+    const albumType: AlbumType = albumGemsCount <= 4 ? 'ep' : albumGemsCount <= 6 ? faker.helpers.arrayElement(['ep', 'album']) : 'album';
 
     const album: Album = {
       id: faker.string.uuid(),
@@ -75,7 +79,7 @@ export function generateDummyAlbums(count = 20): Album[] {
     };
 
     return album;
-  });
+  }).filter((album): album is Album => album !== null);
 }
 
-export const dummyAlbums = generateDummyAlbums();
+export const dummyAlbums = generateDummyAlbums(30);

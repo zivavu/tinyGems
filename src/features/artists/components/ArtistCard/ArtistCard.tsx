@@ -51,7 +51,6 @@ export function ArtistCard({ artist, className }: ArtistCardProps) {
             <Typography variant="h4" className="line-clamp-1">
               {artist.name}
             </Typography>
-            {artist.metadata.verificationType && <Icons.BadgeCheck className="w-5 h-5 text-blue-500" aria-label="Verified artist" />}
           </div>
           {artist.location?.country && (
             <Typography variant="small" className="text-gray-500 flex items-center gap-1">
@@ -78,12 +77,12 @@ export function ArtistCard({ artist, className }: ArtistCardProps) {
         <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400">
           <Typography variant="small" className="flex items-center gap-1">
             <Icons.Users className="w-4 h-4" />
-            {artist.stats.followers.toLocaleString()} followers
+            {artist.stats.followers} followers
           </Typography>
           {artist.stats.monthlyListeners && (
             <Typography variant="small" className="flex items-center gap-1">
               <Icons.Headphones className="w-4 h-4" />
-              {artist.stats.monthlyListeners.toLocaleString()} monthly
+              {artist.stats.monthlyListeners} monthly
             </Typography>
           )}
         </div>

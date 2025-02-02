@@ -25,7 +25,7 @@ export function ArtistProperties({ artist }: ArtistPropertiesProps) {
         {artist.stats.lastSongDate && (
           <Typography variant="small" className="text-gray-500 flex items-center gap-1">
             <Icons.Calendar className="w-4 h-4" />
-            Last active {new Date(artist.stats.lastSongDate).toLocaleDateString()}
+            Last active {new Date(artist.stats.lastSongDate).toDateString()}
           </Typography>
         )}
       </div>
