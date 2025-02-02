@@ -21,6 +21,7 @@ export interface MediaBase {
   createdAt: string;
   artist: ArtistSnapshot;
   metadata: {
+    releaseDate: string;
     submittedByUserId: string;
     status: MediaStatus;
   };

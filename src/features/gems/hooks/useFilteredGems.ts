@@ -1,20 +1,20 @@
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
-import { MusicFiltersId } from '../components/FiltersInputBar/filterOptions';
+import { SingleFilterId } from '../components/FiltersInputBar/filterOptions';
 
-import { filterGems } from '../utils/filterGems';
 import { MusicGem } from '../types';
+import { filterGems } from '../utils/filterGems';
 
 export function useFilteredGems(gems: MusicGem[]) {
   const searchParams = useSearchParams();
 
   const filteredGems = useMemo(() => {
-    const params: { [key in MusicFiltersId]?: string[] } = {};
+    const params: { [key in SingleFilterId]?: string[] } = {};
 
     // Convert URL search params to filter params
     searchParams.forEach((value, key) => {
       if (value) {
-        params[key as MusicFiltersId] = value.split(',');
+        params[key as SingleFilterId] = value.split(',');
       }
     });
 

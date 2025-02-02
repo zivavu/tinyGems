@@ -388,17 +388,21 @@ export const additionalOptions: FilterOption[] = [
   },
 ] as const;
 
-export type MusicFiltersId = 'lang' | 'gender' | 'genre' | 'audienceSize' | 'platform' | 'bpm' | 'mood' | 'lyricsTopics' | 'additional';
+export const commonFilterIds = ['genre', 'lang', 'platform', 'gender', 'audienceSize', 'mood', 'lyricsTopics'] as const;
+export const singleFilterIds = [...commonFilterIds, 'bpm', 'additional'] as const;
+export const albumFilterIds = [...commonFilterIds, 'albumType', 'releaseYear', 'trackCount'] as const;
+export const artistFilterIds = [...commonFilterIds, 'location', 'verification', 'activity'] as const;
 
-export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
-  {
-    title: 'Gender',
-    options: genderOptions,
-    id: 'gender',
-    icon: 'User',
-    isSearchable: false,
-    showFilterChips: false,
-  },
+export const allFilterIds = [...new Set([...commonFilterIds, ...singleFilterIds, ...albumFilterIds, ...artistFilterIds])];
+
+export type CommonFilterId = (typeof commonFilterIds)[number];
+export type SingleFilterId = (typeof singleFilterIds)[number];
+export type AlbumFilterId = (typeof albumFilterIds)[number];
+export type ArtistFilterId = (typeof artistFilterIds)[number];
+
+export type AllFilterId = (typeof allFilterIds)[number];
+
+export const singlesFilter: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
   {
     title: 'Genre',
     options: musicGenres,
@@ -406,6 +410,73 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
     icon: 'Music',
     isSearchable: true,
     showFilterChips: true,
+  },
+  {
+    title: 'Mood',
+    options: moodOptions,
+    id: 'mood',
+    icon: 'Smile',
+    isSearchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'BPM',
+    options: bpmOptions,
+    id: 'bpm',
+    icon: 'AudioLines',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Lyrics Topic',
+    options: lyricsTopicOptions,
+    id: 'lyricsTopics',
+    icon: 'ScrollText',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Additional',
+    options: additionalOptions,
+    id: 'additional',
+    icon: 'Plus',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Release Year',
+    options: [
+      { id: '2024', label: '2024' },
+      { id: '2023', label: '2023' },
+      { id: '2022', label: '2022' },
+      { id: '2021', label: '2021' },
+      { id: '2020', label: '2020' },
+      { id: '2019', label: '2019' },
+      { id: '2018', label: '2018' },
+      { id: '2017', label: '2017' },
+      { id: '2016', label: '2016' },
+      { id: '2015', label: '2015' },
+      { id: '2014', label: '2014' },
+      { id: '2013', label: '2013' },
+      { id: '2012', label: '2012' },
+      { id: '2011', label: '2011' },
+      { id: '2010', label: '2010' },
+      { id: '2009', label: '2009' },
+      { id: '2008', label: '2008' },
+      { id: 'older', label: 'Older' },
+    ],
+    id: 'releaseYear',
+    icon: 'Calendar',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Gender',
+    options: genderOptions,
+    id: 'gender',
+    icon: 'User',
+    isSearchable: false,
+    showFilterChips: false,
   },
   {
     title: 'Audience Size',
@@ -424,13 +495,29 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
     showFilterChips: false,
     isHiddenInAddPage: true,
   },
+] as const;
+
+export const albumFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
   {
-    title: 'BPM',
-    options: bpmOptions,
-    id: 'bpm',
-    icon: 'AudioLines',
+    title: 'Album Type',
+    options: [
+      { id: 'album', label: 'Album' },
+      { id: 'ep', label: 'EP' },
+      { id: 'mixtape', label: 'Mixtape' },
+      { id: 'compilation', label: 'Compilation' },
+    ],
+    id: 'albumType',
+    icon: 'Disc',
     isSearchable: false,
     showFilterChips: false,
+  },
+  {
+    title: 'Genre',
+    options: musicGenres,
+    id: 'genre',
+    icon: 'Music',
+    isSearchable: true,
+    showFilterChips: true,
   },
   {
     title: 'Mood',
@@ -449,11 +536,143 @@ export const musicFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelecti
     showFilterChips: false,
   },
   {
-    title: 'Additional',
-    options: additionalOptions,
-    id: 'additional',
-    icon: 'Plus',
+    title: 'Release Year',
+    options: [
+      { id: '2024', label: '2024' },
+      { id: '2023', label: '2023' },
+      { id: '2022', label: '2022' },
+      { id: '2021', label: '2021' },
+      { id: '2020', label: '2020' },
+      { id: '2019', label: '2019' },
+      { id: '2018', label: '2018' },
+      { id: '2017', label: '2017' },
+      { id: '2016', label: '2016' },
+      { id: '2015', label: '2015' },
+      { id: '2014', label: '2014' },
+      { id: '2013', label: '2013' },
+      { id: '2012', label: '2012' },
+      { id: '2011', label: '2011' },
+      { id: '2010', label: '2010' },
+      { id: '2009', label: '2009' },
+      { id: '2008', label: '2008' },
+      { id: 'older', label: 'Older' },
+    ],
+    id: 'releaseYear',
+    icon: 'Calendar',
     isSearchable: false,
     showFilterChips: false,
   },
-] as const;
+  {
+    title: 'Track Count',
+    options: [
+      { id: '1-5', label: '1-5 tracks' },
+      { id: '6-10', label: '6-10 tracks' },
+      { id: '11-15', label: '11-15 tracks' },
+      { id: '16+', label: '16+ tracks' },
+    ],
+    id: 'trackCount',
+    icon: 'ListMusic',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Artist Gender',
+    options: genderOptions,
+    id: 'gender',
+    icon: 'User',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Audience Size',
+    options: audienceSizes,
+    id: 'audienceSize',
+    icon: 'Users',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Platform',
+    options: platformOptions,
+    id: 'platform',
+    icon: 'Globe',
+    isSearchable: false,
+    showFilterChips: false,
+    isHiddenInAddPage: true,
+  },
+];
+
+export const artistFilters: Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>[] = [
+  {
+    title: 'Genre',
+    options: musicGenres,
+    id: 'genre',
+    icon: 'Music',
+    isSearchable: true,
+    showFilterChips: true,
+  },
+  {
+    title: 'Gender',
+    options: genderOptions,
+    id: 'gender',
+    icon: 'User',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Location',
+    options: [
+      { id: 'europe', label: 'Europe' },
+      { id: 'north-america', label: 'North America' },
+      { id: 'south-america', label: 'South America' },
+      { id: 'asia', label: 'Asia' },
+      { id: 'africa', label: 'Africa' },
+      { id: 'oceania', label: 'Oceania' },
+    ],
+    id: 'location',
+    icon: 'MapPin',
+    isSearchable: false,
+    showFilterChips: true,
+  },
+  {
+    title: 'Audience Size',
+    options: audienceSizes,
+    id: 'audienceSize',
+    icon: 'Users',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Activity',
+    options: [
+      { id: 'very_active', label: 'Very Active', description: 'Released music in last 3 months' },
+      { id: 'active', label: 'Active', description: 'Released music in last year' },
+      { id: 'inactive', label: 'Inactive', description: 'No releases in over a year' },
+    ],
+    id: 'activity',
+    icon: 'Activity',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Verification',
+    options: [
+      { id: 'platform_verified', label: 'Platform Verified' },
+      { id: 'claimed', label: 'Claimed Profile' },
+      { id: 'unverified', label: 'Unverified' },
+    ],
+    id: 'verification',
+    icon: 'BadgeCheck',
+    isSearchable: false,
+    showFilterChips: false,
+  },
+  {
+    title: 'Platform',
+    options: platformOptions,
+    id: 'platform',
+    icon: 'Globe',
+    isSearchable: false,
+    showFilterChips: false,
+    isHiddenInAddPage: true,
+  },
+];

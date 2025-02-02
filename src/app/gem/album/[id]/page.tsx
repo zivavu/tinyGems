@@ -28,7 +28,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
     });
 
   const coverImage = album.properties.media.coverImage;
-  const releaseYear = new Date(album.properties.releaseDate).getFullYear();
+  const releaseYear = new Date(album.metadata.releaseDate).getFullYear();
 
   return (
     <main className="container px-4 py-8 mx-auto max-w-7xl" role="main">

@@ -33,7 +33,7 @@ export function Header() {
             <span className="text-sm">Add</span>
           </NextLink>
           <NextLink
-            href="/seek"
+            href="/seek?category=music"
             className="flex items-center gap-2 text-gray-500 hover:text-rose-500 transition-colors"
             aria-label="Seek gems"
           >

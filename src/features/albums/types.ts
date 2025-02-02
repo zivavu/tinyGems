@@ -8,7 +8,6 @@ export interface AlbumProperties {
   };
 
   platforms: Platform[];
-  releaseDate: string;
   duration: string;
   genres: string[];
   language?: string[];

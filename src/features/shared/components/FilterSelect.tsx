@@ -1,6 +1,6 @@
 'use client';
 
-import { MusicFiltersId } from '@/features/gems/components/FiltersInputBar/filterOptions';
+import { AlbumFilterId, ArtistFilterId, SingleFilterId } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { Button as HeadlessUiButton } from '@headlessui/react';
 import { useState } from 'react';
 import { cn } from '../utils/dummy/utils';
@@ -33,7 +33,7 @@ export interface FilterSelectProps {
   className?: string;
   selectedValues: string[] | undefined;
   onSelectionChange: (newValues: string[]) => void;
-  id?: MusicFiltersId;
+  id?: SingleFilterId | AlbumFilterId | ArtistFilterId;
   isHiddenInAddPage?: boolean;
   pageType: 'add' | 'seek';
 }

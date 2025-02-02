@@ -66,6 +66,7 @@ async function generateGem(): Promise<MusicGem> {
     artist: createArtistSnapshot(randomArtist),
 
     metadata: {
+      releaseDate: faker.date.past().toISOString(),
       submittedByUserId: faker.string.uuid(),
       status: faker.helpers.arrayElement(['active', 'deleted', 'hidden']),
     },

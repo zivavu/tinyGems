@@ -1,8 +1,8 @@
-import { MusicFiltersId } from '../components/FiltersInputBar/filterOptions';
+import { SingleFilterId } from '../components/FiltersInputBar/filterOptions';
 import { MusicGem } from '../types';
 
 type FilterParams = {
-  [key in MusicFiltersId]?: string[];
+  [key in SingleFilterId]?: string[];
 };
 
 export function filterGems(gems: MusicGem[], params: FilterParams) {
@@ -18,7 +18,7 @@ export function filterGems(gems: MusicGem[], params: FilterParams) {
 
     // Check each filter parameter
     for (const [key, values] of Object.entries(params)) {
-      switch (key as MusicFiltersId) {
+      switch (key as SingleFilterId) {
         case 'lang':
           if (!hasMatchingValue(values, gem.properties.languages)) return false;
           break;

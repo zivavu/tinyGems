@@ -1,6 +1,6 @@
 'use client';
 
-import { musicFilters } from '@/features/gems/components/FiltersInputBar/filterOptions';
+import { singlesFilter } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { FilterSelect } from '@/features/shared/components/FilterSelect';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
@@ -208,7 +208,7 @@ export default function AddGemPage() {
           </Typography>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {musicFilters
+            {singlesFilter
               .filter((filter) => !filter.isHiddenInAddPage)
               .map((filter) => (
                 <FilterSelect
