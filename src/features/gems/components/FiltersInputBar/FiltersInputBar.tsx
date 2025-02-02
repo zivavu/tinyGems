@@ -8,7 +8,7 @@ import { albumFilters, artistFilters, singlesFilter } from './filterOptions';
 import { useParamFilters } from './hooks';
 
 const contentTypeOptions: SegmentOption[] = [
-  { id: 'songs', label: 'Songs', icon: 'Music' },
+  { id: 'singles', label: 'Singles', icon: 'Music' },
   { id: 'albums', label: 'Albums', icon: 'Disc' },
   { id: 'artists', label: 'Artists', icon: 'Users' },
 ] as const;
@@ -20,7 +20,7 @@ export function FiltersInputBar() {
   const contentType = getContentType();
 
   const filtersMap = {
-    songs: singlesFilter,
+    singles: singlesFilter,
     albums: albumFilters,
     artists: artistFilters,
   } as const;

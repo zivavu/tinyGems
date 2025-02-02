@@ -60,6 +60,7 @@ export function generateDummyAlbums(count = 20): Album[] {
           coverImage: faker.helpers.maybe(() => `https://picsum.photos/seed/${faker.string.uuid()}/800/800`, { probability: 0.9 }),
         },
         platforms: albumGems[0]?.properties.platforms || [],
+
         duration: calculateAlbumDuration(albumGems),
         genres: faker.helpers.arrayElements(
           musicGenres.flatMap((group) => group.options.map((option) => option.id)),

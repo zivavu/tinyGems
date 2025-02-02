@@ -1,15 +1,35 @@
 'use client';
 
+import { AlbumCard } from '@/features/albums/components/AlbumCard/AlbumCard';
+import { Album } from '@/features/albums/types';
+import { ArtistCard } from '@/features/artists/components/ArtistCard/ArtistCard';
+import { Artist } from '@/features/artists/types';
 import { FiltersInputBar } from '@/features/gems/components/FiltersInputBar/FiltersInputBar';
+import { useParamFilters } from '@/features/gems/components/FiltersInputBar/hooks';
 import { GemCard } from '@/features/gems/components/GemCard/GemCard';
-import { useFilteredGems } from '@/features/gems/hooks/useFilteredGems';
+import { MusicGem } from '@/features/gems/types';
 import { Icons } from '@/features/shared/components/Icons';
+import { useFilteredContent } from '@/features/shared/hooks/useFilteredContent';
+import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
+import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { Button } from '@headlessui/react';
 import { Suspense } from 'react';
 
 export default function SeekPage() {
-  const filteredGems = useFilteredGems(dummyGems);
+  const { getContentType } = useParamFilters();
+  const contentType = getContentType();
+
+  console.log(contentType);
+
+  const contentMap = {
+    singles: dummyGems,
+    albums: dummyAlbums,
+    artists: dummyArtists,
+  } as const;
+
+  const filteredContent = useFilteredContent(contentMap[contentType], contentType);
+  console.log(filteredContent);
 
   return (
     <div className="flex flex-col pb-16 space-y-16">
@@ -26,13 +46,18 @@ export default function SeekPage() {
         <FiltersInputBar />
       </Suspense>
 
-      <main className="container flex px-4 mx-auto" role="main" aria-label="Search gems">
-        <section aria-label="Gems grid">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
-            {filteredGems.slice(0, 20).map((gem) => (
-              <GemCard key={gem.id} gem={gem} />
-            ))}
-          </div>
+      <main className="container mx-auto px-4" role="main" aria-label={`Search ${contentType}`}>
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4" aria-label={`${contentType} grid`}>
+          {filteredContent.slice(0, 20).map((item) => {
+            switch (contentType) {
+              case 'singles':
+                return <GemCard key={item.id} gem={item as MusicGem} />;
+              case 'albums':
+                return <AlbumCard key={item.id} album={item as Album} />;
+              case 'artists':
+                return <ArtistCard key={item.id} artist={item as Artist} />;
+            }
+          })}
         </section>
       </main>
 
@@ -40,10 +65,10 @@ export default function SeekPage() {
         <Button
           as="button"
           className="flex items-center gap-3 px-8 py-4 text-lg font-medium text-white bg-rose-500 rounded-full shadow-xl hover:bg-rose-600 hover:scale-105 active:scale-95 transition-all duration-200 ease-in-out"
-          aria-label="Add your gem"
+          aria-label={`Add ${contentType.slice(0, -1)}`}
         >
           <Icons.Plus className="w-6 h-6" />
-          <span>Add your gem</span>
+          <span>Add {contentType.slice(0, -1)}</span>
         </Button>
 
         <Button

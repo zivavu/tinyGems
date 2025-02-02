@@ -24,3 +24,10 @@ export interface Album extends MediaBase {
 
   properties: AlbumProperties;
 }
+
+export interface AlbumSnapshot {
+  id: string;
+  title: string;
+  createdAt: string;
+  properties: Pick<AlbumProperties, 'duration' | 'totalTracks' | 'media'>;
+}

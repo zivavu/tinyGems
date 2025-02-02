@@ -82,7 +82,9 @@ import {
   User,
   Users,
   Video,
+  TrendingUp,
   Activity,
+  AlertTriangle,
   Waves,
   X,
   type LucideIcon,
@@ -90,8 +92,10 @@ import {
 
 export const Icons = {
   Mail,
+  AlertTriangle,
   ListMusic,
   MapPin,
+  TrendingUp,
   BadgeCheck,
   Activity,
   ExternalLink,

@@ -10,7 +10,7 @@ import {
 } from './filterOptions';
 
 export type FiltersId = SingleFilterId | AlbumFilterId | ArtistFilterId;
-export type ContentType = 'songs' | 'albums' | 'artists';
+export type ContentType = 'singles' | 'albums' | 'artists';
 
 export function useParamFilters() {
   const searchParams = useSearchParams();
@@ -36,7 +36,7 @@ export function useParamFilters() {
 
     // Get the filter IDs for the selected content type
     const allowedFilters: Record<ContentType, readonly FiltersId[]> = {
-      songs: singleFilterIds,
+      singles: singleFilterIds,
       albums: albumFilterIds,
       artists: artistFilterIds,
     } as const;
@@ -55,7 +55,7 @@ export function useParamFilters() {
   };
 
   const getContentType = (): ContentType => {
-    return (searchParams.get('type') as ContentType) || 'songs';
+    return (searchParams.get('type') as ContentType) || 'singles';
   };
 
   const getSelectedParams = (id: FiltersId | undefined) => {
