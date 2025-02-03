@@ -16,15 +16,16 @@ interface ArtistCardProps {
 
 export function ArtistCard({ artist, className }: ArtistCardProps) {
   return (
-    <div
+    <Link
+      href={`/artist/${artist.id}`}
       className={cn(
-        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm transition-all group hover:shadow-md dark:border-gray-800 dark:bg-gray-900',
+        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm transition-all group hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-800/50 dark:border-gray-800 dark:bg-gray-900',
         className,
       )}
     >
       <div className="relative">
         {artist.banner && (
-          <div className="h-24 overflow-hidden">
+          <div className="h-36 overflow-hidden">
             <Image src={artist.banner} alt={`${artist.name}'s banner`} width={400} height={100} className="object-cover w-full h-full" />
           </div>
         )}
@@ -44,8 +45,7 @@ export function ArtistCard({ artist, className }: ArtistCardProps) {
           </div>
         </div>
       </div>
-
-      <Link href={`/artist/${artist.id}`} className="block p-4 flex-1 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+      <div className="p-4 flex-1">
         <div className="mb-2 space-y-1">
           <div className="flex items-center gap-2">
             <Typography variant="h4" className="line-clamp-1">
@@ -86,7 +86,7 @@ export function ArtistCard({ artist, className }: ArtistCardProps) {
             </Typography>
           )}
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 }

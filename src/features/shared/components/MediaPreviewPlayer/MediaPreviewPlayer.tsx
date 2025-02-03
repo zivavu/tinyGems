@@ -30,9 +30,7 @@ export function MediaPreviewPlayer({ media, onLoad, type }: MediaPreviewPlayerPr
   });
 
   const platformUrl = getPlatformUrl(platforms, preferredPlatform);
-  console.log('platformUrl', platformUrl);
   const embedUrl = platformUrl ? getEmbedUrl(preferredPlatform, platformUrl, type) : null;
-  console.log('embedUrl', embedUrl);
   const playerId = `${media.id}-${preferredPlatform}`;
 
   useEffect(() => {

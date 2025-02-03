@@ -1,5 +1,7 @@
+import { AlbumGrid } from '@/features/albums/components/AlbumGrid/AlbumGrid';
 import { GemGrid } from '@/features/gems/components/GemGrid';
 import { Typography } from '@/features/shared/components/Typography';
+import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { cn } from '@/features/shared/utils/dummy/utils';
@@ -23,7 +25,9 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
     notFound();
   }
 
-  const artistGems = dummyGems.filter((gem) => gem.artist.name === artist.name);
+  const artistGems = dummyGems.filter((gem) => gem.artist.id === artist.id);
+  const artistAlbums = dummyAlbums.filter((album) => album.artist.id === artist.id);
+  const singles = artistGems.filter((gem) => gem.properties.isSingle);
 
   const socialLinks = [
     { url: artist.links.website, icon: faGlobe, label: 'Website' },
@@ -70,12 +74,37 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
         <div className="grid gap-6 mb-8 lg:grid-cols-[2fr,1fr]">
           <div className="space-y-6">
-            <div className="flex gap-6" aria-label="Artist statistics">
+            <div className="flex gap-6 flex-wrap" aria-label="Artist statistics">
               <div>
-                <Typography variant="h4">{artist.stats.followers}</Typography>
+                <Typography variant="h4">{artist.stats.followers.toLocaleString()}</Typography>
                 <Typography variant="small" className="text-gray-500">
                   Followers
                 </Typography>
+              </div>
+              <div>
+                <Typography variant="h4">{artist.stats.monthlyListeners.toLocaleString()}</Typography>
+                <Typography variant="small" className="text-gray-500">
+                  Monthly Listeners
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="h4">{artistGems.length}</Typography>
+                <Typography variant="small" className="text-gray-500">
+                  Total Tracks
+                </Typography>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Typography variant="small" className="text-gray-500">
+                Genres
+              </Typography>
+              <div className="flex flex-wrap gap-2">
+                {artist.genres.map((genre) => (
+                  <span key={genre} className="px-3 py-1 text-sm bg-gray-100 rounded-full dark:bg-gray-800">
+                    {genre}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
@@ -99,12 +128,32 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
           )}
         </div>
 
-        <div className="space-y-6">
-          <Typography variant="h2">Gems</Typography>
-          <section aria-label={`${artist.name}'s gems`}>
+        {artistAlbums.length > 0 && (
+          <section className="mb-12" aria-label="Albums">
+            <Typography variant="h2" className="mb-6">
+              Albums
+            </Typography>
+            <AlbumGrid albums={artistAlbums} />
+          </section>
+        )}
+
+        {singles.length > 0 && (
+          <section className="mb-12" aria-label="Singles">
+            <Typography variant="h2" className="mb-6">
+              Singles
+            </Typography>
+            <GemGrid gems={singles} />
+          </section>
+        )}
+
+        {artistGems.length > 0 && (
+          <section className="mb-12" aria-label="All Tracks">
+            <Typography variant="h2" className="mb-6">
+              All Tracks
+            </Typography>
             <GemGrid gems={artistGems} />
           </section>
-        </div>
+        )}
       </div>
     </main>
   );

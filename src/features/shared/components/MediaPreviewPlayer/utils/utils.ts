@@ -40,6 +40,7 @@ export function getEmbedUrl(platform: string | undefined, url: string | undefine
       //@ts-expect-error - url is a string
       const bandcampAlbum = SAMPLE_ALBUMS_URLS.bandcamp.find((album) => album.url === url.url);
 
+      if (!bandcampAlbum) return null;
       const commonParams = '/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/';
       return `https://bandcamp.com/EmbeddedPlayer/album=${bandcampAlbum.albumId}${commonParams}`;
     }

@@ -22,6 +22,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     const { pauseAll, currentPlayerId } = get();
     if (currentPlayerId === newPlayerId) return;
 
+    console.log('newPlayerId', newPlayerId);
     pauseAll(newPlayerId);
     set({ currentPlayerId: newPlayerId });
   },
