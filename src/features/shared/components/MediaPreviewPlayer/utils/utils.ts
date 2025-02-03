@@ -37,8 +37,8 @@ export function getEmbedUrl(platform: string | undefined, url: string | undefine
     }
 
     case 'bandcamp': {
-      const bandcampAlbum = SAMPLE_ALBUMS_URLS.bandcamp.find((album) => album.url === url);
-      if (!bandcampAlbum) return null;
+      //@ts-expect-error - url is a string
+      const bandcampAlbum = SAMPLE_ALBUMS_URLS.bandcamp.find((album) => album.url === url.url);
 
       const commonParams = '/size=large/bgcol=ffffff/linkcol=0687f5/tracklist=false/transparent=true/';
       return `https://bandcamp.com/EmbeddedPlayer/album=${bandcampAlbum.albumId}${commonParams}`;
@@ -64,7 +64,7 @@ export function getIframeHeight(platform: string, type: 'gem' | 'album'): string
   if (type === 'album') {
     switch (platform.toLowerCase()) {
       case 'bandcamp':
-        return '600';
+        return '460';
       case 'spotify':
         return '380';
       default:
@@ -78,7 +78,7 @@ export function getIframeHeight(platform: string, type: 'gem' | 'album'): string
     case 'soundcloud':
       return '315';
     case 'bandcamp':
-      return '415';
+      return '460';
     case 'spotify':
       return '352';
     default:

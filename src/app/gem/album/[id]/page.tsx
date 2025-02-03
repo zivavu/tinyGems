@@ -1,7 +1,6 @@
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
-import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -17,14 +16,6 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
   if (!album) {
     notFound();
   }
-
-  const albumGems = dummyGems
-    .filter((gem) => album.tracks.find((track) => track.gemId === gem.id))
-    .sort((a, b) => {
-      const orderA = album.tracks.find((t) => t.gemId === a.id)?.order || 0;
-      const orderB = album.tracks.find((t) => t.gemId === b.id)?.order || 0;
-      return orderA - orderB;
-    });
 
   const coverImage = album.properties.media.coverImage;
   const releaseYear = new Date(album.metadata.releaseDate).getFullYear();

@@ -1,4 +1,3 @@
-import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import { MusicGem } from '../types';
@@ -21,10 +20,7 @@ export function GemGrid({ gems, className }: GemGridProps) {
   return (
     <div className={cn('grid gap-6', 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4', className)}>
       {gems.map((gem) => (
-        <>
-          <MediaPreviewPlayer key={gem.id} media={gem} type="gem" />
-          <GemCard gem={gem} />
-        </>
+        <GemCard key={gem.id} gem={gem} />
       ))}
     </div>
   );
