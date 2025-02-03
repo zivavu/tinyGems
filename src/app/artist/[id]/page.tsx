@@ -82,7 +82,7 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
                 </Typography>
               </div>
               <div>
-                <Typography variant="h4">{artist.stats.monthlyListeners.toLocaleString()}</Typography>
+                <Typography variant="h4">{artist?.stats?.monthlyListeners?.toLocaleString()}</Typography>
                 <Typography variant="small" className="text-gray-500">
                   Monthly Listeners
                 </Typography>
