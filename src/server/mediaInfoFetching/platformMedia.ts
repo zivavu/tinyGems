@@ -1,7 +1,7 @@
-import { Platform, PlatformType } from '../types';
-import { getSoundCloudTrackInfo } from './soundcloudClient';
-import { getSpotifyTrackInfo } from './spotifyClient';
-import { getYouTubeVideoInfo } from './youtubeClient';
+import { Platform, PlatformType } from '../../features/gems/types';
+import { getSoundCloudTrackInfo } from '../soundcloudClient';
+import { getSpotifyTrackInfo } from '../spotifyClient';
+import { getYouTubeVideoInfo } from '../youtubeClient';
 
 // Types for media info from different platforms
 interface PlatformMediaInfo {

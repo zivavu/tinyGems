@@ -1,7 +1,7 @@
 'use client';
 
-import { usePlayerStore } from '@/features/gems/components/GemCard/comps/stores/playerStore';
 import { PlatformType } from '@/features/gems/types';
+import { usePlayerStore } from './usePlayerStore';
 
 interface PlayerHandler {
   connectWithIFrame: (iframe: HTMLIFrameElement) => Promise<void | (() => void)>;
@@ -38,7 +38,13 @@ declare global {
   }
 }
 
-export function useInitEmbededPlayerControls({ playerId, playerType }: { playerId: string; playerType: PlatformType | undefined }) {
+interface UseInitEmbededPlayerControlsProps {
+  playerId: string;
+  playerType: PlatformType | undefined;
+  mediaType?: 'gem' | 'album';
+}
+
+export function useInitEmbededPlayerControls({ playerId, playerType }: UseInitEmbededPlayerControlsProps) {
   const { registerPlayerInTheStore, setCurrentPlayer, currentPlayerId } = usePlayerStore();
 
   if (!playerType) return { connectWithIFrame: async () => {}, pause: () => {} };

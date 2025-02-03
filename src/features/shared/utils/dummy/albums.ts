@@ -6,6 +6,24 @@ import { dummyGems } from './gems';
 
 faker.seed(123);
 
+export const SAMPLE_ALBUMS_URLS = {
+  bandcamp: [
+    {
+      url: 'https://newworldofmine.bandcamp.com/album/after-ovid',
+      albumId: '1282391830',
+    },
+    {
+      url: 'https://fine-sir-1584660650.bandcamp.com/album/1584660650',
+      albumId: '3533779838',
+    },
+  ],
+  spotify: [
+    'https://open.spotify.com/album/4V2oTrdyhyZ3fBNPL3TNMS',
+    'https://open.spotify.com/album/1aVKHYdh9Qqv0lKulUturf',
+    'https://open.spotify.com/album/5JuoWId7VBeIeVKVwGUi0g',
+  ],
+};
+
 function calculateAlbumDuration(gems: typeof dummyGems): string {
   const totalSeconds = gems.reduce((acc, gem) => {
     const [minutes, seconds] = gem.properties.duration.split(':').map(Number);
@@ -32,6 +50,8 @@ export function generateDummyAlbums(count = 20): Album[] {
     const albumGems = faker.helpers.arrayElements(artistGems, albumGemsCount);
 
     const albumType: AlbumType = albumGemsCount <= 4 ? 'ep' : albumGemsCount <= 6 ? faker.helpers.arrayElement(['ep', 'album']) : 'album';
+
+    const platform = faker.helpers.arrayElement(['spotify', 'bandcamp']);
 
     const album: Album = {
       id: faker.string.uuid(),
@@ -63,7 +83,12 @@ export function generateDummyAlbums(count = 20): Album[] {
         media: {
           coverImage: faker.helpers.maybe(() => `https://picsum.photos/seed/${faker.string.uuid()}/800/800`, { probability: 0.9 }),
         },
-        platforms: albumGems[0]?.properties.platforms || [],
+        platforms: [
+          {
+            name: platform,
+            url: faker.helpers.arrayElement(platform === 'spotify' ? SAMPLE_ALBUMS_URLS.spotify : SAMPLE_ALBUMS_URLS.bandcamp),
+          },
+        ],
 
         duration: calculateAlbumDuration(albumGems),
         genres: faker.helpers.arrayElements(

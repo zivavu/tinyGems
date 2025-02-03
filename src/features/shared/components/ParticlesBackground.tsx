@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import colors from 'tailwindcss/colors';
 import { cn } from '../utils/dummy/utils';
 
@@ -9,8 +9,8 @@ const PARTICLE_COUNT = 250;
 const MIN_SIZE = 10;
 const MAX_SIZE = 25;
 const MAX_TARGET_RADIUS = 100;
-const MIN_SPEED = 0.001;
-const MAX_SPEED = 0.003;
+const MIN_SPEED = 0.0005;
+const MAX_SPEED = 0.0025;
 const LIGHT_MODE_COLOR = colors.violet[400];
 const DARK_MODE_COLOR = colors.rose[900];
 
@@ -159,12 +159,18 @@ function ParticlesBackground({ theme, className }: { theme: string | undefined; 
     };
   }, []);
 
-  return <canvas ref={canvasRef} style={{ filter: 'blur(8px)' }} className={cn('absolute inset-0 overflow-hidden', className)} />;
+  return <canvas ref={canvasRef} className={cn('absolute w-full h-full blur-sm inset-0  overflow-hidden', className)} />;
 }
 
 export function ThemedParticlesBackground({ className }: { className?: string }) {
   const { theme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
 
-  if (typeof window === 'undefined') return null;
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
+
   return <ParticlesBackground key={theme} theme={theme} className={className} />;
 }

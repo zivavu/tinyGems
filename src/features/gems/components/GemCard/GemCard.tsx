@@ -2,6 +2,7 @@
 
 import { MusicGem } from '@/features/gems/types';
 import { Icons } from '@/features/shared/components/Icons';
+import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/dummy/utils';
 import { Button } from '@headlessui/react';
@@ -10,7 +11,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { GemPlaceholder } from './comps/GemPlaceholder';
 import { MusicProperties } from './comps/MusicProperties';
-import { PlatformPreview } from './comps/PlatformPreview';
 import { StatsSection } from './comps/StatsSection';
 
 interface GemCardProps {
@@ -52,7 +52,7 @@ export function GemCard({ gem, className }: GemCardProps) {
         aria-label={`Preview image for ${gem.title}`}
       >
         {showPreview ? (
-          <PlatformPreview gem={gem} />
+          <MediaPreviewPlayer media={gem} type="gem" />
         ) : (
           <>
             {mainImage ? (

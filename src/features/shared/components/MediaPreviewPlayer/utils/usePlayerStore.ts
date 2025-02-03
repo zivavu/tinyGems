@@ -22,17 +22,14 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     const { pauseAll, currentPlayerId } = get();
     if (currentPlayerId === newPlayerId) return;
 
-    console.log('setting new player id', newPlayerId);
     pauseAll(newPlayerId);
     set({ currentPlayerId: newPlayerId });
   },
 
   pauseAll: (excludeId) => {
     const { players } = get();
-    console.log('pauseAll', players, excludeId);
     Object.entries(players).forEach(([id, player]) => {
       if (id === excludeId) return;
-      console.log('pausing player', id, excludeId);
       player.pause();
     });
   },

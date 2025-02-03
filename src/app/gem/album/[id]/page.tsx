@@ -1,4 +1,3 @@
-import { AlbumPlayer } from '@/features/albums/components/AlbumPlayer';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
@@ -108,9 +107,6 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
               {album.title}
             </Typography>
           </div>
-
-          {/* Album Player */}
-          <AlbumPlayer gems={albumGems} />
 
           {/* Genres */}
           {album.properties.genres.length > 0 && (

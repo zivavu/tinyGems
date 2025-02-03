@@ -6,13 +6,13 @@ import {
   platformOptions,
 } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { MusicGem, Platform, PlatformType } from '@/features/gems/types';
-import { getPlatformMediaInfo } from '@/features/gems/utils/platformMedia';
+import { getPlatformMediaInfo } from '@/server/mediaInfoFetching/platformMedia';
 import { faker } from '@faker-js/faker';
 import { createArtistSnapshot, dummyArtists } from './artists';
 
 faker.seed(333);
 
-const SAMPLE_PLATFORM_URLS = {
+const SAMPLE_SINGLES_URLS = {
   youtube: [
     'https://www.youtube.com/watch?v=samdIzlNBv8',
     'https://www.youtube.com/watch?v=uPskJjSlUow&l',
@@ -33,7 +33,6 @@ const SAMPLE_PLATFORM_URLS = {
     'https://open.spotify.com/track/1AmAFaRELIqcrtCI230csp',
     'https://open.spotify.com/track/2xnGXs6qDvQDiFthBOvhez',
     'https://open.spotify.com/track/2HzKBOH9XJkCKDXRKZMpAE',
-    'https://open.spotify.com/track/2x9d65LWwkMT4StX1dOS0o',
   ],
 } as const;
 
@@ -41,7 +40,7 @@ function generatePlatformUrl(platform: string): string {
   if (platform === 'other') {
     return `https://music.example.com/${faker.helpers.slugify(faker.lorem.words(2))}`;
   }
-  return faker.helpers.arrayElement(SAMPLE_PLATFORM_URLS[platform as keyof typeof SAMPLE_PLATFORM_URLS] || []);
+  return faker.helpers.arrayElement(SAMPLE_SINGLES_URLS[platform as keyof typeof SAMPLE_SINGLES_URLS] || []);
 }
 
 async function generateGem(): Promise<MusicGem> {
