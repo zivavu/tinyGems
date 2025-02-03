@@ -3,115 +3,169 @@
 import { ThemeToggle } from '@/features/global/components/ThemeToggle';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
-import { Button, Menu, MenuItems } from '@headlessui/react';
+import { Menu, Transition } from '@headlessui/react';
 import NextLink from 'next/link';
-
+import { useState } from 'react';
+import { SearchBar } from './SearchBar/SearchBar';
 export function Header() {
-  // This will be replaced with real auth state later
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isAuthenticated = false;
 
+  const navigationItems = [
+    { href: '/add-gem', label: 'Add', icon: Icons.Plus },
+    { href: '/seek?category=music', label: 'Seek', icon: Icons.Search },
+  ];
+
   return (
-    <header
-      className={`sticky top-0 h-[4.5rem] z-50 py-2 w-full border-b border-rose-100 backdrop-blur-sm dark:border-rose-950 bg-white/80 dark:bg-gray-950/80`}
-      role="banner"
-      aria-label="Main navigation"
-    >
-      <div className="container mx-auto h-full flex justify-between items-center ">
-        <NextLink href="/" className="flex gap-2 items-center" aria-label="tinyGems home">
-          <Icons.Sparkles className="w-5 h-5 text-rose-500" aria-hidden="true" />
-          <Typography variant="h4" className="hidden content-center sm:block">
-            tinyGems
-          </Typography>
-        </NextLink>
+    <header className="sticky top-0 z-50 w-full border-b border-rose-100 backdrop-blur-sm dark:border-rose-950 bg-white/80 dark:bg-gray-950/80">
+      <div className="container mx-auto">
+        <div className="flex h-16 items-center justify-between px-4">
+          <div className="flex items-center gap-8">
+            <NextLink href="/" className="flex items-center gap-2" aria-label="tinyGems home">
+              <Icons.Sparkles className="h-5 w-5 text-rose-500" aria-hidden="true" />
+              <Typography variant="h4" className="hidden sm:block">
+                tinyGems
+              </Typography>
+            </NextLink>
 
-        <div className="flex gap-12 items-center">
-          <NextLink
-            href="/add-gem"
-            className="flex items-center gap-2 text-gray-500 hover:text-rose-500 transition-colors"
-            aria-label="Add your gem"
-          >
-            <span className="text-sm">Add</span>
-          </NextLink>
-          <NextLink
-            href="/seek?category=music"
-            className="flex items-center gap-2 text-gray-500 hover:text-rose-500 transition-colors"
-            aria-label="Seek gems"
-          >
-            <span className="text-sm">Seek</span>
-          </NextLink>
+            <nav className="hidden md:flex md:gap-6">
+              {navigationItems.map((item) => (
+                <NextLink
+                  key={item.href}
+                  href={item.href}
+                  className="flex items-center gap-2 text-gray-500 hover:text-rose-500 transition-colors"
+                >
+                  <item.icon className="h-4 w-4" />
+                  <Typography variant="small">{item.label}</Typography>
+                </NextLink>
+              ))}
+            </nav>
+          </div>
+
+          <div className="flex flex-1 justify-center px-8 max-w-2xl">
+            <SearchBar />
+          </div>
+
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+
+            {isAuthenticated ? (
+              <Menu as="div" className="relative">
+                <Menu.Button className="flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 transition-colors hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/40">
+                  <Icons.User className="h-4 w-4" />
+                  <Typography variant="small">Profile</Typography>
+                </Menu.Button>
+
+                <Transition
+                  enter="transition duration-200 ease-out"
+                  enterFrom="transform scale-95 opacity-0"
+                  enterTo="transform scale-100 opacity-100"
+                  leave="transition duration-75 ease-in"
+                  leaveFrom="transform scale-100 opacity-100"
+                  leaveTo="transform scale-95 opacity-0"
+                >
+                  <Menu.Items className="absolute right-0 mt-2 w-48 rounded-xl border border-rose-100 bg-white py-2 shadow-lg dark:border-rose-900 dark:bg-gray-900">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <NextLink
+                          href="/dashboard"
+                          className={`${
+                            active ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
+                          } flex w-full items-center gap-2 px-4 py-2 text-sm`}
+                        >
+                          <Icons.Layout className="h-4 w-4" />
+                          Dashboard
+                        </NextLink>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <NextLink
+                          href="/library"
+                          className={`${
+                            active ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
+                          } flex w-full items-center gap-2 px-4 py-2 text-sm`}
+                        >
+                          <Icons.Library className="h-4 w-4" />
+                          Library
+                        </NextLink>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <NextLink
+                          href="/settings"
+                          className={`${
+                            active ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
+                          } flex w-full items-center gap-2 px-4 py-2 text-sm`}
+                        >
+                          <Icons.Settings className="h-4 w-4" />
+                          Settings
+                        </NextLink>
+                      )}
+                    </Menu.Item>
+                    <div className="my-2 border-t border-rose-100 dark:border-rose-900" />
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          className={`${
+                            active ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
+                          } flex w-full items-center gap-2 px-4 py-2 text-sm`}
+                          onClick={() => {}}
+                        >
+                          <Icons.LogOut className="h-4 w-4" />
+                          Sign out
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            ) : (
+              <div className="hidden sm:flex sm:items-center sm:gap-4">
+                <NextLink href="/signin" className="text-gray-700 hover:text-rose-500 transition-colors dark:text-gray-200">
+                  <Typography variant="small">Sign in</Typography>
+                </NextLink>
+                <NextLink href="/signup" className="rounded-full bg-rose-500 px-4 py-2 text-white hover:bg-rose-600 transition-colors">
+                  <Typography variant="small">Get Started</Typography>
+                </NextLink>
+              </div>
+            )}
+
+            <button
+              className="rounded-lg p-2 hover:bg-rose-50 md:hidden dark:hover:bg-rose-900/30"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+            >
+              <Icons.Menu className="h-6 w-6" />
+            </button>
+          </div>
         </div>
 
-        <div className="flex gap-4 items-center">
-          <ThemeToggle />
-          {isAuthenticated ? (
-            <Menu as="div" className="relative">
-              <Button
-                className="flex gap-2 items-center px-4 py-2 bg-rose-50 rounded-full transition-colors hover:bg-rose-100"
-                aria-label="Open profile menu"
+        {/* Mobile Navigation */}
+        <Transition
+          show={isMobileMenuOpen}
+          enter="transition duration-200 ease-out"
+          enterFrom="transform -translate-y-full opacity-0"
+          enterTo="transform translate-y-0 opacity-100"
+          leave="transition duration-150 ease-in"
+          leaveFrom="transform translate-y-0 opacity-100"
+          leaveTo="transform -translate-y-full opacity-0"
+        >
+          <nav className="border-t border-rose-100 bg-white dark:border-rose-900 dark:bg-gray-900 md:hidden">
+            {navigationItems.map((item) => (
+              <NextLink
+                key={item.href}
+                href={item.href}
+                className="flex items-center gap-2 border-b border-rose-100 px-4 py-3 text-gray-500 hover:bg-rose-50 hover:text-rose-500 dark:border-rose-900 dark:hover:bg-rose-900/30"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
-                <Icons.User className="w-4 h-4" aria-hidden="true" />
-                <Typography variant="p">Profile</Typography>
-              </Button>
-              <MenuItems
-                className="absolute right-0 py-2 mt-2 w-48 bg-white rounded-xl border border-rose-100 shadow-lg"
-                aria-label="Profile menu"
-              >
-                {() => (
-                  <>
-                    <Button
-                      as={NextLink}
-                      href="/dashboard"
-                      className={({ active }) =>
-                        `${active ? 'bg-rose-50 text-rose-800' : 'text-gray-700'} flex items-center px-4 py-2 text-sm`
-                      }
-                      aria-label="Go to dashboard"
-                    >
-                      Dashboard
-                    </Button>
-                    <Button
-                      as={NextLink}
-                      href="/settings"
-                      className={({ active }) =>
-                        `${active ? 'bg-rose-50 text-rose-800' : 'text-gray-700'} flex items-center px-4 py-2 text-sm`
-                      }
-                      aria-label="Go to settings"
-                    >
-                      Settings
-                    </Button>
-                    <Button
-                      as="button"
-                      className={({ active }) =>
-                        `${active ? 'bg-rose-50 text-rose-800' : 'text-gray-700'} flex w-full items-center px-4 py-2 text-sm`
-                      }
-                      onClick={() => {}}
-                      aria-label="Sign out"
-                    >
-                      Sign out
-                    </Button>
-                  </>
-                )}
-              </MenuItems>
-            </Menu>
-          ) : (
-            <>
-              <Typography variant="p" className="transition-colors hover:text-rose-500" aria-label="Sign in to your account">
-                Sign in
-              </Typography>
-              <Typography
-                variant="p"
-                className="px-4 py-2 text-white bg-rose-500 rounded-full transition-colors hover:bg-rose-600"
-                aria-label="Create a new account"
-              >
-                Get Started
-              </Typography>
-            </>
-          )}
-        </div>
-
-        {/* Mobile Menu Button - Only shows on small screens */}
-        <button className="p-2 rounded-lg md:hidden hover:bg-rose-50" aria-label="Toggle mobile menu" aria-expanded="false">
-          <Icons.Menu className="w-6 h-6" aria-hidden="true" />
-        </button>
+                <item.icon className="h-4 w-4" />
+                <Typography variant="small">{item.label}</Typography>
+              </NextLink>
+            ))}
+          </nav>
+        </Transition>
       </div>
     </header>
   );
