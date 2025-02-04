@@ -3,7 +3,7 @@
 import { ThemeToggle } from '@/features/global/components/ThemeToggle';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
-import { Menu, Transition } from '@headlessui/react';
+import { Menu, MenuButton, MenuItems, Transition } from '@headlessui/react';
 import NextLink from 'next/link';
 import { useState } from 'react';
 import { SearchBar } from './SearchBar/SearchBar';
@@ -12,8 +12,8 @@ export function Header() {
   const isAuthenticated = false;
 
   const navigationItems = [
-    { href: '/add-gem', label: 'Add', icon: Icons.Plus },
     { href: '/seek?category=music', label: 'Seek', icon: Icons.Search },
+    { href: '/add-gem', label: 'Add', icon: Icons.Plus },
   ];
 
   return (
@@ -21,14 +21,14 @@ export function Header() {
       <div className="container mx-auto">
         <div className="flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-8">
-            <NextLink href="/" className="flex items-center gap-2" aria-label="tinyGems home">
-              <Icons.Sparkles className="h-5 w-5 text-rose-500" aria-hidden="true" />
+            <NextLink href="/" className="flex items-center justify-center gap-2" aria-label="tinyGems home">
+              <Icons.Sparkles size={20} className=" text-rose-500" aria-hidden="true" />
               <Typography variant="h4" className="hidden sm:block">
                 tinyGems
               </Typography>
             </NextLink>
 
-            <nav className="hidden md:flex md:gap-6">
+            <nav className="hidden md:flex md:gap-6 items-center">
               {navigationItems.map((item) => (
                 <NextLink
                   key={item.href}
@@ -51,10 +51,10 @@ export function Header() {
 
             {isAuthenticated ? (
               <Menu as="div" className="relative">
-                <Menu.Button className="flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 transition-colors hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/40">
+                <MenuButton className="flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 transition-colors hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/40">
                   <Icons.User className="h-4 w-4" />
                   <Typography variant="small">Profile</Typography>
-                </Menu.Button>
+                </MenuButton>
 
                 <Transition
                   enter="transition duration-200 ease-out"
@@ -64,52 +64,52 @@ export function Header() {
                   leaveFrom="transform scale-100 opacity-100"
                   leaveTo="transform scale-95 opacity-0"
                 >
-                  <Menu.Items className="absolute right-0 mt-2 w-48 rounded-xl border border-rose-100 bg-white py-2 shadow-lg dark:border-rose-900 dark:bg-gray-900">
-                    <Menu.Item>
-                      {({ active }) => (
+                  <MenuItems className="absolute right-0 mt-2 w-48 rounded-xl border border-rose-100 bg-white py-2 shadow-lg dark:border-rose-900 dark:bg-gray-900">
+                    <MenuItems>
+                      {({ open }) => (
                         <NextLink
                           href="/dashboard"
                           className={`${
-                            active ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
+                            open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
                           } flex w-full items-center gap-2 px-4 py-2 text-sm`}
                         >
                           <Icons.Layout className="h-4 w-4" />
                           Dashboard
                         </NextLink>
                       )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
+                    </MenuItems>
+                    <MenuItems>
+                      {({ open }) => (
                         <NextLink
                           href="/library"
                           className={`${
-                            active ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
+                            open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
                           } flex w-full items-center gap-2 px-4 py-2 text-sm`}
                         >
                           <Icons.Library className="h-4 w-4" />
                           Library
                         </NextLink>
                       )}
-                    </Menu.Item>
-                    <Menu.Item>
-                      {({ active }) => (
+                    </MenuItems>
+                    <MenuItems>
+                      {({ open }) => (
                         <NextLink
                           href="/settings"
                           className={`${
-                            active ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
+                            open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
                           } flex w-full items-center gap-2 px-4 py-2 text-sm`}
                         >
                           <Icons.Settings className="h-4 w-4" />
                           Settings
                         </NextLink>
                       )}
-                    </Menu.Item>
+                    </MenuItems>
                     <div className="my-2 border-t border-rose-100 dark:border-rose-900" />
-                    <Menu.Item>
-                      {({ active }) => (
+                    <MenuItems>
+                      {({ open }) => (
                         <button
                           className={`${
-                            active ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
+                            open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
                           } flex w-full items-center gap-2 px-4 py-2 text-sm`}
                           onClick={() => {}}
                         >
@@ -117,8 +117,8 @@ export function Header() {
                           Sign out
                         </button>
                       )}
-                    </Menu.Item>
-                  </Menu.Items>
+                    </MenuItems>
+                  </MenuItems>
                 </Transition>
               </Menu>
             ) : (

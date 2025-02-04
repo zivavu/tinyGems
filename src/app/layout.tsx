@@ -1,4 +1,4 @@
-import { FetchingLayerProvider } from '@/utils/FetchingLayerProvider';
+import { FetchingLayerProvider } from '@/lib/FetchingLayerProvider';
 import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import { Geist, Geist_Mono } from 'next/font/google';

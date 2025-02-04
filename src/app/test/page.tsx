@@ -1,7 +1,7 @@
 'use client';
 
 import { Typography } from '@/features/shared/components/Typography';
-import { trpc } from '@/utils/trpc';
+import { trpc } from '@/lib/trpc';
 
 export default function TestPage() {
   const { data, isLoading, error } = trpc.test.testMongo.useQuery();

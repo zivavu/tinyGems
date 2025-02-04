@@ -6,7 +6,6 @@ import {
   platformOptions,
 } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { MusicGem, Platform, PlatformType } from '@/features/gems/types';
-import { getPlatformMediaInfo } from '@/server/mediaInfoFetching/platformMedia';
 import { faker } from '@faker-js/faker';
 import { createArtistSnapshot, dummyArtists } from './artists';
 
@@ -43,7 +42,7 @@ function generatePlatformUrl(platform: string): string {
   return faker.helpers.arrayElement(SAMPLE_SINGLES_URLS[platform as keyof typeof SAMPLE_SINGLES_URLS] || []);
 }
 
-async function generateGem(): Promise<MusicGem> {
+function generateGem() {
   const randomArtist = faker.helpers.arrayElement(dummyArtists);
   const platformCount = faker.number.int({ min: 1, max: 3 });
   const selectedPlatforms = faker.helpers.arrayElements(
@@ -56,7 +55,7 @@ async function generateGem(): Promise<MusicGem> {
     url: generatePlatformUrl(platformName),
   }));
 
-  const mediaInfo = await getPlatformMediaInfo(platforms);
+  const mediaInfo = {};
 
   return {
     id: faker.string.uuid(),
@@ -111,22 +110,20 @@ async function generateGem(): Promise<MusicGem> {
   };
 }
 
-export async function generateDummyGems(count = 1000) {
+export function generateDummyGems(count = 1000) {
   const gemsPerArtist = Math.ceil(count / dummyArtists.length);
   const gems: MusicGem[] = [];
 
   for (const artist of dummyArtists) {
-    const artistGems = await Promise.all(
-      Array.from({ length: gemsPerArtist }, async () => {
-        const gem = await generateGem();
-        gem.artist = createArtistSnapshot(artist);
-        return gem;
-      }),
-    );
+    const artistGems = Array.from({ length: gemsPerArtist }, () => {
+      const gem = generateGem();
+      gem.artist = createArtistSnapshot(artist);
+      return gem;
+    });
     gems.push(...artistGems);
   }
 
   return gems.slice(0, count);
 }
 
-export const dummyGems = await generateDummyGems();
+export const dummyGems = generateDummyGems();

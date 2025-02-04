@@ -1,6 +1,6 @@
 import { GemGrid } from '@/features/gems/components/GemGrid';
 import { Icons } from '@/features/shared/components/Icons';
-import { ThemedParticlesBackground } from '@/features/shared/components/ParticlesBackground';
+import ParticlesBackground from '@/features/shared/components/ParticlesBackground';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import NextLink from 'next/link';
@@ -37,8 +37,9 @@ function getSectionGradient(section: keyof typeof sectionGradients): string {
 export default function Home() {
   return (
     <main className="relative bg-stone-50 dark:bg-[#0a0a0a]">
+      <ParticlesBackground />
       <section className={`min-h-screen flex items-center justify-center ${getSectionGradient('hero')}`}>
-        <div className="z-20 max-w-6xl space-y-12 mx-auto flex flex-col items-center justify-center text-center">
+        <div className="z-20 max-w-6xl px-6 space-y-12 mx-auto flex flex-col items-center justify-center text-center">
           <div className="relative inline-block">
             <div className="absolute -z-10 inset-0 bg-gradient-to-r from-rose-400 to-purple-900 blur-3xl opacity-20 rounded-full animate-pulse" />
             <Typography variant="h2" className="z-10 font-bold">
@@ -134,8 +135,6 @@ export default function Home() {
           </NextLink>
         </div>
       </section>
-
-      <ThemedParticlesBackground className="z-10" />
     </main>
   );
 }
