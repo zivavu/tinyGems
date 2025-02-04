@@ -123,7 +123,7 @@ export function Header() {
               </Menu>
             ) : (
               <div className="hidden sm:flex sm:items-center sm:gap-4">
-                <NextLink href="/signin" className="text-gray-700 hover:text-rose-500 transition-colors dark:text-gray-200">
+                <NextLink href="/auth/signin" className="text-gray-700 hover:text-rose-500 transition-colors dark:text-gray-200">
                   <Typography variant="small">Sign in</Typography>
                 </NextLink>
                 <NextLink href="/signup" className="rounded-full bg-rose-500 px-4 py-2 text-white hover:bg-rose-600 transition-colors">
