@@ -122,7 +122,7 @@ export default function Home() {
           <Typography variant="h2" className="text-5xl font-black  mb-8">
             Base of the Underground
           </Typography>
-          <Typography variant="p" className="text-xl  mb-12">
+          <Typography variant="p" className="text-xl mb-12">
             Take, a look, check if you like it. If you do, and would like to share with us some more, create an account, and let us see.
           </Typography>
           <NextLink
