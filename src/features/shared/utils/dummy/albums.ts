@@ -38,7 +38,7 @@ function calculateAlbumDuration(gems: typeof dummyGems): string {
 export function generateDummyAlbums(count = 20): Album[] {
   return Array.from({ length: count }, () => {
     const randomArtist = faker.helpers.arrayElement(dummyArtists);
-    const artistGems = dummyGems.filter((gem) => gem.artist?.id === randomArtist.id && !gem.properties.isSingle);
+    const artistGems = dummyGems.filter((gem) => gem.artist?.id === randomArtist.id && gem.properties.releaseType !== 'single');
 
     if (artistGems.length === 0) {
       return null;
