@@ -1,15 +1,22 @@
 'use client';
 
 import { ThemeToggle } from '@/features/global/components/ThemeToggle';
+import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
-import { Button as HeadlessUIButton, Menu, MenuButton, MenuItems, Transition } from '@headlessui/react';
+import { cn } from '@/features/shared/utils/dummy/utils';
+import { authClient } from '@/lib/authClient';
+import { Button as HeadlessUIButton, Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
+import Image from 'next/image';
 import NextLink from 'next/link';
 import { useState } from 'react';
-import { SearchBar } from './SearchBar/SearchBar';
+import { SearchBar } from '../SearchBar/SearchBar';
+
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const isAuthenticated = false;
+
+  const { data } = authClient.useSession();
+  const user = data?.user;
 
   const navigationItems = [
     { href: '/seek?category=music', label: 'Seek', icon: Icons.Search },
@@ -49,11 +56,24 @@ export function Header() {
           <div className="flex items-center gap-4">
             <ThemeToggle />
 
-            {isAuthenticated ? (
+            {user ? (
               <Menu as="div" className="relative">
-                <MenuButton className="flex items-center gap-2 rounded-full bg-rose-50 px-4 py-2 transition-colors hover:bg-rose-100 dark:bg-rose-900/20 dark:hover:bg-rose-900/40">
-                  <Icons.User className="h-4 w-4" />
-                  <Typography variant="small">Profile</Typography>
+                <MenuButton className="flex items-center gap-2 rounded-full transition-colors hover:ring-2 hover:ring-rose-200 dark:hover:ring-rose-800">
+                  {user.image ? (
+                    <Image
+                      width={50}
+                      height={50}
+                      src={user.image}
+                      alt={user.name ?? 'Profile picture'}
+                      className="h-8 w-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900">
+                      <Typography variant="small" className="font-medium text-rose-700 dark:text-rose-300">
+                        {user.name?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'}
+                      </Typography>
+                    </div>
+                  )}
                 </MenuButton>
 
                 <Transition
@@ -65,59 +85,66 @@ export function Header() {
                   leaveTo="transform scale-95 opacity-0"
                 >
                   <MenuItems className="absolute right-0 mt-2 w-48 rounded-xl border border-rose-100 bg-white py-2 shadow-lg dark:border-rose-900 dark:bg-gray-900">
-                    <MenuItems>
-                      {({ open }) => (
+                    <MenuItem as="div">
+                      {({ focus }) => (
                         <NextLink
-                          href="/"
-                          className={`${
-                            open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
-                          } flex w-full items-center gap-2 px-4 py-2 text-sm`}
+                          href="/dashboard"
+                          className={cn(
+                            'flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors',
+                            focus && 'bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-300',
+                          )}
                         >
                           <Icons.Layout className="h-4 w-4" />
                           Dashboard
                         </NextLink>
                       )}
-                    </MenuItems>
-                    <MenuItems>
-                      {({ open }) => (
+                    </MenuItem>
+                    <MenuItem as="div">
+                      {({ focus }) => (
                         <NextLink
                           href="/library"
-                          className={`${
-                            open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
-                          } flex w-full items-center gap-2 px-4 py-2 text-sm`}
+                          className={cn(
+                            'flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors',
+                            focus && 'bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-300',
+                          )}
                         >
                           <Icons.Library className="h-4 w-4" />
                           Library
                         </NextLink>
                       )}
-                    </MenuItems>
-                    <MenuItems>
-                      {({ open }) => (
+                    </MenuItem>
+                    <MenuItem as="div">
+                      {({ focus }) => (
                         <NextLink
                           href="/settings"
-                          className={`${
-                            open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
-                          } flex w-full items-center gap-2 px-4 py-2 text-sm`}
+                          className={cn(
+                            'flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors',
+                            focus && 'bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-300',
+                          )}
                         >
                           <Icons.Settings className="h-4 w-4" />
                           Settings
                         </NextLink>
                       )}
-                    </MenuItems>
+                    </MenuItem>
                     <div className="my-2 border-t border-rose-100 dark:border-rose-900" />
-                    <MenuItems>
-                      {({ open }) => (
-                        <HeadlessUIButton
-                          className={`${
-                            open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
-                          } flex w-full items-center gap-2 px-4 py-2 text-sm`}
-                          onClick={() => {}}
+                    <MenuItem as="div">
+                      {({ focus }) => (
+                        <Button
+                          variant="ghost"
+                          className={cn(
+                            'w-full justify-start px-4 py-2 rounded-none text-sm',
+                            focus && 'bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-300',
+                          )}
+                          onClick={() => {
+                            authClient.signOut();
+                          }}
                         >
-                          <Icons.LogOut className="h-4 w-4" />
+                          <Icons.LogOut className="h-4 w-4 mr-2" />
                           Sign out
-                        </HeadlessUIButton>
+                        </Button>
                       )}
-                    </MenuItems>
+                    </MenuItem>
                   </MenuItems>
                 </Transition>
               </Menu>
@@ -139,7 +166,6 @@ export function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         <Transition
           show={isMobileMenuOpen}
           enter="transition duration-200 ease-out"

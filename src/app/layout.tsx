@@ -5,7 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
 import { Footer } from '@/features/global/components/Footer';
-import { Header } from '@/features/global/components/Header';
+import { Header } from '@/features/global/components/Header/Header';
 import { Toaster } from 'sonner';
 
 const geistSans = Geist({

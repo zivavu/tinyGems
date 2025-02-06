@@ -134,7 +134,7 @@ export default function AuthPage() {
             <TabList className="flex space-x-1 rounded-xl bg-gray-100 p-1.5 dark:bg-gray-800 mb-8">
               <Tab
                 className={({ selected }) =>
-                  `w-full rounded-lg py-3 text-sm font-medium leading-5 transition-colors
+                  `w-full rounded-lg py-3 text-sm font-medium leading-5 transition-colors cursor-pointer
               ${
                 selected
                   ? 'bg-white text-gray-900 shadow dark:bg-gray-700 dark:text-white'
@@ -146,7 +146,7 @@ export default function AuthPage() {
               </Tab>
               <Tab
                 className={({ selected }) =>
-                  `w-full rounded-lg py-3 text-sm font-medium leading-5 transition-colors
+                  `w-full rounded-lg py-3 text-sm font-medium leading-5 transition-colors cursor-pointer
                 ${
                   selected
                     ? 'bg-white text-gray-900 shadow dark:bg-gray-700 dark:text-white'
@@ -262,7 +262,7 @@ export function SpotifyButton({ onClick, isLoading }: SocialButtonProps) {
 
 export function GoogleButton({ onClick, isLoading }: SocialButtonProps) {
   return (
-    <button
+    <Button
       onClick={onClick}
       disabled={isLoading}
       className="w-full h-10 bg-white hover:bg-gray-50 dark:bg-white dark:hover:bg-gray-50 text-gray-800 dark:text-gray-800 font-medium border border-gray-300 rounded-md flex items-center justify-center gap-2 px-4 transition-colors"
@@ -286,19 +286,19 @@ export function GoogleButton({ onClick, isLoading }: SocialButtonProps) {
         />
       </svg>
       Sign in with Google
-    </button>
+    </Button>
   );
 }
 
 export function GithubButton({ onClick, isLoading }: SocialButtonProps) {
   return (
-    <button
+    <Button
       onClick={onClick}
       disabled={isLoading}
       className="w-full h-10 bg-[#24292e] hover:bg-[#2f363d] dark:bg-[#24292e] dark:hover:bg-[#2f363d] text-white font-medium rounded-md flex items-center justify-center gap-2 px-4 transition-colors"
     >
       <FontAwesomeIcon icon={platformIconsMap.github} className="w-5 h-5" />
       Continue with GitHub
-    </button>
+    </Button>
   );
 }

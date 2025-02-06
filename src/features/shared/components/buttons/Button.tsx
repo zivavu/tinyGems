@@ -7,7 +7,7 @@ import { forwardRef } from 'react';
 import { cn } from '../../utils/dummy/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 cursor-pointer disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
