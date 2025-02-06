@@ -10,34 +10,64 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
-const authSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 });
 
-type AuthFormData = z.infer<typeof authSchema>;
-
-export default function SignInPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<AuthFormData>({
-    resolver: zodResolver(authSchema),
+const registerSchema = z
+  .object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string(),
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
   });
 
-  const onSubmit = async (data: AuthFormData) => {
+type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
+
+export default function AuthPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const loginForm = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const registerForm = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const handleLogin = async (data: LoginFormData) => {
     try {
       setIsLoading(true);
-      setError('');
       await authClient.signIn.email(data);
+      toast.success('Welcome back!');
     } catch (err) {
-      setError('Authentication failed. Please try again.');
+      toast.error('Invalid email or password');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRegister = async (data: RegisterFormData) => {
+    try {
+      setIsLoading(true);
+      await authClient.signUp.email({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      });
+      toast.success('Account created successfully! Please check your email to verify your account.');
+    } catch (err) {
+      toast.error('This email might already be registered');
     } finally {
       setIsLoading(false);
     }
@@ -46,13 +76,13 @@ export default function SignInPage() {
   const handleSocialSignIn = async (provider: 'spotify' | 'google' | 'github') => {
     try {
       setIsLoading(true);
-      setError('');
       await authClient.signIn.social({
         provider,
-        callbackURL: '/dashboard',
+        callbackURL: '/',
       });
+      toast.success(`Successfully signed in with ${provider}`);
     } catch (err) {
-      setError(`${provider} sign in failed. Please try again.`);
+      toast.error(`${provider} sign in failed. Please try again.`);
     } finally {
       setIsLoading(false);
     }
@@ -68,7 +98,7 @@ export default function SignInPage() {
           </Typography>
         </div>
 
-        <TabGroup>
+        <TabGroup selectedIndex={selectedIndex} onChange={setSelectedIndex}>
           <TabList className="flex space-x-1 rounded-xl bg-gray-100 p-1 dark:bg-gray-800 mb-6">
             <Tab
               className={({ selected }) =>
@@ -80,7 +110,7 @@ export default function SignInPage() {
               }`
               }
             >
-              Sign In
+              Login
             </Tab>
             <Tab
               className={({ selected }) =>
@@ -92,37 +122,37 @@ export default function SignInPage() {
               }`
               }
             >
-              Sign Up
+              Register
             </Tab>
           </TabList>
 
           <TabPanels>
             <TabPanel>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
                 <div>
                   <input
-                    {...register('email')}
+                    {...loginForm.register('email')}
                     type="email"
                     placeholder="Email"
                     className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                   />
-                  {errors.email && (
+                  {loginForm.formState.errors.email && (
                     <Typography variant="small" className="mt-1 text-red-500">
-                      {errors.email.message}
+                      {loginForm.formState.errors.email.message}
                     </Typography>
                   )}
                 </div>
 
                 <div>
                   <input
-                    {...register('password')}
+                    {...loginForm.register('password')}
                     type="password"
                     placeholder="Password"
                     className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                   />
-                  {errors.password && (
+                  {loginForm.formState.errors.password && (
                     <Typography variant="small" className="mt-1 text-red-500">
-                      {errors.password.message}
+                      {loginForm.formState.errors.password.message}
                     </Typography>
                   )}
                 </div>
@@ -133,22 +163,71 @@ export default function SignInPage() {
               </form>
             </TabPanel>
 
-            <Tab.Panel>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                {/* Same form fields as sign in */}
+            <TabPanel>
+              <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
+                <div>
+                  <input
+                    {...registerForm.register('name')}
+                    type="text"
+                    placeholder="Name"
+                    className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  />
+                  {registerForm.formState.errors.name && (
+                    <Typography variant="small" className="mt-1 text-red-500">
+                      {registerForm.formState.errors.name.message}
+                    </Typography>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    {...registerForm.register('email')}
+                    type="email"
+                    placeholder="Email"
+                    className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  />
+                  {registerForm.formState.errors.email && (
+                    <Typography variant="small" className="mt-1 text-red-500">
+                      {registerForm.formState.errors.email.message}
+                    </Typography>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    {...registerForm.register('password')}
+                    type="password"
+                    placeholder="Password"
+                    className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  />
+                  {registerForm.formState.errors.password && (
+                    <Typography variant="small" className="mt-1 text-red-500">
+                      {registerForm.formState.errors.password.message}
+                    </Typography>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    {...registerForm.register('confirmPassword')}
+                    type="password"
+                    placeholder="Confirm Password"
+                    className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  />
+                  {registerForm.formState.errors.confirmPassword && (
+                    <Typography variant="small" className="mt-1 text-red-500">
+                      {registerForm.formState.errors.confirmPassword.message}
+                    </Typography>
+                  )}
+                </div>
+
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? 'Loading...' : 'Sign Up'}
                 </Button>
               </form>
-            </Tab.Panel>
+            </TabPanel>
           </TabPanels>
         </TabGroup>
-
-        {error && (
-          <Typography variant="small" className="mt-4 text-center text-red-500">
-            {error}
-          </Typography>
-        )}
 
         <div className="relative my-8">
           <div className="absolute inset-0 flex items-center">

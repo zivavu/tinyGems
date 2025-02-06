@@ -11,7 +11,8 @@
     "docker:up": "docker run -d -p 27017:27017 --name tinygems-mongodb mongo:latest",
     "docker:down": "docker stop tinygems-mongodb && docker rm tinygems-mongodb",
     "docker:status": "docker ps --filter name=tinygems-mongodb",
-    "predev": "docker ps --filter name=tinygems-mongodb -q ||  bun run docker:up"
+    "predev": "docker ps --filter name=tinygems-mongodb -q ||  bun run docker:up",
+    "clear-auth": "bun run scripts/clear-auth-db.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^9.4.0",
@@ -41,6 +42,7 @@
     "react-hook-form": "^7.54.2",
     "react-markdown": "^9.0.3",
     "server-only": "^0.0.1",
+    "sonner": "^1.7.4",
     "spotify-web-api-node": "^5.0.2",
     "superjson": "^2.2.2",
     "tailwind-merge": "^3.0.1",

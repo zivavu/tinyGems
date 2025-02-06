@@ -68,7 +68,7 @@ export function Header() {
                     <MenuItems>
                       {({ open }) => (
                         <NextLink
-                          href="/dashboard"
+                          href="/"
                           className={`${
                             open ? 'bg-rose-50 text-rose-800 dark:bg-rose-900/30 dark:text-rose-200' : 'text-gray-700 dark:text-gray-200'
                           } flex w-full items-center gap-2 px-4 py-2 text-sm`}

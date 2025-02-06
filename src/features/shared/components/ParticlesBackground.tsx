@@ -5,15 +5,26 @@ import { cn } from '../utils/dummy/utils';
 
 export default function ParticlesBackground({ className, particleCount = 300 }: { className?: string; particleCount?: number }) {
   const [isMounted, setIsMounted] = useState(false);
-  const particlesPerGroup = 6;
+  const particlesPerGroup = 15;
   const groupCount = Math.ceil(particleCount / particlesPerGroup);
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
-  function getRandomTransform() {
-    const MAX_OFFSET = 30;
-    const transform = `transform: translate(${Math.random() * MAX_OFFSET - MAX_OFFSET / 2}px, ${Math.random() * MAX_OFFSET - MAX_OFFSET / 2}px)`;
-    return transform;
+  function generateKeyframes() {
+    let keyframesRules = '';
+
+    for (let i = 0; i < groupCount; i++) {
+      keyframesRules += `
+        @keyframes float-${i} {
+          0%, 100% { transform: translate(0, 0); }
+          25% { transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px); }
+          50% { transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px); }
+          75% { transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px); }
+          90% { transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px); }
+        }
+      `;
+    }
+    return keyframesRules;
   }
 
   function getRandomSize() {
@@ -79,52 +90,18 @@ export default function ParticlesBackground({ className, particleCount = 300 }: 
         return (
           <div
             key={groupIndex}
-            className="absolute"
+            className="absolute h-full w-full"
             style={{
-              animation: `float 22s infinite`,
+              animation: `float-${groupIndex} 12s infinite`,
+              animationDelay: `${groupIndex * 0.1}s`,
               animationTimingFunction: 'ease-in-out',
-              animationDelay: `${groupIndex * 0.2}s`,
             }}
           >
             {groupParticles}
           </div>
         );
       })}
-      <style>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translate(0, 0);
-          }
-          10% {
-            ${getRandomTransform()};
-          }
-          20% {
-            ${getRandomTransform()};
-          }
-          30% {
-            ${getRandomTransform()};
-          }
-          40% {
-            ${getRandomTransform()};
-          }
-          50% {
-            ${getRandomTransform()};
-          }
-          60% {
-            ${getRandomTransform()};
-          }
-          70% {
-            ${getRandomTransform()};
-          }
-          80% {
-            ${getRandomTransform()};
-          }
-          90% {
-            ${getRandomTransform()};
-          }
-        }
-      `}</style>
+      <style>{generateKeyframes()}</style>
     </div>
   );
 }

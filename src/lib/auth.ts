@@ -1,6 +1,7 @@
 import { client } from '@/server/db';
 import { betterAuth } from 'better-auth';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
+import { username } from 'better-auth/plugins';
 
 export interface UserProfile {
   id: string;
@@ -67,18 +68,24 @@ interface Session {
 
 export const auth = betterAuth({
   database: mongodbAdapter(client.db()),
+  plugins: [username()],
   emailAndPassword: {
     enabled: true,
     verifyEmail: true,
     passwordMinLength: 8,
     passwordMaxLength: 100,
   },
+
   socialProviders: {
     spotify: {
       clientId: process.env.SPOTIFY_CLIENT_ID!,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
       scopes: ['user-read-email', 'user-read-private', 'playlist-read-private', 'playlist-read-collaborative', 'user-library-read'],
-      profile(profile: SpotifyProfile, tokens: AuthTokens) {
+      async profile(profile: SpotifyProfile, tokens: AuthTokens) {
+        if (!profile.email) {
+          throw new Error('Spotify profile missing email');
+        }
+
         return {
           id: profile.id,
           email: profile.email,
@@ -89,7 +96,7 @@ export const auth = betterAuth({
               id: profile.id,
               username: profile.display_name,
               accessToken: tokens.accessToken,
-              refreshToken: tokens.refreshToken,
+              refreshToken: tokens.refreshToken ?? '',
             },
           },
         };

@@ -6,6 +6,7 @@ import './globals.css';
 
 import { Footer } from '@/features/global/components/Footer';
 import { Header } from '@/features/global/components/Header';
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
         <ThemeProvider defaultTheme="system" enableSystem enableColorScheme disableTransitionOnChange>
           <FetchingLayerProvider>
+            <Toaster />
             <Header />
             <div className="flex-1">{children}</div>
             <Footer />
