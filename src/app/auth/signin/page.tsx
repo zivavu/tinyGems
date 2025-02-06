@@ -2,11 +2,12 @@
 
 import { iconsMap } from '@/features/gems/utils/platformIconsMap';
 import { Button } from '@/features/shared/components/buttons/Button';
+import { FormErrorMessage } from '@/features/shared/components/forms/FormErrorMessage';
 import { Typography } from '@/features/shared/components/Typography';
 import { authClient } from '@/lib/authClient';
 import { faGithub, faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
+import { Input, Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -46,46 +47,62 @@ export default function AuthPage() {
   });
 
   const handleLogin = async (data: LoginFormData) => {
-    try {
-      setIsLoading(true);
-      await authClient.signIn.email(data);
-      toast.success('Welcome back!');
-    } catch (err) {
-      toast.error('Invalid email or password');
-    } finally {
-      setIsLoading(false);
-    }
+    await authClient.signIn.email(data, {
+      onRequest: () => {
+        setIsLoading(true);
+      },
+      onResponse: () => {
+        setIsLoading(false);
+      },
+      onError: (ctx) => {
+        setIsLoading(false);
+        toast.error(ctx.error.message);
+      },
+    });
   };
 
   const handleRegister = async (data: RegisterFormData) => {
-    try {
-      setIsLoading(true);
-      await authClient.signUp.email({
+    setIsLoading(true);
+    await authClient.signUp.email(
+      {
         email: data.email,
         password: data.password,
         name: data.name,
-      });
-      toast.success('Account created successfully! Please check your email to verify your account.');
-    } catch (err) {
-      toast.error('This email might already be registered');
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      {
+        onRequest: () => {
+          setIsLoading(true);
+        },
+        onResponse: () => {
+          setIsLoading(false);
+        },
+        onError: (ctx) => {
+          setIsLoading(false);
+          toast.error(ctx.error.message);
+        },
+      },
+    );
   };
 
   const handleSocialSignIn = async (provider: 'spotify' | 'google' | 'github') => {
-    try {
-      setIsLoading(true);
-      await authClient.signIn.social({
+    await authClient.signIn.social(
+      {
         provider,
         callbackURL: '/',
-      });
-      toast.success(`Successfully signed in with ${provider}`);
-    } catch (err) {
-      toast.error(`${provider} sign in failed. Please try again.`);
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      {
+        onRequest: () => {
+          setIsLoading(true);
+        },
+        onResponse: () => {
+          setIsLoading(false);
+        },
+        onError: (ctx) => {
+          setIsLoading(false);
+          toast.error(ctx.error.message);
+        },
+      },
+    );
   };
 
   return (
@@ -130,31 +147,23 @@ export default function AuthPage() {
             <TabPanel>
               <form onSubmit={loginForm.handleSubmit(handleLogin)} className="space-y-4">
                 <div>
-                  <input
+                  <Input
                     {...loginForm.register('email')}
-                    type="email"
                     placeholder="Email"
+                    autoComplete="email"
                     className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                   />
-                  {loginForm.formState.errors.email && (
-                    <Typography variant="small" className="mt-1 text-red-500">
-                      {loginForm.formState.errors.email.message}
-                    </Typography>
-                  )}
+                  <FormErrorMessage message={loginForm.formState.errors.email?.message} />
                 </div>
 
                 <div>
-                  <input
+                  <Input
                     {...loginForm.register('password')}
                     type="password"
                     placeholder="Password"
                     className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                   />
-                  {loginForm.formState.errors.password && (
-                    <Typography variant="small" className="mt-1 text-red-500">
-                      {loginForm.formState.errors.password.message}
-                    </Typography>
-                  )}
+                  <FormErrorMessage message={loginForm.formState.errors.password?.message} />
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
@@ -166,59 +175,43 @@ export default function AuthPage() {
             <TabPanel>
               <form onSubmit={registerForm.handleSubmit(handleRegister)} className="space-y-4">
                 <div>
-                  <input
+                  <Input
                     {...registerForm.register('name')}
                     type="text"
                     placeholder="Name"
                     className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                   />
-                  {registerForm.formState.errors.name && (
-                    <Typography variant="small" className="mt-1 text-red-500">
-                      {registerForm.formState.errors.name.message}
-                    </Typography>
-                  )}
+                  <FormErrorMessage message={registerForm.formState.errors.name?.message} />
                 </div>
 
                 <div>
-                  <input
+                  <Input
                     {...registerForm.register('email')}
-                    type="email"
                     placeholder="Email"
+                    autoComplete="email"
                     className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                   />
-                  {registerForm.formState.errors.email && (
-                    <Typography variant="small" className="mt-1 text-red-500">
-                      {registerForm.formState.errors.email.message}
-                    </Typography>
-                  )}
+                  <FormErrorMessage message={registerForm.formState.errors.email?.message} />
                 </div>
 
                 <div>
-                  <input
+                  <Input
                     {...registerForm.register('password')}
                     type="password"
                     placeholder="Password"
                     className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                   />
-                  {registerForm.formState.errors.password && (
-                    <Typography variant="small" className="mt-1 text-red-500">
-                      {registerForm.formState.errors.password.message}
-                    </Typography>
-                  )}
+                  <FormErrorMessage message={registerForm.formState.errors.password?.message} />
                 </div>
 
                 <div>
-                  <input
+                  <Input
                     {...registerForm.register('confirmPassword')}
                     type="password"
                     placeholder="Confirm Password"
                     className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
                   />
-                  {registerForm.formState.errors.confirmPassword && (
-                    <Typography variant="small" className="mt-1 text-red-500">
-                      {registerForm.formState.errors.confirmPassword.message}
-                    </Typography>
-                  )}
+                  <FormErrorMessage message={registerForm.formState.errors.confirmPassword?.message} />
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
