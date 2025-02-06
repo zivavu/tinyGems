@@ -53,7 +53,7 @@ const addGemSchema = z.object({
   audienceSize: z.array(z.string()).optional(),
   lyricsStyle: z.array(z.string()).optional(),
   additional: z.array(z.string()).optional(),
-  bpm: z.array(z.string()).optional(),
+  bpm: z.string().optional(),
   duration: z
     .string()
     .regex(/^\d{1,2}:\d{2}$/, 'Must be in format MM:SS')

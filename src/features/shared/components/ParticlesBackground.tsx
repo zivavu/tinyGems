@@ -1,96 +1,130 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
-import { useDebounce } from '../hooks/useDebounce';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '../utils/dummy/utils';
 
-const ParticlesBackgroundClient = ({ className }: { className?: string }) => {
+export default function ParticlesBackground({ className, particleCount = 300 }: { className?: string; particleCount?: number }) {
   const [isMounted, setIsMounted] = useState(false);
-  const [scrollSegment, setScrollSegment] = useState(0);
-  const [particles] = useState(() =>
-    Array.from({ length: 300 }, (_, i) => ({
-      id: i,
-      top: Math.random() * 100,
-      left: Math.random() * 100,
-      size: getRandomSize(),
-      segment: Math.floor((Math.random() * 100) / (((window.innerHeight * 2) / document.documentElement.scrollHeight) * 100)),
-    })),
-  );
+  const particlesPerGroup = 6;
+  const groupCount = Math.ceil(particleCount / particlesPerGroup);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   function getRandomTransform() {
-    const MAX_OFFSET = 20;
-    return `transform: translate(${Math.random() * MAX_OFFSET - MAX_OFFSET / 2}px, ${Math.random() * MAX_OFFSET - MAX_OFFSET / 2}px)`;
+    const MAX_OFFSET = 30;
+    const transform = `transform: translate(${Math.random() * MAX_OFFSET - MAX_OFFSET / 2}px, ${Math.random() * MAX_OFFSET - MAX_OFFSET / 2}px)`;
+    return transform;
   }
 
   function getRandomSize() {
-    const MIN_SIZE = 10;
-    const MAX_SIZE = 25;
-    const size = MIN_SIZE + Math.random() * (MAX_SIZE - MIN_SIZE);
-    return `${size}px`;
+    const MIN_SIZE = 7;
+    const MAX_SIZE = 20;
+    return Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
   }
-
-  const debouncedScrollHandler = useDebounce(() => {
-    const scrollPos = window.scrollY;
-    const segmentHeight = window.innerHeight * 2;
-    setScrollSegment(Math.floor(scrollPos / segmentHeight));
-  }, 100);
-
-  useEffect(() => {
-    window.addEventListener('scroll', debouncedScrollHandler);
-    return () => window.removeEventListener('scroll', debouncedScrollHandler);
-  }, [debouncedScrollHandler]);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (!isMounted || !containerRef.current) return;
+
+    function handleResize() {
+      if (!containerRef.current) return;
+      if (containerSize.width === containerRef.current.clientWidth) return;
+      setContainerSize({
+        width: containerRef.current.clientWidth,
+        height: containerRef.current.clientHeight,
+      });
+    }
+
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isMounted, containerRef]);
+
   if (!isMounted) return null;
 
   return (
-    <div className={cn('absolute inset-0 h-full overflow-hidden', className)}>
-      {particles.map((particle) => {
-        if (Math.abs(particle.segment - scrollSegment) > 1) return null;
+    <div ref={containerRef} className={cn('absolute inset-0 h-full overflow-hidden', className)}>
+      {[...Array(groupCount)].map((_, groupIndex) => {
+        const groupParticles = [];
+        for (let i = 0; i < particlesPerGroup; i++) {
+          const particleIndex = groupIndex * particlesPerGroup + i;
+          if (particleIndex >= particleCount) break;
+
+          const originX = Math.random() * (containerSize.width || 0);
+          const originY = Math.random() * (containerSize.height || 0);
+          const size = getRandomSize();
+
+          groupParticles.push(
+            <div
+              key={particleIndex}
+              className="fixed rounded-full bg-rose-400/70 dark:bg-red-600/70"
+              style={{
+                filter: 'blur(6px)',
+                width: size,
+                height: size,
+                left: originX,
+                top: originY,
+              }}
+            />,
+          );
+        }
 
         return (
           <div
-            key={particle.id}
-            className="absolute blur-sm bg-violet-400/30 dark:bg-rose-700/50 rounded-full transition-opacity duration-500"
+            key={groupIndex}
+            className="absolute"
             style={{
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              width: particle.size,
-              height: particle.size,
-              opacity: particle.segment === scrollSegment ? 1 : 0.3,
-              animation: `float 6s ease-in-out infinite`,
-              animationDelay: `${particle.id * 0.02}s`,
+              animation: `float 22s infinite`,
+              animationTimingFunction: 'ease-in-out',
+              animationDelay: `${groupIndex * 0.2}s`,
             }}
-          />
+          >
+            {groupParticles}
+          </div>
         );
       })}
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%,
           100% {
             transform: translate(0, 0);
           }
-          25% {
+          10% {
+            ${getRandomTransform()};
+          }
+          20% {
+            ${getRandomTransform()};
+          }
+          30% {
+            ${getRandomTransform()};
+          }
+          40% {
             ${getRandomTransform()};
           }
           50% {
             ${getRandomTransform()};
           }
-          75% {
+          60% {
+            ${getRandomTransform()};
+          }
+          70% {
+            ${getRandomTransform()};
+          }
+          80% {
+            ${getRandomTransform()};
+          }
+          90% {
             ${getRandomTransform()};
           }
         }
       `}</style>
     </div>
   );
-};
-
-const ParticlesBackground = dynamic(() => Promise.resolve(ParticlesBackgroundClient), {
-  ssr: false,
-});
-
-export default ParticlesBackground;
+}
