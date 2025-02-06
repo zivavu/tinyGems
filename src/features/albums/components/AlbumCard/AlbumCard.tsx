@@ -10,8 +10,8 @@ import { Button } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { AlbumPlaceholder } from './comps/AlbumPlaceholder';
-import { AlbumProperties } from './comps/AlbumProperties';
+import { AlbumPlaceholder } from './components/AlbumPlaceholder';
+import { AlbumProperties } from './components/AlbumProperties';
 
 interface AlbumCardProps {
   album: Album;
