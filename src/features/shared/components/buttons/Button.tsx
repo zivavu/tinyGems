@@ -2,6 +2,7 @@
 
 import { Button as HeadlessButton } from '@headlessui/react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import NextLink from 'next/link';
 import { forwardRef } from 'react';
 import { cn } from '../../utils/dummy/utils';
 
@@ -10,7 +11,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-rose-500 text-white shadow hover:bg-rose-600 dark:bg-rose-500 dark:hover:bg-rose-600',
+        default: 'bg-rose-500 text-white shadow hover:bg-rose-600 dark:bg-rose-700 dark:hover:bg-rose-800',
         destructive: 'bg-red-500 text-white shadow-sm hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600',
         outline:
           'border-2 border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-600',
@@ -35,12 +36,26 @@ const buttonVariants = cva(
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  href?: string;
+  target?: string;
+  rel?: string;
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? HeadlessButton : 'button';
-  return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
-});
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, href, target, rel, ...props }, ref) => {
+    const Comp = href ? NextLink : asChild ? HeadlessButton : 'button';
+
+    const linkProps = href
+      ? {
+          href,
+          target,
+          rel: target === '_blank' ? 'noopener noreferrer' : rel,
+        }
+      : {};
+
+    return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...linkProps} {...props} />;
+  },
+);
 Button.displayName = 'Button';
 
 export { Button, buttonVariants };

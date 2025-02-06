@@ -1,7 +1,7 @@
 import { MusicGem } from '@/features/gems/types';
 import { platformPriority } from '@/features/shared/components/MediaPreviewPlayer/utils/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { iconsMap } from '../../../utils/platformIconsMap';
+import { platformIconsMap } from '../../../utils/platformIconsMap';
 
 interface MusicPropertiesProps {
   gem: MusicGem;
@@ -15,7 +15,7 @@ export function MusicProperties({ gem }: MusicPropertiesProps) {
       <div className="flex gap-2" role="list" aria-label="Available platforms">
         {platformPriority.gem.map((priority) => {
           const platform = gem?.properties?.platforms?.find((p) => p.name.toLowerCase() === priority);
-          return platform ? <FontAwesomeIcon key={platform.url} icon={iconsMap[platform.name]} /> : null;
+          return platform ? <FontAwesomeIcon key={platform.url} icon={platformIconsMap[platform.name]} /> : null;
         })}
       </div>
 

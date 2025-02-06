@@ -1,4 +1,4 @@
-import { iconsMap } from '@/features/gems/utils/platformIconsMap';
+import { platformIconsMap } from '@/features/gems/utils/platformIconsMap';
 import { IconName, Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
@@ -135,7 +135,7 @@ export default async function GemPage({ params }: GemPageProps) {
               >
                 <div className="flex flex-col items-center gap-3">
                   <FontAwesomeIcon
-                    icon={iconsMap[platform.name]}
+                    icon={platformIconsMap[platform.name]}
                     className="w-8 h-8 text-gray-700 dark:text-gray-300 group-hover:text-rose-500 transition-colors"
                   />
                   <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
