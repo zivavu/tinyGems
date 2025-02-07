@@ -10,15 +10,7 @@ export function UIPreferences() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <Typography variant="small" className="font-medium">
-            Landing Page Animation
-          </Typography>
-          <Typography variant="small" className="text-gray-500">
-            Show welcome animation on the landing page
-          </Typography>
-        </div>
+      <div className="flex items-center space-x-4">
         <Switch
           checked={landingAnimation}
           onChange={setLandingAnimation}
@@ -32,17 +24,15 @@ export function UIPreferences() {
             } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
           />
         </Switch>
-      </div>
-
-      <div className="flex items-center justify-between">
         <div>
-          <Typography variant="small" className="font-medium">
-            Reduce Motion
-          </Typography>
+          <Typography className="font-medium">Landing Page Particles</Typography>
           <Typography variant="small" className="text-gray-500">
-            Minimize animations throughout the app
+            Show the background particles on the landing page
           </Typography>
         </div>
+      </div>
+
+      <div className="flex items-center space-x-4">
         <Switch
           checked={reduceMotion}
           onChange={setReduceMotion}
@@ -56,6 +46,12 @@ export function UIPreferences() {
             } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
           />
         </Switch>
+        <div>
+          <Typography className="font-medium">Reduce Motion</Typography>
+          <Typography variant="small" className="text-gray-500">
+            Minimize animations throughout the app
+          </Typography>
+        </div>
       </div>
     </div>
   );
