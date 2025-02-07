@@ -4,10 +4,9 @@ import { Icons } from '@/features/shared/components/Icons';
 import { RangeSlider } from '@/features/shared/components/RangeSlider/RangeSlider';
 import { SegmentedControl, SegmentOption } from '@/features/shared/components/SegmentedControl/SegmentedControl';
 import { Typography } from '@/features/shared/components/Typography';
-import { useState } from 'react';
 import { Button } from '../../../shared/components/buttons/Button';
 import { FilterSelect } from '../../../shared/components/FilterSelect';
-import { albumFilters, AllFilterId, artistFilters, bpmRangeConfig, singlesFilter, yearRangeConfig } from './filterOptions';
+import { albumFilters, AllFilterId, artistFilters, isRangeFilter, singlesFilter } from './filterOptions';
 import { ContentType, useParamFilters } from './hooks';
 
 const contentTypeOptions: SegmentOption[] = [
@@ -62,8 +61,16 @@ const filterGroups: Record<ContentType, { title: string; filters: AllFilterId[] 
 } as const;
 
 export function FiltersInputBar() {
-  const { clearAllParams, isAnyParamSelected, handleParamChange, getSelectedParams, handleContentTypeChange, getContentType } =
-    useParamFilters();
+  const {
+    clearAllParams,
+    isAnyParamSelected,
+    handleParamChange,
+    getSelectedParams,
+    handleRangeChange,
+    getRangeValues,
+    handleContentTypeChange,
+    getContentType,
+  } = useParamFilters();
 
   const contentType = getContentType();
 
@@ -72,9 +79,6 @@ export function FiltersInputBar() {
     albums: albumFilters,
     artists: artistFilters,
   } as const;
-
-  const [bpmRange, setBpmRange] = useState<[number, number]>([bpmRangeConfig.defaultValues[0], bpmRangeConfig.defaultValues[1]]);
-  const [yearRange, setYearRange] = useState<[number, number]>([yearRangeConfig.defaultValues[0], yearRangeConfig.defaultValues[1]]);
 
   return (
     <div className="z-40 bg-white border-b dark:bg-gray-900 dark:border-gray-800">
@@ -95,32 +99,18 @@ export function FiltersInputBar() {
                   const filter = filtersMap[contentType].find((f) => f.id === filterId);
                   if (!filter) return null;
 
-                  if (filterId === 'bpm' && contentType === 'singles') {
+                  if (isRangeFilter(filter)) {
                     return (
                       <RangeSlider
-                        key="bpm"
-                        min={bpmRangeConfig.min}
-                        max={bpmRangeConfig.max}
-                        step={bpmRangeConfig.step}
-                        values={bpmRange}
-                        onChange={setBpmRange}
-                        label="BPM Range"
-                        icon={Icons.AudioLines}
-                      />
-                    );
-                  }
-
-                  if (filterId === 'releaseYear' && (contentType === 'singles' || contentType === 'albums')) {
-                    return (
-                      <RangeSlider
-                        key="releaseYear"
-                        min={yearRangeConfig.min}
-                        max={yearRangeConfig.max}
-                        step={yearRangeConfig.step}
-                        values={yearRange}
-                        onChange={setYearRange}
-                        label="Release Year Range"
-                        icon={Icons.Calendar}
+                        key={filter.id}
+                        min={filter.min}
+                        max={filter.max}
+                        step={filter.step}
+                        values={getRangeValues(filter.id) ?? filter.defaultValues}
+                        onChange={(values) => handleRangeChange(filter.id, values)}
+                        label={filter.title}
+                        icon={filter.icon}
+                        formatValue={filter.formatValue}
                       />
                     );
                   }

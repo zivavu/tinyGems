@@ -1,10 +1,12 @@
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef } from 'react';
 import {
   AlbumFilterId,
   albumFilterIds,
   AllFilterId,
   ArtistFilterId,
   artistFilterIds,
+  RangeFilterId,
   SingleFilterId,
   singleFilterIds,
 } from './filterOptions';
@@ -87,6 +89,39 @@ export function useParamFilters() {
     return hasFilters;
   };
 
+  function getRangeValues(id: RangeFilterId | undefined): [number, number] | undefined {
+    if (!id) return undefined;
+    const value = searchParams.get(id);
+    return value ? (value.split(',').map(Number) as [number, number]) : undefined;
+  }
+
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handleRangeChange = useCallback(
+    (id: RangeFilterId | undefined, values: [number, number]) => {
+      if (!id) return;
+
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+
+      debounceTimeout.current = setTimeout(() => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set(id, values.join(','));
+        router.push(`/seek?${params.toString()}`, { scroll: false });
+      }, 300);
+    },
+    [router, searchParams],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+    };
+  }, []);
+
   return {
     handleParamChange,
     getSelectedParams,
@@ -95,5 +130,7 @@ export function useParamFilters() {
     isAnyParamSelected,
     handleContentTypeChange,
     getContentType,
+    getRangeValues,
+    handleRangeChange,
   };
 }

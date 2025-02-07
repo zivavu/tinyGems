@@ -1,4 +1,5 @@
-import { FilterOptionsGroup, FilterSelectProps } from '@/features/shared/components/FilterSelect';
+import { FilterOptionsGroup } from '@/features/shared/components/FilterSelect';
+import { IconName } from '@/features/shared/components/Icons';
 import {
   AU,
   BR,
@@ -400,12 +401,52 @@ export type SingleFilterId = (typeof singleFilterIds)[number];
 export type AlbumFilterId = (typeof albumFilterIds)[number];
 export type ArtistFilterId = (typeof artistFilterIds)[number];
 
-export type AllFilterId = (typeof allFilterIds)[number];
+export type RangeFilterId = 'bpm' | 'releaseYear';
+export type SelectFilterId =
+  | 'genre'
+  | 'mood'
+  | 'lyricsTopics'
+  | 'gender'
+  | 'audienceSize'
+  | 'platform'
+  | 'additional'
+  | 'albumType'
+  | 'lang'
+  | 'location'
+  | 'activity'
+  | 'verification';
+export type AllFilterId = SelectFilterId | RangeFilterId;
 
-export type FilterObject = Omit<FilterSelectProps, 'selectedValues' | 'onSelectionChange' | 'pageType'>;
+interface BaseFilter {
+  id: AllFilterId;
+  title: string;
+  icon?: IconName;
+  isHiddenInAddPage?: boolean;
+}
+
+export interface SelectFilter extends BaseFilter {
+  type: 'select';
+  id: SelectFilterId;
+  options: FilterOption[] | FilterOptionsGroup[];
+  isSearchable?: boolean;
+  showFilterChips?: boolean;
+}
+
+export interface RangeFilter extends BaseFilter {
+  type: 'range';
+  id: RangeFilterId;
+  min: number;
+  max: number;
+  step: number;
+  defaultValues: [number, number];
+  formatValue?: (value: number) => string;
+}
+
+export type FilterObject = SelectFilter | RangeFilter;
 
 const commonFilters: FilterObject[] = [
   {
+    type: 'select',
     title: 'Genre',
     options: musicGenres,
     id: 'genre',
@@ -414,6 +455,7 @@ const commonFilters: FilterObject[] = [
     showFilterChips: true,
   },
   {
+    type: 'select',
     title: 'Mood',
     options: moodOptions,
     id: 'mood',
@@ -422,6 +464,7 @@ const commonFilters: FilterObject[] = [
     showFilterChips: true,
   },
   {
+    type: 'select',
     title: 'Artist Gender',
     options: genderOptions,
     id: 'gender',
@@ -430,6 +473,7 @@ const commonFilters: FilterObject[] = [
     showFilterChips: false,
   },
   {
+    type: 'select',
     title: 'Audience Size',
     options: audienceSizes,
     id: 'audienceSize',
@@ -438,6 +482,7 @@ const commonFilters: FilterObject[] = [
     showFilterChips: false,
   },
   {
+    type: 'select',
     title: 'Platform',
     options: platformOptions,
     id: 'platform',
@@ -447,6 +492,7 @@ const commonFilters: FilterObject[] = [
     isHiddenInAddPage: true,
   },
   {
+    type: 'select',
     title: 'Lyrics Topic',
     options: lyricsTopicOptions,
     id: 'lyricsTopics',
@@ -456,45 +502,35 @@ const commonFilters: FilterObject[] = [
   },
 ];
 
-const releaseYearFilter: FilterObject = {
+// Define range filters
+const bpmFilter: RangeFilter = {
+  type: 'range',
+  title: 'BPM Range',
+  id: 'bpm',
+  icon: 'AudioLines',
+  min: 30,
+  max: 200,
+  step: 1,
+  defaultValues: [60, 160],
+  formatValue: (value) => `${value} BPM`,
+};
+
+const yearFilter: RangeFilter = {
+  type: 'range',
   title: 'Release Year',
-  options: [
-    { id: '2024', label: '2024' },
-    { id: '2023', label: '2023' },
-    { id: '2022', label: '2022' },
-    { id: '2021', label: '2021' },
-    { id: '2020', label: '2020' },
-    { id: '2019', label: '2019' },
-    { id: '2018', label: '2018' },
-    { id: '2017', label: '2017' },
-    { id: '2016', label: '2016' },
-    { id: '2015', label: '2015' },
-    { id: '2014', label: '2014' },
-    { id: '2013', label: '2013' },
-    { id: '2012', label: '2012' },
-    { id: '2011', label: '2011' },
-    { id: '2010', label: '2010' },
-    { id: '2009', label: '2009' },
-    { id: '2008', label: '2008' },
-    { id: 'older', label: 'Older' },
-  ],
   id: 'releaseYear',
   icon: 'Calendar',
-  isSearchable: false,
-  showFilterChips: false,
+  min: 1900,
+  max: new Date().getFullYear(),
+  step: 1,
+  defaultValues: [2000, new Date().getFullYear()],
 };
 
 export const singlesFilter: FilterObject[] = [
   ...commonFilters,
+  bpmFilter,
   {
-    title: 'BPM',
-    options: bpmOptions,
-    id: 'bpm',
-    icon: 'AudioLines',
-    isSearchable: false,
-    showFilterChips: false,
-  },
-  {
+    type: 'select',
     title: 'Additional',
     options: additionalOptions,
     id: 'additional',
@@ -502,11 +538,12 @@ export const singlesFilter: FilterObject[] = [
     isSearchable: false,
     showFilterChips: false,
   },
-  releaseYearFilter,
+  yearFilter,
 ];
 
 export const albumFilters: FilterObject[] = [
   {
+    type: 'select',
     title: 'Album Type',
     options: [
       { id: 'album', label: 'Album' },
@@ -520,12 +557,13 @@ export const albumFilters: FilterObject[] = [
     showFilterChips: false,
   },
   ...commonFilters,
-  releaseYearFilter,
+  yearFilter,
 ];
 
 export const artistFilters: FilterObject[] = [
   ...commonFilters,
   {
+    type: 'select',
     title: 'Location',
     options: [
       { id: 'europe', label: 'Europe' },
@@ -541,6 +579,7 @@ export const artistFilters: FilterObject[] = [
     showFilterChips: true,
   },
   {
+    type: 'select',
     title: 'Activity',
     options: [
       { id: 'very_active', label: 'Very Active', description: 'Released music in last 3 months' },
@@ -553,6 +592,7 @@ export const artistFilters: FilterObject[] = [
     showFilterChips: false,
   },
   {
+    type: 'select',
     title: 'Verification',
     options: [
       { id: 'platform_verified', label: 'Platform Verified' },
@@ -566,16 +606,11 @@ export const artistFilters: FilterObject[] = [
   },
 ];
 
-export const bpmRangeConfig = {
-  min: 30,
-  max: 200,
-  step: 1,
-  defaultValues: [60, 160],
-} as const;
+// Type guard to check filter types
+export function isRangeFilter(filter: FilterObject): filter is RangeFilter {
+  return filter.type === 'range';
+}
 
-export const yearRangeConfig = {
-  min: 1900,
-  max: new Date().getFullYear(),
-  step: 1,
-  defaultValues: [2000, new Date().getFullYear()],
-} as const;
+export function isSelectFilter(filter: FilterObject): filter is SelectFilter {
+  return filter.type === 'select';
+}
