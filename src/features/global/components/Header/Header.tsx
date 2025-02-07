@@ -61,7 +61,7 @@ export function Header() {
 
               {user ? (
                 <Menu as="div" className="relative ">
-                  <MenuButton className="flex items-center cursor-pointer gap-2 rounded-full transition-colors hover:ring-2 hover:ring-rose-200 dark:hover:ring-rose-800">
+                  <MenuButton className="flex items-center gap-2 rounded-full transition-colors hover:ring-2 hover:ring-rose-200 dark:hover:ring-rose-800">
                     {user.image ? (
                       <Image
                         width={50}

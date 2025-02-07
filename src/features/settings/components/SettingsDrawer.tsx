@@ -29,7 +29,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
 
       <div className="fixed inset-y-0 right-0 flex max-w-full">
-        <DialogPanel className="w-full max-w-md transform bg-white shadow-xl transition-all dark:bg-gray-900">
+        <DialogPanel className="w-full max-w-md bg-white shadow-xl dark:bg-gray-900">
           <div className="flex items-center justify-between border-b border-rose-100 dark:border-rose-900 p-6">
             <DialogTitle as={Typography} variant="h3">
               Settings

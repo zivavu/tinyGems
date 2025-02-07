@@ -1,7 +1,7 @@
 'use client';
 
 import { ContentType } from '@/features/gems/components/FiltersInputBar/hooks';
-import { RadioGroup } from '@headlessui/react';
+import { Radio, RadioGroup } from '@headlessui/react';
 import { IconName, Icons } from '../Icons';
 
 export type SegmentOption = {
@@ -24,7 +24,7 @@ export function SegmentedControl({ options, value, onChange }: SegmentedControlP
         const isSelected = value === option.id;
 
         return (
-          <RadioGroup.Option
+          <Radio
             key={option.id}
             value={option.id}
             className={`
@@ -34,7 +34,7 @@ export function SegmentedControl({ options, value, onChange }: SegmentedControlP
           >
             <Icon className={`w-5 h-5 ${isSelected ? 'text-rose-500' : 'text-gray-500'}`} />
             <span className={`font-medium ${isSelected ? 'text-gray-900 dark:text-white' : 'text-gray-500'}`}>{option.label}</span>
-          </RadioGroup.Option>
+          </Radio>
         );
       })}
     </RadioGroup>

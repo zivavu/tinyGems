@@ -54,7 +54,7 @@ export function SearchBar() {
                 </div>
               ) : (
                 results.map((result) => (
-                  <ComboboxOption key={`${result.type}-${result.item.id}`} value={result} className={`relative cursor-pointer select-none`}>
+                  <ComboboxOption key={`${result.type}-${result.item.id}`} value={result} className={`relative select-none`}>
                     {({ selected }) => (
                       <NextLink href={result.href}>
                         <div className={`flex items-center gap-3 px-4 py-2 ${selected ? 'bg-rose-50 dark:bg-rose-900/30' : ''}`}>
