@@ -3,10 +3,10 @@
 import { Icons } from '@/features/shared/components/Icons';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import React from 'react';
+import { cn } from '../utils/utils';
 import { FilterButton } from './buttons/FilterButton';
 import { PopoverTransition } from './transitions/PopoverTransition';
 import { Typography } from './Typography';
-import { cn } from '../utils/dummy/utils';
 
 interface SelectProps {
   title: string;

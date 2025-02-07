@@ -3,7 +3,7 @@
 import { Artist } from '@/features/artists/types';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
-import { cn } from '@/features/shared/utils/dummy/utils';
+import { cn } from '@/features/shared/utils/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArtistPlaceholder } from './comps/ArtistPlaceholder';

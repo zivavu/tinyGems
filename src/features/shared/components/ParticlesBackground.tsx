@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { cn } from '../utils/dummy/utils';
+import { cn } from '../utils/utils';
 
 export default function ParticlesBackground({ className, particleCount = 300 }: { className?: string; particleCount?: number }) {
   const [isMounted, setIsMounted] = useState(false);

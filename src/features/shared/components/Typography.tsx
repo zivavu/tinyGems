@@ -1,5 +1,5 @@
 import { HTMLAttributes } from 'react';
-import { cn } from '../utils/dummy/utils';
+import { cn } from '../utils/utils';
 
 const variants = {
   h1: {

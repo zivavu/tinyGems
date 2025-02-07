@@ -5,7 +5,7 @@ import { StatsSection } from '@/features/gems/components/GemCard/comps/StatsSect
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { Typography } from '@/features/shared/components/Typography';
-import { cn } from '@/features/shared/utils/dummy/utils';
+import { cn } from '@/features/shared/utils/utils';
 import { Button } from '@headlessui/react';
 import Image from 'next/image';
 import Link from 'next/link';

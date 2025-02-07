@@ -1,7 +1,7 @@
 import NextLink from 'next/link';
 import type { ComponentProps } from 'react';
+import { cn } from '../utils/utils';
 import { Typography } from './Typography';
-import { cn } from '../utils/dummy/utils';
 
 type LinkProps = ComponentProps<typeof NextLink> & {
   variant?: ComponentProps<typeof Typography>['variant'];

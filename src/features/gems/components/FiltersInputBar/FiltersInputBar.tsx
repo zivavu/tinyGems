@@ -1,11 +1,13 @@
 'use client';
 
 import { Icons } from '@/features/shared/components/Icons';
+import { RangeSlider } from '@/features/shared/components/RangeSlider/RangeSlider';
 import { SegmentedControl, SegmentOption } from '@/features/shared/components/SegmentedControl/SegmentedControl';
 import { Typography } from '@/features/shared/components/Typography';
+import { useState } from 'react';
 import { Button } from '../../../shared/components/buttons/Button';
 import { FilterSelect } from '../../../shared/components/FilterSelect';
-import { albumFilters, AllFilterId, artistFilters, singlesFilter } from './filterOptions';
+import { albumFilters, AllFilterId, artistFilters, bpmRangeConfig, singlesFilter, yearRangeConfig } from './filterOptions';
 import { ContentType, useParamFilters } from './hooks';
 
 const contentTypeOptions: SegmentOption[] = [
@@ -71,6 +73,9 @@ export function FiltersInputBar() {
     artists: artistFilters,
   } as const;
 
+  const [bpmRange, setBpmRange] = useState<[number, number]>([bpmRangeConfig.defaultValues[0], bpmRangeConfig.defaultValues[1]]);
+  const [yearRange, setYearRange] = useState<[number, number]>([yearRangeConfig.defaultValues[0], yearRangeConfig.defaultValues[1]]);
+
   return (
     <div className="z-40 bg-white border-b dark:bg-gray-900 dark:border-gray-800">
       <div className="flex flex-col items-center gap-6 px-4 py-6">
@@ -89,6 +94,36 @@ export function FiltersInputBar() {
                 {group.filters.map((filterId) => {
                   const filter = filtersMap[contentType].find((f) => f.id === filterId);
                   if (!filter) return null;
+
+                  if (filterId === 'bpm' && contentType === 'singles') {
+                    return (
+                      <RangeSlider
+                        key="bpm"
+                        min={bpmRangeConfig.min}
+                        max={bpmRangeConfig.max}
+                        step={bpmRangeConfig.step}
+                        values={bpmRange}
+                        onChange={setBpmRange}
+                        label="BPM Range"
+                        icon={Icons.AudioLines}
+                      />
+                    );
+                  }
+
+                  if (filterId === 'releaseYear' && (contentType === 'singles' || contentType === 'albums')) {
+                    return (
+                      <RangeSlider
+                        key="releaseYear"
+                        min={yearRangeConfig.min}
+                        max={yearRangeConfig.max}
+                        step={yearRangeConfig.step}
+                        values={yearRange}
+                        onChange={setYearRange}
+                        label="Release Year Range"
+                        icon={Icons.Calendar}
+                      />
+                    );
+                  }
 
                   return (
                     <FilterSelect

@@ -2,7 +2,7 @@
 
 import { Album } from '@/features/albums/types';
 import { MusicGem } from '@/features/gems/types';
-import { cn } from '@/features/shared/utils/dummy/utils';
+import { cn } from '@/features/shared/utils/utils';
 import { useEffect, useRef, useState } from 'react';
 import { Typography } from '../Typography';
 import { useInitEmbededPlayerControls } from './utils/useInitEmbededPlayerControls';

@@ -5,7 +5,7 @@ import { FilterSelect } from '@/features/shared/components/FilterSelect';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { Button } from '@/features/shared/components/buttons/Button';
-import { cn } from '@/features/shared/utils/dummy/utils';
+import { cn } from '@/features/shared/utils/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import Calendar from 'react-calendar';

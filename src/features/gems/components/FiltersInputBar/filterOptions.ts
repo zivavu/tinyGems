@@ -565,3 +565,17 @@ export const artistFilters: FilterObject[] = [
     showFilterChips: false,
   },
 ];
+
+export const bpmRangeConfig = {
+  min: 30,
+  max: 200,
+  step: 1,
+  defaultValues: [60, 160],
+} as const;
+
+export const yearRangeConfig = {
+  min: 1900,
+  max: new Date().getFullYear(),
+  step: 1,
+  defaultValues: [2000, new Date().getFullYear()],
+} as const;

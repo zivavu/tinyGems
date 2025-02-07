@@ -1,8 +1,8 @@
 'use client';
 
 import { Icons } from '@/features/shared/components/Icons';
+import { cn } from '../../utils/utils';
 import { Button } from './Button';
-import { cn } from '../../utils/dummy/utils';
 
 interface FilterButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string;

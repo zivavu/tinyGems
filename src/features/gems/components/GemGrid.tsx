@@ -1,5 +1,5 @@
 import { Typography } from '@/features/shared/components/Typography';
-import { cn } from '@/features/shared/utils/dummy/utils';
+import { cn } from '@/features/shared/utils/utils';
 import { MusicGem } from '../types';
 import { GemCard } from './GemCard/GemCard';
 
