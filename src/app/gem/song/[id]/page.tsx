@@ -67,11 +67,7 @@ export default async function GemPage({ params }: GemPageProps) {
         <div className="flex gap-2">
           <button className="flex-1 flex items-center justify-center gap-2 p-3 bg-white rounded-xl hover:bg-rose-50 dark:bg-gray-900 dark:hover:bg-rose-900/20 transition-colors">
             <Icons.Heart className="w-5 h-5 text-rose-500" />
-            <span className="font-medium">{gem.stats.likes}</span>
-          </button>
-          <button className="flex-1 flex items-center justify-center gap-2 p-3 bg-white rounded-xl hover:bg-rose-50 dark:bg-gray-900 dark:hover:bg-rose-900/20 transition-colors">
-            <Icons.Bookmark className="w-5 h-5 text-rose-500" />
-            <span className="font-medium">{gem.stats.saves}</span>
+            <span className="font-medium">{gem.likes.total}</span>
           </button>
         </div>
 

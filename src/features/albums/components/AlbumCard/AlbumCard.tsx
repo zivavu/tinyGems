@@ -115,7 +115,7 @@ export function AlbumCard({ album, className }: AlbumCardProps) {
           ))}
         </div>
 
-        <StatsSection likes={album.stats.likes} saves={album.stats.saves} />
+        <StatsSection likes={album.likes.likes} saves={album.likes.saves} />
       </Link>
     </div>
   );

@@ -66,7 +66,7 @@ export function generateDummyAlbums(count = 20): Album[] {
         status: faker.helpers.arrayElement(['active', 'hidden', 'deleted']),
       },
 
-      stats: {
+      likes: {
         likes: faker.number.int({ min: 0, max: 1000 }),
         saves: faker.number.int({ min: 0, max: 500 }),
         views: faker.number.int({ min: 0, max: 2000 }),

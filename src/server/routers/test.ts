@@ -1,6 +1,6 @@
-import { publicProcedure, router } from '../trpc';
+import { createTRPCRouter, publicProcedure } from '../trpc';
 
-export const testRouter = router({
+export const testRouter = createTRPCRouter({
   testMongo: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.db) {
       return {

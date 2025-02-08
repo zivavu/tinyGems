@@ -77,15 +77,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Icons.Heart className="w-5 h-5 text-rose-500" />
-                  <span>{album.stats.likes.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Icons.Bookmark className="w-5 h-5 text-rose-500" />
-                  <span>{album.stats.saves.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Icons.Eye className="w-5 h-5 text-rose-500" />
-                  <span>{album.stats.views.toLocaleString()}</span>
+                  <span>{album.likes.total.toLocaleString()}</span>
                 </div>
               </div>
             </div>

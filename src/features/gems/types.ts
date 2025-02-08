@@ -5,14 +5,14 @@ export type PlatformType = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | '
 
 export type EngagementType = 'likes' | 'saves' | 'views';
 
-export interface EngagementStats {
+export interface LikesStats {
   total: number;
   breakdown: {
-    daily: Record<EngagementType, number>;
-    weekly: Record<EngagementType, number>;
-    monthly: Record<EngagementType, number>;
-    yearly: Record<EngagementType, number>;
-    allTime: Record<EngagementType, number>;
+    daily: number;
+    weekly: number;
+    monthly: number;
+    yearly: number;
+    allTime: number;
   };
 }
 
@@ -35,7 +35,7 @@ export interface MediaBase {
     submittedByUserId: string;
     status: MediaStatus;
   };
-  stats: EngagementStats;
+  likes: LikesStats;
   tags?: string[];
 }
 

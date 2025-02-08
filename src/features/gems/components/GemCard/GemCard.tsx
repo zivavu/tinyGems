@@ -1,9 +1,11 @@
 'use client';
 
 import { MusicGem } from '@/features/gems/types';
+import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { Typography } from '@/features/shared/components/Typography';
+import { useLike } from '@/features/shared/hooks/useLike';
 import { cn } from '@/features/shared/utils/utils';
 import { Button } from '@headlessui/react';
 import Image from 'next/image';
@@ -21,6 +23,11 @@ interface GemCardProps {
 export function GemCard({ gem, className }: GemCardProps) {
   const mainImage = gem?.properties.media?.coverImage || gem?.properties.media?.coverImage?.[0];
   const [showPreview, setShowPreview] = useState(false);
+
+  const { isLiked, handleLike, isLoading } = useLike({
+    id: gem.id,
+    type: 'song',
+  });
 
   if (!gem)
     return (
@@ -81,6 +88,10 @@ export function GemCard({ gem, className }: GemCardProps) {
         )}
       </div>
 
+      <div className="absolute top-2 right-2 z-10">
+        <LikeButton isLiked={isLiked} onClick={handleLike} isLoading={isLoading} className="bg-black/50 hover:bg-black/60" />
+      </div>
+
       <Link href={`/gem/song/${gem.id}`} className="block p-4 flex-1 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
         <div className="mb-2 space-y-1">
           <Typography variant="h4" className="line-clamp-1">
@@ -105,7 +116,7 @@ export function GemCard({ gem, className }: GemCardProps) {
           ))}
         </div>
 
-        <StatsSection likes={gem?.stats?.likes} saves={gem?.stats?.saves} />
+        <StatsSection likes={gem?.likes?.total} />
       </Link>
     </div>
   );
