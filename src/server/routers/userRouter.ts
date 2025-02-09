@@ -1,4 +1,6 @@
+import { auth } from '@/lib/auth';
 import { TRPCError } from '@trpc/server';
+import { headers } from 'next/headers';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
@@ -7,49 +9,32 @@ const toggleLikeSchema = z.object({
   type: z.enum(['song', 'album', 'artist']),
 });
 
-export const libraryRouter = createTRPCRouter({
+export const userRouter = createTRPCRouter({
   toggleLike: protectedProcedure.input(toggleLikeSchema).mutation(async ({ ctx, input }) => {
     const { id, type } = input;
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userId = session?.user?.id;
 
-    // Better-Auth session access
-    if (!(await ctx.session?.$context).session) {
-      throw new TRPCError({
-        code: 'UNAUTHORIZED',
-        message: 'User not authenticated',
-      });
+    if (!userId) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
 
-    const userId = (await ctx.session?.$context).session?.user.id;
-
     try {
-      // Check if like exists
-      const existingLike = await ctx.db.like.findFirst({
-        where: {
-          userId,
-          itemId: id,
-          type,
-        },
-      });
+      const users = ctx.db.collection('users');
+      const user = await users.findOne({ id: userId });
+      const likes = user?.likes || [];
 
-      if (existingLike) {
-        // Unlike
-        await ctx.db.like.delete({
-          where: {
-            id: existingLike.id,
-          },
-        });
+      const existingLikeIndex = likes.findIndex((like) => like.itemId === id && like.type === type);
+
+      if (existingLikeIndex > -1) {
+        likes.splice(existingLikeIndex, 1);
+        await users.updateOne({ id: userId }, { $set: { likes } });
         return { liked: false };
-      } else {
-        // Like
-        await ctx.db.like.create({
-          data: {
-            userId,
-            itemId: id,
-            type,
-          },
-        });
-        return { liked: true };
       }
+
+      likes.push({ itemId: id, type, createdAt: new Date() });
+      await users.updateOne({ id: userId }, { $set: { likes } });
+      return { liked: true };
     } catch (error) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
@@ -59,14 +44,14 @@ export const libraryRouter = createTRPCRouter({
   }),
 
   getLikes: protectedProcedure.query(async ({ ctx }) => {
-    if (!ctx.session?.user?.id) {
+    const userId = (await ctx.session?.$context).session?.user?.id;
+    if (!userId) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
+
         message: 'User not authenticated',
       });
     }
-
-    const userId = ctx.session.user.id;
 
     try {
       const likes = await ctx.db.like.findMany({

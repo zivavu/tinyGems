@@ -27,33 +27,11 @@ export interface UserProfile {
       accessToken: string;
     };
   };
-}
-
-interface SpotifyProfile {
-  id: string;
-  email: string;
-  display_name: string;
-  images?: { url: string }[];
-}
-
-interface GoogleProfile {
-  sub: string;
-  email: string;
-  name: string;
-  picture: string;
-}
-
-interface GithubProfile {
-  id: number;
-  email: string;
-  name: string | null;
-  login: string;
-  avatar_url: string;
-}
-
-interface AuthTokens {
-  accessToken: string;
-  refreshToken?: string;
+  likes?: Array<{
+    itemId: string;
+    type: 'song' | 'album' | 'artist';
+    createdAt: Date;
+  }>;
 }
 
 interface Session {
@@ -69,78 +47,42 @@ interface Session {
 export const auth = betterAuth({
   database: mongodbAdapter(client.db()),
   plugins: [username()],
+  user: {
+    additionalFields: {
+      likes: {
+        type: 'string[]',
+        required: false,
+        defaultValue: [],
+        items: {
+          type: 'object',
+          properties: {
+            itemId: { type: 'string' },
+            type: { type: 'string', enum: ['song', 'album', 'artist'] },
+            createdAt: { type: 'date' },
+          },
+        },
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
-    verifyEmail: true,
-    passwordMinLength: 8,
-    passwordMaxLength: 100,
+    requireEmailVerification: true,
+    minPasswordLength: 8,
+    maxPasswordLength: 100,
   },
 
   socialProviders: {
     spotify: {
       clientId: process.env.SPOTIFY_CLIENT_ID!,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET!,
-      scopes: ['user-read-email', 'user-read-private', 'playlist-read-private', 'playlist-read-collaborative', 'user-library-read'],
-      async profile(profile: SpotifyProfile, tokens: AuthTokens) {
-        if (!profile.email) {
-          throw new Error('Spotify profile missing email');
-        }
-
-        return {
-          id: profile.id,
-          email: profile.email,
-          name: profile.display_name,
-          image: profile.images?.[0]?.url,
-          platforms: {
-            spotify: {
-              id: profile.id,
-              username: profile.display_name,
-              accessToken: tokens.accessToken,
-              refreshToken: tokens.refreshToken ?? '',
-            },
-          },
-        };
-      },
     },
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      scopes: ['email', 'profile'],
-      profile(profile: GoogleProfile, tokens: AuthTokens) {
-        return {
-          id: profile.sub,
-          email: profile.email,
-          name: profile.name,
-          image: profile.picture,
-          platforms: {
-            google: {
-              id: profile.sub,
-              email: profile.email,
-              accessToken: tokens.accessToken,
-              refreshToken: tokens.refreshToken,
-            },
-          },
-        };
-      },
     },
     github: {
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-      profile(profile: GithubProfile, tokens: AuthTokens) {
-        return {
-          id: profile.id.toString(),
-          email: profile.email,
-          name: profile.name || profile.login,
-          image: profile.avatar_url,
-          platforms: {
-            github: {
-              id: profile.id.toString(),
-              username: profile.login,
-              accessToken: tokens.accessToken,
-            },
-          },
-        };
-      },
     },
   },
   callbacks: {

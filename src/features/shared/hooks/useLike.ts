@@ -13,13 +13,14 @@ export function useLike({ id, type, initialLiked = false }: UseLikeProps) {
   const [isLiked, setIsLiked] = useState(initialLiked);
   const utils = trpc.useUtils();
 
-  const { mutate: toggleLike, isPending } = trpc.library.toggleLike.useMutation({
+  const { mutate: toggleLike, isPending } = trpc.userRouter.toggleLike.useMutation({
     onMutate: async () => {
       // Optimistically update UI
       setIsLiked((prev) => !prev);
 
       // Store previous state for rollback
-      const previous = utils.library.getLikes.getData();
+      const previous = utils.userRouter.getLikes.getData();
+      console.log(previous);
 
       return { previous };
     },
@@ -27,12 +28,12 @@ export function useLike({ id, type, initialLiked = false }: UseLikeProps) {
       // Rollback on error
       setIsLiked(initialLiked);
       if (context?.previous) {
-        utils.library.getLikes.setData(undefined, context.previous);
+        utils.userRouter.getLikes.setData(undefined, context.previous);
       }
     },
     onSettled: () => {
       // Refetch to ensure sync
-      utils.library.getLikes.invalidate();
+      utils.userRouter.getLikes.invalidate();
     },
   });
 
