@@ -49,18 +49,20 @@ export const auth = betterAuth({
   plugins: [username()],
   user: {
     additionalFields: {
-      likes: {
+      likedSongIds: {
         type: 'string[]',
         required: false,
         defaultValue: [],
-        items: {
-          type: 'object',
-          properties: {
-            itemId: { type: 'string' },
-            type: { type: 'string', enum: ['song', 'album', 'artist'] },
-            createdAt: { type: 'date' },
-          },
-        },
+      },
+      likedAlbumIds: {
+        type: 'string[]',
+        required: false,
+        defaultValue: [],
+      },
+      likedArtistIds: {
+        type: 'string[]',
+        required: false,
+        defaultValue: [],
       },
     },
   },

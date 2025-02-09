@@ -2,11 +2,10 @@ import { Icons } from '@/features/shared/components/Icons';
 
 interface StatsSectionProps {
   likes: number;
-  saves: number;
 }
 
-export function StatsSection({ likes, saves }: StatsSectionProps) {
-  if (!likes && !saves) return null;
+export function StatsSection({ likes }: StatsSectionProps) {
+  if (!likes) return null;
 
   return (
     <div className="flex justify-between items-center mt-4 text-sm" aria-label="Engagement stats">

@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth';
 import { TRPCError } from '@trpc/server';
+import { ObjectId, type Document } from 'mongodb';
 import { headers } from 'next/headers';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
@@ -15,26 +16,27 @@ export const userRouter = createTRPCRouter({
     const session = await auth.api.getSession({ headers: await headers() });
     const userId = session?.user?.id;
 
-    if (!userId) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
-    }
-
     try {
-      const users = ctx.db.collection('users');
-      const user = await users.findOne({ id: userId });
-      const likes = user?.likes || [];
+      const users = ctx.db.collection<Document>('users');
+      const likeField = `liked${type.charAt(0).toUpperCase() + type.slice(1)}Ids`;
 
-      const existingLikeIndex = likes.findIndex((like) => like.itemId === id && like.type === type);
+      const userFind = users.find({ _id: new ObjectId(userId) });
+      const user = await userFind[0];
+      const currentLikes = user?.[likeField] || [];
 
-      if (existingLikeIndex > -1) {
-        likes.splice(existingLikeIndex, 1);
-        await users.updateOne({ id: userId }, { $set: { likes } });
-        return { liked: false };
+      if (!user) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'User not found' });
       }
 
-      likes.push({ itemId: id, type, createdAt: new Date() });
-      await users.updateOne({ id: userId }, { $set: { likes } });
-      return { liked: true };
+      await users.updateOne(
+        { id: userId },
+
+        {
+          $set: { [likeField]: currentLikes.includes(id) ? currentLikes.filter((likeId: string) => likeId !== id) : [...currentLikes, id] },
+        },
+      );
+
+      return { liked: !currentLikes.includes(id) };
     } catch (error) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',

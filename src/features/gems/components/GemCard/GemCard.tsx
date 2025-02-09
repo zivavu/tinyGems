@@ -24,7 +24,7 @@ export function GemCard({ gem, className }: GemCardProps) {
   const mainImage = gem?.properties.media?.coverImage || gem?.properties.media?.coverImage?.[0];
   const [showPreview, setShowPreview] = useState(false);
 
-  const { isLiked, handleLike, isLoading } = useLike({
+  const { isLiked, handleLike, isPending } = useLike({
     id: gem.id,
     type: 'song',
   });
@@ -89,7 +89,7 @@ export function GemCard({ gem, className }: GemCardProps) {
       </div>
 
       <div className="absolute top-2 right-2 z-10">
-        <LikeButton isLiked={isLiked} onClick={handleLike} isLoading={isLoading} className="bg-black/50 hover:bg-black/60" />
+        <LikeButton isLiked={isLiked} onClick={handleLike} isLoading={isPending} className="bg-black/50 hover:bg-black/60" />
       </div>
 
       <Link href={`/gem/song/${gem.id}`} className="block p-4 flex-1 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
