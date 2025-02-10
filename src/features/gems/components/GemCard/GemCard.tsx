@@ -3,6 +3,7 @@
 import { MusicGem } from '@/features/gems/types';
 import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
 import { CardError } from '@/features/shared/components/cards/CardError';
+import { LoadingCard } from '@/features/shared/components/cards/LoadingCard';
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { CardWrapper } from '@/features/shared/components/transitions/CardWrapper';
@@ -17,12 +18,13 @@ import { MusicProperties } from './MusicProperties';
 import { StatsSection } from './StatsSection';
 
 interface GemCardProps {
-  gem: MusicGem;
+  gem?: MusicGem;
   className?: string;
   index: number;
+  isLoading?: boolean;
 }
 
-export function GemCard({ gem, className, index }: GemCardProps) {
+export function GemCard({ gem, className, index, isLoading }: GemCardProps) {
   const mainImage = gem?.properties.media?.coverImage || gem?.properties.media?.coverImage?.[0];
   const [showPreview, setShowPreview] = useState(false);
 
@@ -30,6 +32,9 @@ export function GemCard({ gem, className, index }: GemCardProps) {
     return <CardError type="gem" className={className} />;
   }
 
+  if (isLoading) {
+    return <LoadingCard index={index} className={className} variant="gem" />;
+  }
   return (
     <CardWrapper index={index} className={className}>
       <div className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}>

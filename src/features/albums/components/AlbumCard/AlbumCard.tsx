@@ -15,19 +15,25 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { AlbumPlaceholder } from '../AlbumPlaceholder';
 import { AlbumProperties } from './AlbumProperties';
+import { LoadingCard } from '@/features/shared/components/cards/LoadingCard';
 
 interface AlbumCardProps {
   album: Album;
   className?: string;
   index: number;
+  isLoading?: boolean;
 }
 
-export function AlbumCard({ album, className, index }: AlbumCardProps) {
+export function AlbumCard({ album, isLoading, className, index }: AlbumCardProps) {
   const [showPreview, setShowPreview] = useState(false);
   const mainImage = album.properties.media?.coverImage;
 
   if (!album) {
     return <CardError type="album" className={className} />;
+  }
+
+  if (isLoading) {
+    return <LoadingCard index={index} className={className} variant="album" />;
   }
 
   return (

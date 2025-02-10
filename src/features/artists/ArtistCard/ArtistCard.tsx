@@ -12,16 +12,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArtistPlaceholder } from './ArtistPlaceholder';
 import { ArtistProperties } from './ArtistProperties';
+import { LoadingCard } from '@/features/shared/components/cards/LoadingCard';
 
 interface ArtistCardProps {
   artist: Artist;
   className?: string;
   index: number;
+  isLoading?: boolean;
 }
 
-export function ArtistCard({ artist, className, index }: ArtistCardProps) {
+export function ArtistCard({ artist, isLoading, className, index }: ArtistCardProps) {
   if (!artist) {
     return <CardError type="artist" className={className} />;
+  }
+
+  if (isLoading) {
+    return <LoadingCard index={index} className={className} variant="gem" />;
   }
 
   return (

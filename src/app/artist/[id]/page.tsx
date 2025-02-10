@@ -1,5 +1,4 @@
 import { Typography } from '@/features/shared/components/Typography';
-import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { cn } from '@/features/shared/utils/utils';
@@ -24,8 +23,6 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
   }
 
   const artistGems = dummyGems.filter((gem) => gem.artist.id === artist.id);
-  const artistAlbums = dummyAlbums.filter((album) => album.artist.id === artist.id);
-  const singles = artistGems.filter((gem) => gem.properties.isSingle);
 
   const socialLinks = [
     { url: artist.links.website, icon: faGlobe, label: 'Website' },
