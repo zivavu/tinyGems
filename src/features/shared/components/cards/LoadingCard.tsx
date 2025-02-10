@@ -1,14 +1,15 @@
 'use client';
 
+import { LikeType } from '@/server/routers/userRouter';
 import { CardWrapper } from '../transitions/CardWrapper';
 
 interface LoadingCardProps {
   className?: string;
   index: number;
-  variant?: 'gem' | 'album' | 'artist';
+  variant?: LikeType;
 }
 
-export function LoadingCard({ className, index, variant = 'gem' }: LoadingCardProps) {
+export function LoadingCard({ className, index, variant = 'song' }: LoadingCardProps) {
   return (
     <CardWrapper index={index} className={className}>
       <div className="animate-pulse">

@@ -91,7 +91,7 @@ export function Header() {
                       <MenuItem as="div">
                         {({ focus }) => (
                           <NextLink
-                            href="/library"
+                            href="/user-library"
                             className={cn(
                               'flex w-full items-center gap-2 px-4 py-2 text-sm transition-colors',
                               focus && 'bg-rose-50 text-rose-600 dark:bg-rose-900/30 dark:text-rose-300',

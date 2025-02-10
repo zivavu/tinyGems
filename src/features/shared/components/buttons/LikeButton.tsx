@@ -5,7 +5,6 @@ import { useLike } from '@/features/shared/hooks/useLike';
 import { cn } from '@/features/shared/utils/utils';
 import { LikeType } from '@/server/routers/userRouter';
 import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
 import { AuthCTAPopover } from '../auth/AuthCTAPopover';
 
 interface LikeButtonProps {
@@ -16,19 +15,6 @@ interface LikeButtonProps {
 
 export function LikeButton({ id, type, className }: LikeButtonProps) {
   const { isLiked, handleLike, isPending, isAuthenticated } = useLike({ id, type });
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return (
-      <button className={cn('p-2 rounded-full backdrop-blur-sm transition-colors', 'group/like bg-black/20', className)}>
-        <Icons.Heart className="w-5 h-5 text-white group-hover/like:text-rose-500 transition-colors" />
-      </button>
-    );
-  }
 
   if (!isAuthenticated) {
     return (

@@ -27,7 +27,7 @@ export function ArtistCard({ artist, isLoading, className, index }: ArtistCardPr
   }
 
   if (isLoading) {
-    return <LoadingCard index={index} className={className} variant="gem" />;
+    return <LoadingCard index={index} className={className} variant="artist" />;
   }
 
   return (

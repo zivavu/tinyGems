@@ -33,7 +33,7 @@ export function GemCard({ gem, className, index, isLoading }: GemCardProps) {
   }
 
   if (isLoading) {
-    return <LoadingCard index={index} className={className} variant="gem" />;
+    return <LoadingCard index={index} className={className} variant="song" />;
   }
   return (
     <CardWrapper index={index} className={className}>
