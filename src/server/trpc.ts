@@ -33,6 +33,7 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
+      userId,
       session: ctx.session,
     },
   });

@@ -1,30 +1,27 @@
-import { auth } from '@/lib/auth';
 import { TRPCError } from '@trpc/server';
-import { headers } from 'next/headers';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 
+export const likeTypeEnum = z.enum(['song', 'album', 'artist']);
+export type LikeType = z.infer<typeof likeTypeEnum>;
+
 interface LikeDocument {
   userId: string;
+
   itemId: string;
-  type: 'song' | 'album' | 'artist';
+  type: LikeType;
   createdAt: Date;
 }
 
 const toggleLikeSchema = z.object({
   id: z.string(),
-  type: z.enum(['song', 'album', 'artist']),
+  type: likeTypeEnum,
 });
 
 export const userRouter = createTRPCRouter({
   toggleLike: protectedProcedure.input(toggleLikeSchema).mutation(async ({ ctx, input }) => {
     const { id, type } = input;
-    const session = await auth.api.getSession({ headers: await headers() });
-    const userId = session?.user?.id;
-
-    if (!userId) {
-      throw new TRPCError({ code: 'UNAUTHORIZED' });
-    }
+    const { userId } = ctx;
 
     try {
       const likes = ctx.db.collection<LikeDocument>('likes');
@@ -57,20 +54,16 @@ export const userRouter = createTRPCRouter({
     }
   }),
 
-  getLikes: protectedProcedure.query(async ({ ctx }) => {
-    const session = await auth.api.getSession({ headers: await headers() });
-    const userId = session?.user?.id;
+  getLikes: protectedProcedure.input(z.object({ type: likeTypeEnum })).query(async ({ ctx, input }) => {
+    const { type } = input;
+    const { userId } = ctx;
 
     try {
       const likes = ctx.db.collection<LikeDocument>('likes');
 
-      const userLikes = await likes.find({ userId }).toArray();
+      const userLikes: LikeDocument[] = await likes.find({ userId, type }).toArray();
 
-      return {
-        songs: userLikes.filter((like) => like.type === 'song').map((like) => like.itemId),
-        albums: userLikes.filter((like) => like.type === 'album').map((like) => like.itemId),
-        artists: userLikes.filter((like) => like.type === 'artist').map((like) => like.itemId),
-      };
+      return userLikes.map((like) => like.itemId);
     } catch (error) {
       console.error('Detailed error:', error);
       throw new TRPCError({

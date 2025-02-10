@@ -1,34 +1,26 @@
 'use client';
 
 import { trpc } from '@/lib/trpc';
+import { LikeType } from '@/server/routers/userRouter';
 import { useCallback } from 'react';
 
 interface UseLikeProps {
   id: string;
-  type: 'song' | 'album' | 'artist';
+  type: LikeType;
 }
 
 export function useLike({ id, type }: UseLikeProps) {
-  const { data: likes } = trpc.userRouter.getLikes.useQuery();
+  const { data: likes } = trpc.userRouter.getLikes.useQuery({ type });
   const utils = trpc.useUtils();
 
-  const isLiked = likes?.songs.some((like) => like === id);
+  const isLiked = likes?.includes(id);
 
   const { mutate: toggleLike, isPending } = trpc.userRouter.toggleLike.useMutation({
-    onMutate: async () => {
-      const previous = utils.userRouter.getLikes.getData();
-
-      utils.userRouter.getLikes.setData(undefined, (old) => ({
-        ...old!,
-        songs: isLiked ? old!.songs.filter((likeId) => likeId !== id) : [...old!.songs, id],
-      }));
-
-      return { previous };
-    },
-    onError: (_, __, context) => {
-      if (context?.previous) {
-        utils.userRouter.getLikes.setData(undefined, context.previous);
-      }
+    onMutate: () => {
+      utils.userRouter.getLikes.setData({ type }, (old) => {
+        if (!old) return [id];
+        return isLiked ? old.filter((likeId) => likeId !== id) : [...(old ?? []), id];
+      });
     },
     onSettled: () => {
       utils.userRouter.getLikes.invalidate();
@@ -41,7 +33,7 @@ export function useLike({ id, type }: UseLikeProps) {
   }, [id, type, isPending, toggleLike]);
 
   return {
-    isLiked,
+    isLiked: isLiked ?? false,
     handleLike,
     isPending,
   };
