@@ -1,8 +1,11 @@
 'use client';
 
 import { AlbumCard } from '@/features/albums/components/AlbumCard/AlbumCard';
+import { Album } from '@/features/albums/types';
 import { ArtistCard } from '@/features/artists/ArtistCard/ArtistCard';
+import { Artist } from '@/features/artists/types';
 import { GemCard } from '@/features/gems/components/GemCard/GemCard';
+import { MusicGem } from '@/features/gems/types';
 import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
