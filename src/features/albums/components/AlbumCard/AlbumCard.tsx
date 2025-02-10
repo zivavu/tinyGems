@@ -4,6 +4,7 @@ import { Album } from '@/features/albums/types';
 import { StatsSection } from '@/features/gems/components/GemCard/StatsSection';
 import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
 import { CardError } from '@/features/shared/components/cards/CardError';
+import { LoadingCard } from '@/features/shared/components/cards/LoadingCard';
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { CardWrapper } from '@/features/shared/components/transitions/CardWrapper';
@@ -15,7 +16,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { AlbumPlaceholder } from '../AlbumPlaceholder';
 import { AlbumProperties } from './AlbumProperties';
-import { LoadingCard } from '@/features/shared/components/cards/LoadingCard';
 
 interface AlbumCardProps {
   album: Album;
