@@ -3,12 +3,13 @@
 import { Album } from '@/features/albums/types';
 import { StatsSection } from '@/features/gems/components/GemCard/StatsSection';
 import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
+import { CardError } from '@/features/shared/components/cards/CardError';
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
+import { CardWrapper } from '@/features/shared/components/transitions/CardWrapper';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/utils';
 import { Button } from '@headlessui/react';
-import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -18,39 +19,19 @@ import { AlbumProperties } from './AlbumProperties';
 interface AlbumCardProps {
   album: Album;
   className?: string;
+  index: number;
 }
 
-export function AlbumCard({ album, className }: AlbumCardProps) {
+export function AlbumCard({ album, className, index }: AlbumCardProps) {
   const [showPreview, setShowPreview] = useState(false);
   const mainImage = album.properties.media?.coverImage;
 
   if (!album) {
-    return (
-      <div className="relative bg-white dark:bg-gray-900 rounded-lg border flex flex-col border-rose-200 dark:border-rose-800 shadow-sm">
-        <div className="aspect-square bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center">
-          <Icons.AlertTriangle className="w-12 h-12 text-rose-500" />
-        </div>
-        <div className="p-4 flex-1 flex flex-col items-center justify-center text-center">
-          <Typography variant="h4" className="mb-2 text-rose-500">
-            Oops! Something went wrong
-          </Typography>
-          <Typography variant="small" className="text-gray-500 max-w-[80%]">
-            We couldn&apos;t load this album. Please try refreshing the page or come back later.
-          </Typography>
-        </div>
-      </div>
-    );
+    return <CardError type="album" className={className} />;
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={cn(
-        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900',
-        className,
-      )}
-    >
+    <CardWrapper index={index} className={className}>
       <div
         className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}
         role="img"
@@ -125,6 +106,6 @@ export function AlbumCard({ album, className }: AlbumCardProps) {
 
         <StatsSection totalLikes={album.likes?.total} />
       </Link>
-    </motion.div>
+    </CardWrapper>
   );
 }

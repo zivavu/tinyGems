@@ -1,8 +1,8 @@
 'use client';
 
+import { authClient } from '@/lib/authClient';
 import { trpc } from '@/lib/trpc';
 import { LikeType } from '@/server/routers/userRouter';
-import { useCallback } from 'react';
 
 interface UseLikeProps {
   id: string;
@@ -10,6 +10,16 @@ interface UseLikeProps {
 }
 
 export function useLike({ id, type }: UseLikeProps) {
+  const session = authClient.useSession();
+  const isAuthenticated = !!session.data?.user;
+
+  if (!isAuthenticated) {
+    return {
+      isLiked: false,
+      handleLike: () => {},
+      isPending: false,
+    };
+  }
   const { data: likes } = trpc.userRouter.getLikes.useQuery({ type });
   const utils = trpc.useUtils();
 
@@ -27,14 +37,15 @@ export function useLike({ id, type }: UseLikeProps) {
     },
   });
 
-  const handleLike = useCallback(() => {
+  function handleLike() {
     if (isPending) return;
     toggleLike({ id, type });
-  }, [id, type, isPending, toggleLike]);
+  }
 
   return {
     isLiked: isLiked ?? false,
     handleLike,
     isPending,
+    isAuthenticated,
   };
 }

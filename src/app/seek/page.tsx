@@ -33,14 +33,14 @@ function SeekContent() {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
       <main className="container mx-auto px-4" role="main" aria-label={`Search ${contentType}`}>
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4" aria-label={`${contentType} grid`}>
-          {filteredContent.slice(0, 20).map((item) => {
+          {filteredContent.slice(0, 20).map((item, index) => {
             switch (contentType) {
               case 'singles':
-                return <GemCard key={item.id} gem={item as MusicGem} />;
+                return <GemCard key={item.id} gem={item as MusicGem} index={index} />;
               case 'albums':
-                return <AlbumCard key={item.id} album={item as Album} />;
+                return <AlbumCard key={item.id} album={item as Album} index={index} />;
               case 'artists':
-                return <ArtistCard key={item.id} artist={item as Artist} />;
+                return <ArtistCard key={item.id} artist={item as Artist} index={index} />;
             }
           })}
         </section>

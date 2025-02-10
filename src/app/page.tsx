@@ -114,8 +114,8 @@ export default function Home() {
             Discover Newset Gems
           </Typography>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {dummyGems.slice(0, 8).map((gem) => (
-              <GemCard key={gem.id} gem={gem} className="h-full" />
+            {dummyGems.slice(0, 8).map((gem, index) => (
+              <GemCard key={gem.id} gem={gem} index={index} className="h-full" />
             ))}
           </div>
         </div>

@@ -2,8 +2,10 @@
 
 import { MusicGem } from '@/features/gems/types';
 import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
+import { CardError } from '@/features/shared/components/cards/CardError';
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
+import { CardWrapper } from '@/features/shared/components/transitions/CardWrapper';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/utils';
 import { motion } from 'motion/react';
@@ -17,48 +19,20 @@ import { StatsSection } from './StatsSection';
 interface GemCardProps {
   gem: MusicGem;
   className?: string;
+  index: number;
 }
 
-export function GemCard({ gem, className }: GemCardProps) {
+export function GemCard({ gem, className, index }: GemCardProps) {
   const mainImage = gem?.properties.media?.coverImage || gem?.properties.media?.coverImage?.[0];
   const [showPreview, setShowPreview] = useState(false);
 
   if (!gem) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="relative bg-white dark:bg-gray-900 rounded-lg border flex flex-col border-rose-200 dark:border-rose-800 shadow-sm"
-      >
-        <div className="aspect-square bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center">
-          <Icons.AlertTriangle className="w-12 h-12 text-rose-500" />
-        </div>
-        <div className="p-4 flex-1 flex flex-col items-center justify-center text-center">
-          <Typography variant="h4" className="mb-2 text-rose-500">
-            Oops! Something went wrong
-          </Typography>
-          <Typography variant="small" className="text-gray-500 max-w-[80%]">
-            We couldn&apos;t load this gem. Please try refreshing the page or come back later.
-          </Typography>
-        </div>
-      </motion.div>
-    );
+    return <CardError type="gem" className={className} />;
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={cn(
-        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900',
-        className,
-      )}
-    >
-      <div
-        className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}
-        role="img"
-        aria-label={`Preview image for ${gem.title}`}
-      >
+    <CardWrapper index={index} className={className}>
+      <div className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}>
         {showPreview ? (
           <MediaPreviewPlayer media={gem} type="gem" />
         ) : (
@@ -129,6 +103,6 @@ export function GemCard({ gem, className }: GemCardProps) {
           <StatsSection totalLikes={gem?.likes?.total} />
         </Link>
       </motion.div>
-    </motion.div>
+    </CardWrapper>
   );
 }
