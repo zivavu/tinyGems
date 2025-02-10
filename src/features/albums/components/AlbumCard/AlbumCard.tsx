@@ -1,17 +1,19 @@
 'use client';
 
 import { Album } from '@/features/albums/types';
-import { StatsSection } from '@/features/gems/components/GemCard/comps/StatsSection';
+import { StatsSection } from '@/features/gems/components/GemCard/StatsSection';
+import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/utils';
 import { Button } from '@headlessui/react';
+import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { AlbumPlaceholder } from './components/AlbumPlaceholder';
-import { AlbumProperties } from './components/AlbumProperties';
+import { AlbumPlaceholder } from '../AlbumPlaceholder';
+import { AlbumProperties } from './AlbumProperties';
 
 interface AlbumCardProps {
   album: Album;
@@ -41,9 +43,11 @@ export function AlbumCard({ album, className }: AlbumCardProps) {
   }
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       className={cn(
-        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm transition-all group hover:shadow-md dark:border-gray-800 dark:bg-gray-900',
+        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900',
         className,
       )}
     >
@@ -86,6 +90,10 @@ export function AlbumCard({ album, className }: AlbumCardProps) {
         </div>
       </div>
 
+      <div className="absolute top-3 right-3 z-10">
+        <LikeButton id={album.id} type="album" />
+      </div>
+
       <Link href={`/gem/album/${album.id}`} className="block p-4 flex-1 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
         <div className="mb-2 space-y-1">
           <div className="flex items-start justify-between gap-2">
@@ -115,8 +123,8 @@ export function AlbumCard({ album, className }: AlbumCardProps) {
           ))}
         </div>
 
-        <StatsSection likes={album.likes.likes} saves={album.likes.saves} />
+        <StatsSection totalLikes={album.likes?.total} />
       </Link>
-    </div>
+    </motion.div>
   );
 }

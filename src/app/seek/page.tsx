@@ -2,7 +2,7 @@
 
 import { AlbumCard } from '@/features/albums/components/AlbumCard/AlbumCard';
 import { Album } from '@/features/albums/types';
-import { ArtistCard } from '@/features/artists/components/ArtistCard/ArtistCard';
+import { ArtistCard } from '@/features/artists/ArtistCard/ArtistCard';
 import { Artist } from '@/features/artists/types';
 import { FiltersInputBar } from '@/features/gems/components/FiltersInputBar/FiltersInputBar';
 import { useParamFilters } from '@/features/gems/components/FiltersInputBar/hooks';
@@ -14,6 +14,7 @@ import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { Button } from '@headlessui/react';
+import { motion } from 'motion/react';
 import { Suspense } from 'react';
 
 function SeekContent() {
@@ -29,7 +30,7 @@ function SeekContent() {
   const filteredContent = useFilteredContent(contentMap[contentType], contentType);
 
   return (
-    <>
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
       <main className="container mx-auto px-4" role="main" aria-label={`Search ${contentType}`}>
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4" aria-label={`${contentType} grid`}>
           {filteredContent.slice(0, 20).map((item) => {
@@ -64,7 +65,7 @@ function SeekContent() {
           <span>Edit filters</span>
         </Button>
       </div>
-    </>
+    </motion.div>
   );
 }
 

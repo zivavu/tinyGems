@@ -1,4 +1,4 @@
-import { GemGrid } from '@/features/gems/components/GemGrid';
+import { GemCard } from '@/features/gems/components/GemCard/GemCard';
 import { Icons } from '@/features/shared/components/Icons';
 import ParticlesBackground from '@/features/shared/components/ParticlesBackground';
 import { Typography } from '@/features/shared/components/Typography';
@@ -113,7 +113,11 @@ export default function Home() {
           <Typography variant="h2" className="text-4xl font-bold text-center mb-12">
             Discover Newset Gems
           </Typography>
-          <GemGrid gems={dummyGems.slice(0, 8)} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {dummyGems.slice(0, 8).map((gem) => (
+              <GemCard key={gem.id} gem={gem} className="h-full" />
+            ))}
+          </div>
         </div>
       </section>
 

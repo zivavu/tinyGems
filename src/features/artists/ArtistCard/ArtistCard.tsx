@@ -1,13 +1,14 @@
 'use client';
 
 import { Artist } from '@/features/artists/types';
+import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/utils';
+import { motion } from 'motion/react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { ArtistPlaceholder } from './comps/ArtistPlaceholder';
-import { ArtistProperties } from './comps/ArtistProperties';
+import { ArtistPlaceholder } from './ArtistPlaceholder';
+import { ArtistProperties } from './ArtistProperties';
 
 interface ArtistCardProps {
   artist: Artist;
@@ -16,10 +17,11 @@ interface ArtistCardProps {
 
 export function ArtistCard({ artist, className }: ArtistCardProps) {
   return (
-    <Link
-      href={`/artist/${artist.id}`}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       className={cn(
-        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm transition-all group hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-800/50 dark:border-gray-800 dark:bg-gray-900',
+        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900',
         className,
       )}
     >
@@ -87,6 +89,10 @@ export function ArtistCard({ artist, className }: ArtistCardProps) {
           )}
         </div>
       </div>
-    </Link>
+
+      <div className="absolute top-3 right-3 z-10">
+        <LikeButton id={artist.id} type="artist" />
+      </div>
+    </motion.div>
   );
 }

@@ -1,7 +1,7 @@
 import { MusicGem } from '@/features/gems/types';
 import { platformPriority } from '@/features/shared/components/MediaPreviewPlayer/utils/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { platformIconsMap } from '../../../utils/platformIconsMap';
+import { platformIconsMap } from '../../utils/platformIconsMap';
 
 interface MusicPropertiesProps {
   gem: MusicGem;

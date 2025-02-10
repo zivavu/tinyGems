@@ -1,5 +1,3 @@
-import { AlbumGrid } from '@/features/albums/components/AlbumGrid/AlbumGrid';
-import { GemGrid } from '@/features/gems/components/GemGrid';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
@@ -127,33 +125,6 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
             </div>
           )}
         </div>
-
-        {artistAlbums.length > 0 && (
-          <section className="mb-12" aria-label="Albums">
-            <Typography variant="h2" className="mb-6">
-              Albums
-            </Typography>
-            <AlbumGrid albums={artistAlbums} />
-          </section>
-        )}
-
-        {singles.length > 0 && (
-          <section className="mb-12" aria-label="Singles">
-            <Typography variant="h2" className="mb-6">
-              Singles
-            </Typography>
-            <GemGrid gems={singles} />
-          </section>
-        )}
-
-        {artistGems.length > 0 && (
-          <section className="mb-12" aria-label="All Tracks">
-            <Typography variant="h2" className="mb-6">
-              All Tracks
-            </Typography>
-            <GemGrid gems={artistGems} />
-          </section>
-        )}
       </div>
     </main>
   );
