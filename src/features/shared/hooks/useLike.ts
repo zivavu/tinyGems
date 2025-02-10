@@ -1,8 +1,7 @@
 'use client';
 
-import { authClient } from '@/lib/authClient';
 import { trpc } from '@/lib/trpc';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 interface UseLikeProps {
   id: string;
@@ -10,35 +9,28 @@ interface UseLikeProps {
 }
 
 export function useLike({ id, type }: UseLikeProps) {
-  const { data: session } = authClient.useSession();
-  const likes = session?.user.likedSongIds || [];
-
-  const isInitiallyLiked = likes.some((like) => like === id);
-
-  console.log(likes);
-  const [isLiked, setIsLiked] = useState(isInitiallyLiked);
+  const { data: likes } = trpc.userRouter.getLikes.useQuery();
   const utils = trpc.useUtils();
+
+  const isLiked = likes?.songs.some((like) => like === id);
 
   const { mutate: toggleLike, isPending } = trpc.userRouter.toggleLike.useMutation({
     onMutate: async () => {
-      // Optimistically update UI
-      setIsLiked((prev) => !prev);
-
-      // Store previous state for rollback
       const previous = utils.userRouter.getLikes.getData();
-      console.log(previous);
+
+      utils.userRouter.getLikes.setData(undefined, (old) => ({
+        ...old!,
+        songs: isLiked ? old!.songs.filter((likeId) => likeId !== id) : [...old!.songs, id],
+      }));
 
       return { previous };
     },
-    onError: (err, _, context) => {
-      // Rollback on error
-      setIsLiked(isInitiallyLiked);
+    onError: (_, __, context) => {
       if (context?.previous) {
         utils.userRouter.getLikes.setData(undefined, context.previous);
       }
     },
     onSettled: () => {
-      // Refetch to ensure sync
       utils.userRouter.getLikes.invalidate();
     },
   });

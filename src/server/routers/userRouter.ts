@@ -1,9 +1,15 @@
 import { auth } from '@/lib/auth';
 import { TRPCError } from '@trpc/server';
-import { ObjectId, type Document } from 'mongodb';
 import { headers } from 'next/headers';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
+
+interface LikeDocument {
+  userId: string;
+  itemId: string;
+  type: 'song' | 'album' | 'artist';
+  createdAt: Date;
+}
 
 const toggleLikeSchema = z.object({
   id: z.string(),
@@ -16,28 +22,34 @@ export const userRouter = createTRPCRouter({
     const session = await auth.api.getSession({ headers: await headers() });
     const userId = session?.user?.id;
 
+    if (!userId) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
+    }
+
     try {
-      const users = ctx.db.collection<Document>('users');
-      const likeField = `liked${type.charAt(0).toUpperCase() + type.slice(1)}Ids`;
+      const likes = ctx.db.collection<LikeDocument>('likes');
 
-      const userFind = users.find({ _id: new ObjectId(userId) });
-      const user = await userFind[0];
-      const currentLikes = user?.[likeField] || [];
+      const existingLike = await likes.findOne({
+        userId,
+        itemId: id,
+        type,
+      });
 
-      if (!user) {
-        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'User not found' });
+      if (existingLike) {
+        await likes.deleteOne({ userId, itemId: id, type });
+        return { success: true, isLiked: false };
       }
 
-      await users.updateOne(
-        { id: userId },
+      await likes.insertOne({
+        userId,
+        itemId: id,
+        type,
+        createdAt: new Date(),
+      });
 
-        {
-          $set: { [likeField]: currentLikes.includes(id) ? currentLikes.filter((likeId: string) => likeId !== id) : [...currentLikes, id] },
-        },
-      );
-
-      return { liked: !currentLikes.includes(id) };
+      return { success: true, isLiked: true };
     } catch (error) {
+      console.error('Detailed error:', error);
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Failed to toggle like',
@@ -46,28 +58,21 @@ export const userRouter = createTRPCRouter({
   }),
 
   getLikes: protectedProcedure.query(async ({ ctx }) => {
-    const userId = (await ctx.session?.$context).session?.user?.id;
-    if (!userId) {
-      throw new TRPCError({
-        code: 'UNAUTHORIZED',
-
-        message: 'User not authenticated',
-      });
-    }
+    const session = await auth.api.getSession({ headers: await headers() });
+    const userId = session?.user?.id;
 
     try {
-      const likes = await ctx.db.like.findMany({
-        where: {
-          userId,
-        },
-        select: {
-          itemId: true,
-          type: true,
-        },
-      });
+      const likes = ctx.db.collection<LikeDocument>('likes');
 
-      return likes;
+      const userLikes = await likes.find({ userId }).toArray();
+
+      return {
+        songs: userLikes.filter((like) => like.type === 'song').map((like) => like.itemId),
+        albums: userLikes.filter((like) => like.type === 'album').map((like) => like.itemId),
+        artists: userLikes.filter((like) => like.type === 'artist').map((like) => like.itemId),
+      };
     } catch (error) {
+      console.error('Detailed error:', error);
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: 'Failed to fetch likes',
