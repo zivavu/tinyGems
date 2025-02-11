@@ -1,7 +1,7 @@
 import { ArtistSnapshot } from '@/features/artists/types';
 
 export type GemCategory = 'music';
-export type PlatformType = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'other';
+export type PlatformType = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'appleMusic' | 'other';
 
 export type EngagementType = 'likes' | 'saves' | 'views';
 
