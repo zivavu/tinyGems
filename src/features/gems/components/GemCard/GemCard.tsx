@@ -32,9 +32,6 @@ export function GemCard({ gem, className, index, isLoading }: GemCardProps) {
     return <CardError type="gem" className={className} />;
   }
 
-  if (isLoading) {
-    return <LoadingCard index={index} className={className} variant="song" />;
-  }
   return (
     <CardWrapper index={index} className={className}>
       <div className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}>

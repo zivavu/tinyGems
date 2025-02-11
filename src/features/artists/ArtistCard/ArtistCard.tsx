@@ -26,9 +26,7 @@ export function ArtistCard({ artist, isLoading, className, index }: ArtistCardPr
     return <CardError type="artist" className={className} />;
   }
 
-  if (isLoading) {
-    return <LoadingCard index={index} className={className} variant="artist" />;
-  }
+
 
   return (
     <CardWrapper index={index} className={className}>

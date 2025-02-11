@@ -19,7 +19,7 @@ export function useLike({ id, type, title }: UseLikeProps) {
     return {
       isLiked: false,
       handleLike: () => {
-        toast.error('Please sign in to like content');
+        toast.error('Please sign in to like the content');
       },
       isPending: false,
     };

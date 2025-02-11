@@ -6,34 +6,49 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { LibraryContent } from './LibraryContent';
 
 const tabs = [
-  { name: 'Songs', icon: Icons.Music },
-  { name: 'Albums', icon: Icons.Disc },
-  { name: 'Artists', icon: Icons.Users },
+  { name: 'Songs', icon: Icons.Music, count: 0 },
+  { name: 'Albums', icon: Icons.Disc, count: 0 },
+  { name: 'Artists', icon: Icons.Users, count: 0 },
 ];
 
 export function LibraryTabs() {
   return (
     <TabGroup>
-      <TabList className="flex gap-2 p-1 mb-8 max-w-md bg-white dark:bg-stone-900 rounded-lg">
-        {tabs.map((tab) => (
-          <Tab
-            key={tab.name}
-            className={({ selected }) =>
-              cn(
-                'flex items-center gap-2 w-full py-2.5 px-4 rounded-md text-sm font-medium leading-5 transition-colors',
-                selected
-                  ? 'bg-rose-500 text-white shadow'
-                  : 'text-stone-600 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800',
-              )
-            }
-          >
-            <tab.icon className="w-4 h-4" />
-            {tab.name}
-          </Tab>
-        ))}
-      </TabList>
+      <div className="border-b border-stone-200 dark:border-stone-800">
+        <TabList className="flex -mb-px">
+          {tabs.map((tab) => (
+            <Tab
+              key={tab.name}
+              className={({ selected }) =>
+                cn(
+                  'group relative min-w-[180px] py-4 px-6 flex items-center justify-center gap-2.5',
+                  'focus:outline-none',
+                  selected
+                    ? 'text-rose-600 dark:text-rose-400'
+                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200',
+                  'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5',
+                  selected
+                    ? 'before:bg-rose-600 dark:before:bg-rose-400'
+                    : 'before:bg-transparent hover:before:bg-stone-200 dark:hover:before:bg-stone-700',
+                  'before:transition-all before:duration-300',
+                )
+              }
+            >
+              <tab.icon className={cn('w-5 h-5 transition-transform duration-300', 'group-hover:scale-110')} />
+              <span className="font-medium">{tab.name}</span>
+              {tab.count > 0 && (
+                <span
+                  className={cn('px-2 py-0.5 text-xs rounded-full', 'bg-stone-100 dark:bg-stone-800', 'text-stone-600 dark:text-stone-400')}
+                >
+                  {tab.count}
+                </span>
+              )}
+            </Tab>
+          ))}
+        </TabList>
+      </div>
 
-      <TabPanels>
+      <TabPanels className="mt-8">
         <TabPanel>
           <LibraryContent type="song" />
         </TabPanel>

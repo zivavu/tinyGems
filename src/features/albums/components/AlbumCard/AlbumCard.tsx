@@ -4,7 +4,6 @@ import { Album } from '@/features/albums/types';
 import { StatsSection } from '@/features/gems/components/GemCard/StatsSection';
 import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
 import { CardError } from '@/features/shared/components/cards/CardError';
-import { LoadingCard } from '@/features/shared/components/cards/LoadingCard';
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { CardWrapper } from '@/features/shared/components/transitions/CardWrapper';
@@ -30,10 +29,6 @@ export function AlbumCard({ album, isLoading, className, index }: AlbumCardProps
 
   if (!album) {
     return <CardError type="album" className={className} />;
-  }
-
-  if (isLoading) {
-    return <LoadingCard index={index} className={className} variant="album" />;
   }
 
   return (
