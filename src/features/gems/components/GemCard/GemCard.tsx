@@ -3,7 +3,6 @@
 import { MusicGem } from '@/features/gems/types';
 import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
 import { CardError } from '@/features/shared/components/cards/CardError';
-import { LoadingCard } from '@/features/shared/components/cards/LoadingCard';
 import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { CardWrapper } from '@/features/shared/components/transitions/CardWrapper';
@@ -24,7 +23,7 @@ interface GemCardProps {
   isLoading?: boolean;
 }
 
-export function GemCard({ gem, className, index, isLoading }: GemCardProps) {
+export function GemCard({ gem, className, index }: GemCardProps) {
   const mainImage = gem?.properties.media?.coverImage || gem?.properties.media?.coverImage?.[0];
   const [showPreview, setShowPreview] = useState(false);
 

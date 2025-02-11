@@ -44,13 +44,13 @@ function FilterOption({ option, selected, onClick }: { option: FilterOption; sel
       onClick={onClick}
       className={cn(
         'flex items-center w-full gap-2 px-2 py-1.5 text-sm rounded-lg transition-colors',
-        selected ? 'bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-200' : 'hover:bg-gray-50 dark:hover:bg-gray-700',
+        selected ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-200' : 'hover:bg-gray-50 dark:hover:bg-gray-700',
       )}
     >
       {option.Icon && <option.Icon className="flex-shrink-0 w-5 h-4" />}
       <div className="flex flex-col flex-1 text-left">
         <span>{option.label}</span>
-        <span className={cn('text-xs', selected ? 'text-rose-600 dark:text-rose-400' : 'text-gray-500 dark:text-gray-400')}>
+        <span className={cn('text-xs', selected ? 'text-amber-600 dark:text-amber-400' : 'text-gray-500 dark:text-gray-400')}>
           {option.description}
         </span>
       </div>

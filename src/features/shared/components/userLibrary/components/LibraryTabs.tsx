@@ -24,11 +24,11 @@ export function LibraryTabs() {
                   'group relative min-w-[180px] py-4 px-6 flex items-center justify-center gap-2.5',
                   'focus:outline-none',
                   selected
-                    ? 'text-rose-600 dark:text-rose-400'
+                    ? 'text-indigo-600 dark:text-indigo-400'
                     : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200',
                   'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5',
                   selected
-                    ? 'before:bg-rose-600 dark:before:bg-rose-400'
+                    ? 'before:bg-indigo-600 dark:before:bg-indigo-400'
                     : 'before:bg-transparent hover:before:bg-stone-200 dark:hover:before:bg-stone-700',
                   'before:transition-all before:duration-300',
                 )

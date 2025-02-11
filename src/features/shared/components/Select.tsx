@@ -30,15 +30,15 @@ export function Select({ title, selected, count, icon: IconName, popoverClassNam
               as={FilterButton}
               className={cn(
                 'flex-1 transition-all duration-200',
-                count && count > 0 && !isOpen && 'shadow-[0_0_0_1px] shadow-rose-200 dark:shadow-rose-500/30',
-                isOpen && 'bg-rose-50 dark:bg-rose-500/10',
+                count && count > 0 && !isOpen && 'shadow-[0_0_0_1px] shadow-amber-200 dark:shadow-amber-500/30',
+                isOpen && 'bg-amber-50 dark:bg-amber-500/10',
               )}
             >
               <div className="flex gap-2 items-center">
-                {Icon && <Icon className={cn('w-4 h-4 transition-colors', (isOpen || selected) && 'text-rose-600 dark:text-rose-400')} />}
+                {Icon && <Icon className={cn('w-4 h-4 transition-colors', (isOpen || selected) && 'text-amber-600 dark:text-amber-400')} />}
                 <Typography
                   variant="small"
-                  className={cn('font-medium transition-colors', (isOpen || selected) && 'text-rose-600 dark:text-rose-400')}
+                  className={cn('font-medium transition-colors', (isOpen || selected) && 'text-amber-600 dark:text-amber-400')}
                 >
                   {title}
                 </Typography>
@@ -49,7 +49,7 @@ export function Select({ title, selected, count, icon: IconName, popoverClassNam
           <PopoverTransition show={isOpen}>
             <PopoverPanel
               className={cn(
-                'absolute z-10 mt-2 bg-white rounded-lg border-gray-200 shadow-lg border-1 min-w-80 dark:bg-gray-800 dark:border-gray-700',
+                'absolute z-10 mt-2 bg-white rounded-lg border-amber-200 shadow-lg border-1 min-w-80 dark:bg-gray-800 dark:border-gray-700',
                 popoverClassName,
               )}
             >

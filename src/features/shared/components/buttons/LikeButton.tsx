@@ -34,10 +34,10 @@ export function LikeButton({ id, type, className }: LikeButtonProps) {
         if (!isPending) handleLike();
       }}
       className={cn(
-        'p-2 rounded-full backdrop-blur-sm transition-colors',
-        'group/like',
-        isPending && 'cursor-not-allowed opacity-50',
-        isLiked ? 'bg-black/30' : 'bg-black/20',
+        'p-2 rounded-full transition-colors',
+        isLiked
+          ? 'text-violet-500 bg-violet-100 dark:bg-violet-900/30'
+          : 'text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30',
         className,
       )}
       disabled={isPending}

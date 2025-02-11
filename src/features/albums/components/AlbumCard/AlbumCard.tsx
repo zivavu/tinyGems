@@ -23,7 +23,7 @@ interface AlbumCardProps {
   isLoading?: boolean;
 }
 
-export function AlbumCard({ album, isLoading, className, index }: AlbumCardProps) {
+export function AlbumCard({ album, className, index }: AlbumCardProps) {
   const [showPreview, setShowPreview] = useState(false);
   const mainImage = album.properties.media?.coverImage;
 

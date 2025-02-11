@@ -36,14 +36,12 @@ interface SortablePlatformProps {
 function PlatformItem({ platform, index }: { platform: Platform; index: number }) {
   return (
     <div
-      className="flex items-center gap-3 rounded-lg border border-rose-100 bg-white p-3 
-      dark:border-rose-900 dark:bg-gray-800"
+      className="flex items-center gap-3 rounded-lg border border-amber-100 bg-white p-3 
+      dark:border-amber-900 dark:bg-gray-800"
     >
       <div className="flex items-center gap-3 flex-1">
-        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-900">
-          <Typography variant="small" className="font-medium text-rose-500">
-            {index + 1}
-          </Typography>
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-800">
+          <Typography variant="small">{index + 1}</Typography>
         </div>
         <FontAwesomeIcon icon={platformIconsMap[platform.id]} className="h-5 w-5" />
         <Typography variant="small">{platform.name}</Typography>

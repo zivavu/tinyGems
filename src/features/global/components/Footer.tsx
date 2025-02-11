@@ -6,19 +6,17 @@ import { Link } from '../../shared/components/Link';
 
 export function Footer() {
   return (
-    <footer className="w-full z-20 bg-white border-t border-rose-100 dark:bg-gray-950 dark:border-rose-950">
+    <footer className="w-full z-20 bg-white border-t border-amber-200 dark:bg-gray-950 dark:border-amber-950">
       <div className="container px-4 py-8 mx-auto">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-          {/* Brand Column */}
           <div className="space-y-4">
             <div className="flex gap-2 items-center">
-              <Icons.Sparkles className="w-5 h-5 text-rose-500" />
+              <Icons.Sparkles className="w-5 h-5 text-amber-500" />
               <Typography variant="h3">tinyGems</Typography>
             </div>
             <Typography variant="muted">A cozy corner of the internet for artists to share their creations.</Typography>
           </div>
 
-          {/* Resources Column */}
           <div className="space-y-4">
             <Typography variant="h4">Resources</Typography>
             <div className="flex flex-col gap-2">
@@ -31,7 +29,6 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Legal Column */}
           <div className="space-y-4">
             <Typography variant="h4">Legal</Typography>
             <div className="flex flex-col gap-2">
@@ -48,7 +45,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 justify-between items-center pt-8 mt-8 border-t border-rose-100 dark:border-rose-950 md:flex-row">
+        <div className="flex flex-col gap-4 justify-between items-center pt-8 mt-8 border-t border-indigo-100 dark:border-indigo-950 md:flex-row">
           <Typography variant="muted">© {new Date().getFullYear()} tinyGems. No rights reserved.</Typography>
           <div className="flex gap-6">
             <Link href="https://github.com/zivavu/tinyGems" target="_blank">

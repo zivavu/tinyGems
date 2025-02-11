@@ -286,8 +286,8 @@ export default function AddGemPage() {
                     readOnly
                     placeholder="Select a date"
                     className={cn(
-                      'w-full px-4 py-2 rounded-lg border-gray-300 focus:ring-rose-500 focus:border-rose-500 dark:bg-gray-700 dark:border-gray-600 cursor-pointer',
-                      errors.releaseDate && 'border-red-500 focus:ring-red-500 focus:border-red-500',
+                      'w-full px-4 py-2 rounded-lg border-gray-300 focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-700 dark:border-gray-600 cursor-pointer',
+                      errors.releaseDate && 'border-amber-500 focus:ring-amber-500 focus:border-amber-500',
                     )}
                     onClick={() => setShowCalendar(!showCalendar)}
                   />

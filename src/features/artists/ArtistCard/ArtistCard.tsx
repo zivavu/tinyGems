@@ -12,7 +12,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArtistPlaceholder } from './ArtistPlaceholder';
 import { ArtistProperties } from './ArtistProperties';
-import { LoadingCard } from '@/features/shared/components/cards/LoadingCard';
 
 interface ArtistCardProps {
   artist: Artist;
@@ -21,12 +20,10 @@ interface ArtistCardProps {
   isLoading?: boolean;
 }
 
-export function ArtistCard({ artist, isLoading, className, index }: ArtistCardProps) {
+export function ArtistCard({ artist, className, index }: ArtistCardProps) {
   if (!artist) {
     return <CardError type="artist" className={className} />;
   }
-
-
 
   return (
     <CardWrapper index={index} className={className}>

@@ -3,24 +3,36 @@
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '../utils/utils';
 
+function debounce<T extends (...args: unknown[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
+  let timeoutId: NodeJS.Timeout;
+
+  return function (...args: Parameters<T>) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, wait);
+  };
+}
+
 export default function ParticlesBackground({ className, particleCount = 300 }: { className?: string; particleCount?: number }) {
-  const [isMounted, setIsMounted] = useState(false);
   const particlesPerGroup = 15;
   const groupCount = Math.ceil(particleCount / particlesPerGroup);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [particles, setParticles] = useState<React.ReactNode>(null);
 
+  const maxDistance = 50;
+  const getRandomDistance = () => Math.random() * maxDistance - maxDistance / 2;
+  const getTransform = () => `translate(${getRandomDistance()}px, ${getRandomDistance()}px)`;
   function generateKeyframes() {
     let keyframesRules = '';
-
     for (let i = 0; i < groupCount; i++) {
       keyframesRules += `
         @keyframes float-${i} {
           0%, 100% { transform: translate(0, 0); }
-          25% { transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px); }
-          50% { transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px); }
-          75% { transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px); }
-          90% { transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px); }
+          25% { transform: ${getTransform()}; }
+          50% { transform: ${getTransform()}; }
+          75% { transform: ${getTransform()}; }
+          90% { transform: ${getTransform()}; }
         }
       `;
     }
@@ -33,75 +45,80 @@ export default function ParticlesBackground({ className, particleCount = 300 }: 
     return Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
   }
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  function createParticles() {
+    if (!containerRef.current) return null;
+
+    const width = containerRef.current.clientWidth;
+    const height = containerRef.current.clientHeight;
+
+    if (width === 0 || height === 0) return null;
+
+    return [...Array(groupCount)].map((_, groupIndex) => {
+      const groupParticles = [];
+      for (let i = 0; i < particlesPerGroup; i++) {
+        const particleIndex = groupIndex * particlesPerGroup + i;
+        if (particleIndex >= particleCount) break;
+
+        const originX = Math.random() * width;
+        const originY = Math.random() * height;
+        const size = getRandomSize();
+
+        groupParticles.push(
+          <div
+            key={particleIndex}
+            className="fixed rounded-full bg-indigo-600 "
+            style={{
+              filter: 'blur(6px)',
+              width: size,
+              height: size,
+              left: originX,
+              top: originY,
+              opacity: 0,
+              animation: 'fadeIn 0.5s ease-out forwards',
+            }}
+          />,
+        );
+      }
+
+      return (
+        <div
+          key={groupIndex}
+          className="absolute h-full w-full"
+          style={{
+            animation: `float-${groupIndex} 12s infinite`,
+            animationDelay: `${groupIndex * 0.1}s`,
+            animationTimingFunction: 'ease-in-out',
+          }}
+        >
+          {groupParticles}
+        </div>
+      );
+    });
+  }
 
   useEffect(() => {
-    if (!isMounted || !containerRef.current) return;
+    const handleResize = debounce(() => {
+      setParticles(createParticles());
+    }, 30);
 
-    function handleResize() {
-      if (!containerRef.current) return;
-      if (containerSize.width === containerRef.current.clientWidth) return;
-      setContainerSize({
-        width: containerRef.current.clientWidth,
-        height: containerRef.current.clientHeight,
-      });
-    }
-
-    handleResize();
+    setParticles(createParticles());
 
     window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [isMounted, containerRef]);
-
-  if (!isMounted) return null;
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <div ref={containerRef} className={cn('absolute inset-0 h-full overflow-hidden', className)}>
-      {[...Array(groupCount)].map((_, groupIndex) => {
-        const groupParticles = [];
-        for (let i = 0; i < particlesPerGroup; i++) {
-          const particleIndex = groupIndex * particlesPerGroup + i;
-          if (particleIndex >= particleCount) break;
-
-          const originX = Math.random() * (containerSize.width || 0);
-          const originY = Math.random() * (containerSize.height || 0);
-          const size = getRandomSize();
-
-          groupParticles.push(
-            <div
-              key={particleIndex}
-              className="fixed rounded-full bg-rose-400/70 dark:bg-red-600/70"
-              style={{
-                filter: 'blur(6px)',
-                width: size,
-                height: size,
-                left: originX,
-                top: originY,
-              }}
-            />,
-          );
-        }
-
-        return (
-          <div
-            key={groupIndex}
-            className="absolute h-full w-full"
-            style={{
-              animation: `float-${groupIndex} 12s infinite`,
-              animationDelay: `${groupIndex * 0.1}s`,
-              animationTimingFunction: 'ease-in-out',
-            }}
-          >
-            {groupParticles}
-          </div>
-        );
-      })}
-      <style>{generateKeyframes()}</style>
+      {particles}
+      <style>
+        {`
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 0.7; }
+          }
+          ${generateKeyframes()}
+        `}
+      </style>
     </div>
   );
 }

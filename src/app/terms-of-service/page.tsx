@@ -16,7 +16,7 @@ export default async function TermsOfUsePage() {
         managed to hack the page - let me know if possible. You can steal as much content as you want. Yeah. That&apos;s about it.
         <br />
         If you see anything that is werid about these terms, and contradicts with the open source and stuff,{' '}
-        <Link href="/contact" className="text-rose-500">
+        <Link href="/contact" className="text-amber-500">
           let me know
         </Link>
         .

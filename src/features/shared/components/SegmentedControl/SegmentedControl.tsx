@@ -32,7 +32,7 @@ export function SegmentedControl({ options, value, onChange }: SegmentedControlP
               relative flex items-center gap-2 px-4 py-2 cursor-pointer rounded-xl transition-all
             `}
           >
-            <Icon className={`w-5 h-5 ${isSelected ? 'text-rose-500' : 'text-gray-500'}`} />
+            <Icon className={`w-5 h-5 ${isSelected ? 'text-amber-500' : 'text-gray-500'}`} />
             <span className={`font-medium ${isSelected ? 'text-gray-900 dark:text-white' : 'text-gray-500'}`}>{option.label}</span>
           </Radio>
         );

@@ -166,7 +166,7 @@ export default function AuthPage() {
                       {...loginForm.register('email')}
                       placeholder="Email"
                       autoComplete="email"
-                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <FormErrorMessage message={loginForm.formState.errors.email?.message} />
                   </div>
@@ -176,7 +176,7 @@ export default function AuthPage() {
                       {...loginForm.register('password')}
                       type="password"
                       placeholder="Password"
-                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <FormErrorMessage message={loginForm.formState.errors.password?.message} />
                   </div>
@@ -194,7 +194,7 @@ export default function AuthPage() {
                       {...registerForm.register('name')}
                       type="text"
                       placeholder="Name"
-                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <FormErrorMessage message={registerForm.formState.errors.name?.message} />
                   </div>
@@ -204,7 +204,7 @@ export default function AuthPage() {
                       {...registerForm.register('email')}
                       placeholder="Email"
                       autoComplete="email"
-                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <FormErrorMessage message={registerForm.formState.errors.email?.message} />
                   </div>
@@ -214,7 +214,7 @@ export default function AuthPage() {
                       {...registerForm.register('password')}
                       type="password"
                       placeholder="Password"
-                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <FormErrorMessage message={registerForm.formState.errors.password?.message} />
                   </div>
@@ -224,7 +224,7 @@ export default function AuthPage() {
                       {...registerForm.register('confirmPassword')}
                       type="password"
                       placeholder="Confirm Password"
-                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                     <FormErrorMessage message={registerForm.formState.errors.confirmPassword?.message} />
                   </div>

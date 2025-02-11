@@ -15,17 +15,8 @@ export function useLike({ id, type, title }: UseLikeProps) {
   const session = authClient.useSession();
   const isAuthenticated = !!session.data?.user;
 
-  if (!isAuthenticated) {
-    return {
-      isLiked: false,
-      handleLike: () => {
-        toast.error('Please sign in to like the content');
-      },
-      isPending: false,
-    };
-  }
-
   const { data: likes } = trpc.userRouter.getLikes.useQuery({ type });
+
   const utils = trpc.useUtils();
 
   const isLiked = likes?.includes(id);
@@ -73,6 +64,16 @@ export function useLike({ id, type, title }: UseLikeProps) {
   function handleLike() {
     if (isPending) return;
     toggleLike({ id, type });
+  }
+
+  if (!isAuthenticated) {
+    return {
+      isLiked: false,
+      handleLike: () => {
+        toast.error('Please sign in to like the content');
+      },
+      isPending: false,
+    };
   }
 
   return {

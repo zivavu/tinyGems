@@ -29,7 +29,7 @@ export function SearchBar() {
         <div className="relative">
           <div className="relative w-full">
             <ComboboxInput
-              className="w-full h-10 pl-10 pr-4 text-sm bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:bg-gray-800/50 dark:border-gray-700 dark:focus:border-rose-500 dark:focus:ring-rose-900/30"
+              className="w-full h-10 pl-10 pr-4 text-sm bg-gray-50 border border-amber-200 rounded-full focus:outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-100 dark:bg-gray-800/50 dark:border-gray-700 dark:focus:border-amber-500 dark:focus:ring-amber-900/30"
               placeholder="Search artists, albums, songs..."
               onChange={(event) => setQuery(event.target.value)}
               displayValue={() => ''}
@@ -57,7 +57,9 @@ export function SearchBar() {
                   <ComboboxOption key={`${result.type}-${result.item.id}`} value={result} className={`relative select-none`}>
                     {({ selected }) => (
                       <NextLink href={result.href}>
-                        <div className={`flex items-center gap-3 px-4 py-2 ${selected ? 'bg-rose-50 dark:bg-rose-900/30' : ''}`}>
+                        <div
+                          className={`flex items-center hover:bg-amber-50/30 dark:hover:bg-amber-900/30 gap-3 px-4 py-2 ${selected ? 'bg-amber-50 dark:bg-amber-900/30' : ''}`}
+                        >
                           <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                             {getItemImage(result)}
                           </div>
@@ -65,7 +67,7 @@ export function SearchBar() {
                           <div>
                             <Typography
                               variant="small"
-                              className={`font-medium ${selected ? 'text-rose-800 dark:text-rose-200' : 'text-gray-900 dark:text-gray-100'}`}
+                              className={`font-medium ${selected ? 'text-amber-800 dark:text-amber-200' : 'text-gray-900 dark:text-gray-100'}`}
                             >
                               {getItemTitle(result)}
                             </Typography>

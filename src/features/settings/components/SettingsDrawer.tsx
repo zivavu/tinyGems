@@ -51,7 +51,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
             leaveTo="translate-x-full"
           >
             <DialogPanel className="w-full max-w-md bg-white shadow-xl dark:bg-gray-900">
-              <div className="flex items-center justify-between border-b border-rose-100 dark:border-rose-900 p-6">
+              <div className="flex items-center justify-between border-b border-amber-100 dark:border-amber-900 p-6">
                 <DialogTitle as={Typography} variant="h3">
                   Settings
                 </DialogTitle>
@@ -64,7 +64,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
                 <div className="p-6 space-y-10">
                   <section>
                     <div className="flex items-center gap-2 mb-6">
-                      <Icons.Music className="h-5 w-5 text-rose-500" />
+                      <Icons.Music className="h-5 w-5 text-amber-500" />
                       <Typography variant="h4">Platform Settings</Typography>
                     </div>
                     <PlatformPreferences platforms={platforms} />
@@ -72,7 +72,7 @@ export function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
 
                   <section>
                     <div className="flex items-center gap-2 mb-6">
-                      <Icons.Monitor className="h-5 w-5 text-rose-500" />
+                      <Icons.Monitor className="h-5 w-5 text-amber-500" />
                       <Typography variant="h4">Interface Settings</Typography>
                     </div>
                     <UIPreferences />

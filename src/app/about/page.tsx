@@ -104,7 +104,7 @@ export default function AboutPage() {
             Well, for now, there&apos;s not much you can do besides sharing your favorite artists here.
             <br />
             If you have any suggestions regarding the website, feel free to{' '}
-            <Link href="/contact" className="text-rose-600 hover:text-rose-700 transition duration-300">
+            <Link href="/contact" className="text-amber-600 hover:text-amber-700 transition duration-300">
               contact me
             </Link>
             <br />
