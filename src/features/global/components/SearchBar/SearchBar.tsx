@@ -29,7 +29,7 @@ export function SearchBar() {
         <div className="relative">
           <div className="relative w-full">
             <ComboboxInput
-              className="w-full h-10 pl-10 pr-4 text-sm bg-gray-50 border border-amber-200 rounded-full focus:outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-100 dark:bg-gray-800/50 dark:border-gray-700 dark:focus:border-amber-500 dark:focus:ring-amber-900/30"
+              className="w-full h-10 pl-10 pr-4 text-sm bg-gray-50 border border-amber-200 rounded-full focus:outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-100 dark:bg-gray-800/50 dark:border-gray-700 dark:focus:border-amber-500 dark:focus:ring-amber-900/30 transition-all duration-200"
               placeholder="Search artists, albums, songs..."
               onChange={(event) => setQuery(event.target.value)}
               displayValue={() => ''}

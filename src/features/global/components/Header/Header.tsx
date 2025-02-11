@@ -7,7 +7,7 @@ import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/utils';
 import { authClient } from '@/lib/authClient';
-import { Button as HeadlessUIButton, Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { useState } from 'react';
@@ -16,6 +16,7 @@ import { SearchBar } from '../SearchBar/SearchBar';
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   const { data } = authClient.useSession();
   const user = data?.user;
@@ -30,33 +31,52 @@ export function Header() {
       <header className="sticky top-0 z-50 w-full border-b border-amber-200 backdrop-blur-sm dark:border-amber-950 bg-white/80 dark:bg-gray-950/80">
         <div className="container mx-auto">
           <div className="flex h-16 items-center justify-between px-4">
-            <div className="flex items-center gap-8">
-              <NextLink href="/" className="flex items-center justify-center gap-2" aria-label="tinyGems home">
-                <Icons.Sparkles size={20} className="text-amber-500" aria-hidden="true" />
-                <Typography variant="h4" className="hidden sm:block">
-                  tinyGems
-                </Typography>
-              </NextLink>
+            <NextLink
+              href="/"
+              className={cn('flex shrink-0 items-center justify-center gap-2 transition-all w-[140px]', isSearchExpanded && 'md:opacity-0')}
+              aria-label="tinyGems home"
+            >
+              <Icons.Sparkles size={20} className="text-amber-500" aria-hidden="true" />
+              <Typography variant="h4" className="hidden sm:block">
+                tinyGems
+              </Typography>
+            </NextLink>
 
-              <nav className="hidden md:flex md:gap-6 items-center">
-                {navigationItems.map((item) => (
-                  <NextLink
-                    key={item.href}
-                    href={item.href}
-                    className="flex items-center gap-2 text-gray-500 hover:text-amber-500 transition-colors"
-                  >
-                    <item.icon className="h-4 w-4 text-amber-500" />
-                    <Typography variant="small">{item.label}</Typography>
-                  </NextLink>
-                ))}
-              </nav>
+            <div className="flex flex-1 items-center justify-center gap-8">
+              {!isSearchExpanded && (
+                <nav className="hidden md:flex md:gap-2">
+                  {navigationItems.map((item) => (
+                    <NextLink
+                      key={item.href}
+                      href={item.href}
+                      className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50/50 hover:bg-amber-100/80 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 transition-all"
+                    >
+                      <item.icon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                      <Typography className="font-medium text-amber-900 dark:text-amber-100">{item.label}</Typography>
+                    </NextLink>
+                  ))}
+                </nav>
+              )}
+
+              <div
+                className={cn(
+                  'hidden md:flex transition-all duration-200 ease-in-out max-w-2xl',
+                  isSearchExpanded ? 'w-full' : 'w-0 overflow-hidden',
+                )}
+              >
+                <SearchBar />
+              </div>
             </div>
 
-            <div className="flex flex-1 justify-center px-8 max-w-2xl">
-              <SearchBar />
-            </div>
-
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 shrink-0 w-[140px] justify-end">
+              <Button
+                variant="ghost"
+                className="rounded-lg p-2 hover:bg-amber-50 dark:hover:bg-amber-900/30"
+                onClick={() => setIsSearchExpanded(!isSearchExpanded)}
+                aria-label="Toggle search"
+              >
+                {isSearchExpanded ? <Icons.X className="h-5 w-5" /> : <Icons.Search className="h-5 w-5" />}
+              </Button>
               <ThemeToggle />
 
               {user ? (
@@ -145,14 +165,6 @@ export function Header() {
                   </NextLink>
                 </div>
               )}
-
-              <HeadlessUIButton
-                className="rounded-lg p-2 hover:bg-amber-50 md:hidden dark:hover:bg-amber-900/30"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                aria-label="Toggle mobile menu"
-              >
-                <Icons.Menu className="h-6 w-6" />
-              </HeadlessUIButton>
             </div>
           </div>
 
@@ -165,19 +177,22 @@ export function Header() {
             leaveFrom="transform translate-y-0 opacity-100"
             leaveTo="transform -translate-y-full opacity-0"
           >
-            <nav className="border-t border-amber-100 bg-white dark:border-amber-900 dark:bg-gray-900 md:hidden">
-              {navigationItems.map((item) => (
-                <NextLink
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-2 border-b border-amber-100 px-4 py-3 text-gray-500 hover:bg-amber-50 hover:text-amber-500 dark:border-amber-900 dark:hover:bg-amber-900/30"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <item.icon className="h-4 w-4" />
-                  <Typography variant="small">{item.label}</Typography>
-                </NextLink>
-              ))}
-            </nav>
+            <div className="border-t border-amber-100 bg-white p-4 dark:border-amber-900 dark:bg-gray-900 md:hidden">
+              <SearchBar />
+              <nav className="mt-4 flex flex-col gap-2">
+                {navigationItems.map((item) => (
+                  <NextLink
+                    key={item.href}
+                    href={item.href}
+                    className="flex items-center gap-2 rounded-lg bg-amber-50/50 px-4 py-3 hover:bg-amber-100/80 dark:bg-amber-900/20 dark:hover:bg-amber-900/40"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <item.icon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                    <Typography className="font-medium text-amber-900 dark:text-amber-100">{item.label}</Typography>
+                  </NextLink>
+                ))}
+              </nav>
+            </div>
           </Transition>
         </div>
       </header>
