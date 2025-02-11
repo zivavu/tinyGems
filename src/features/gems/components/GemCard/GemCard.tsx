@@ -68,8 +68,34 @@ export function GemCard({ gem, className, index }: GemCardProps) {
         )}
       </div>
 
-      <div className="absolute top-3 right-3 z-10">
-        <LikeButton id={gem.id} type="song" />
+      <div className="flex items-center justify-between px-4 py-2 border-b dark:border-gray-700">
+        <div className="flex items-center gap-2">
+          <LikeButton id={gem.id} type="song" />
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="p-2 rounded-full text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+            aria-label="Add to playlist"
+          >
+            <Icons.ListPlus className="w-5 h-5" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="p-2 rounded-full text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+            aria-label="Share gem"
+          >
+            <Icons.Share2 className="w-5 h-5" />
+          </motion.button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="p-2 rounded-full text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+            aria-label="Hide from feed"
+          >
+            <Icons.EyeOff className="w-5 h-5" />
+          </motion.button>
+        </div>
       </div>
 
       <motion.div
@@ -101,7 +127,10 @@ export function GemCard({ gem, className, index }: GemCardProps) {
             ))}
           </div>
 
-          <StatsSection totalLikes={gem?.likes?.total} />
+          <div className="flex items-center justify-between">
+            <StatsSection totalLikes={gem?.likes?.total} />
+            <LikeButton id={gem.id} type="song" />
+          </div>
         </Link>
       </motion.div>
     </CardWrapper>
