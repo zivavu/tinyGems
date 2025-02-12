@@ -42,7 +42,7 @@ export default function Home() {
 
             <div className="flex flex-wrap gap-6 justify-center items-center">
               <NextLink
-                href="/seek?category=music"
+                href="/discover?category=music"
                 className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-white bg-gradient-to-br from-amber-600 to-purple-700 
                   rounded-[2rem] shadow-xl transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl group"
               >
@@ -201,7 +201,7 @@ export default function Home() {
                 Take a look, check if you like it. If you do, and would like to share with us some more, create an account, and let us see.
               </Typography>
               <NextLink
-                href="/seek?category=music"
+                href="/discover?category=music"
                 className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-white bg-gradient-to-br from-amber-600 to-purple-700 
                   rounded-[2rem] shadow-xl transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl group"
               >

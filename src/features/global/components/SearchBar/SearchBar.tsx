@@ -8,10 +8,11 @@ import { Typography } from '@/features/shared/components/Typography';
 import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
-import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions, Transition } from '@headlessui/react';
+import { cn } from '@/features/shared/utils/utils';
+import { Input, Popover, PopoverButton, PopoverPanel, Transition } from '@headlessui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 
 type SearchResult = {
   type: 'artist' | 'album' | 'gem';
@@ -21,71 +22,100 @@ type SearchResult = {
 
 export function SearchBar() {
   const [query, setQuery] = useState('');
-  const results = query === '' ? [] : searchAll(query);
+  const results = searchAll(query);
+
+  const groupedResults = {
+    artists: results.filter((r) => r.type === 'artist'),
+    albums: results.filter((r) => r.type === 'album'),
+    gems: results.filter((r) => r.type === 'gem'),
+  };
 
   return (
-    <div className="w-full">
-      <Combobox>
-        <div className="relative">
-          <div className="relative w-full">
-            <ComboboxInput
-              className="w-full h-10 pl-10 pr-4 text-sm bg-gray-50 border border-amber-200 rounded-full focus:outline-none focus:border-amber-300 focus:ring-2 focus:ring-amber-100 dark:bg-gray-800/50 dark:border-gray-700 dark:focus:border-amber-500 dark:focus:ring-amber-900/30 transition-all duration-200"
-              placeholder="Search artists, albums, songs..."
-              onChange={(event) => setQuery(event.target.value)}
-              displayValue={() => ''}
-            />
-            <Icons.Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-          </div>
+    <Popover className="relative">
+      <>
+        <PopoverButton className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50/50 hover:bg-amber-100/80 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 transition-all">
+          <Icons.Search className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+          <Typography className="font-medium text-amber-900 dark:text-amber-100 hidden sm:block">Search</Typography>
+        </PopoverButton>
 
-          <Transition
-            enter="transition duration-100 ease-out"
-            enterFrom="transform scale-95 opacity-0"
-            enterTo="transform scale-100 opacity-100"
-            leave="transition duration-75 ease-out"
-            leaveFrom="transform scale-100 opacity-100"
-            leaveTo="transform scale-95 opacity-0"
-          >
-            <ComboboxOptions className="absolute z-50 mt-2 w-full overflow-hidden rounded-xl bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-900 dark:ring-white/10">
-              {results.length === 0 && query !== '' ? (
-                <div className="px-4 py-2">
-                  <Typography variant="small" className="text-gray-500">
-                    No results found
-                  </Typography>
-                </div>
-              ) : (
-                results.map((result) => (
-                  <ComboboxOption key={`${result.type}-${result.item.id}`} value={result} className={`relative select-none`}>
-                    {({ selected }) => (
-                      <NextLink href={result.href}>
-                        <div
-                          className={`flex items-center hover:bg-amber-50/30 dark:hover:bg-amber-900/30 gap-3 px-4 py-2 ${selected ? 'bg-amber-50 dark:bg-amber-900/30' : ''}`}
-                        >
-                          <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-                            {getItemImage(result)}
-                          </div>
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-200"
+          enterFrom="opacity-0 -translate-y-1"
+          enterTo="opacity-100 translate-y-0"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100 translate-y-0"
+          leaveTo="opacity-0 -translate-y-1"
+        >
+          <PopoverPanel className="absolute left-1/2 z-50 mt-2 w-screen max-w-md -translate-x-1/2 transform">
+            <div className="overflow-hidden rounded-lg bg-white dark:bg-gray-900 shadow-lg">
+              <div className="p-2">
+                <Input
+                  type="text"
+                  className={cn(
+                    'w-full h-10 px-4 pl-10 rounded-lg',
+                    'bg-amber-50/50 dark:bg-amber-900/20',
+                    'focus:outline-none focus:ring-2 focus:ring-amber-200 dark:focus:ring-amber-800',
+                    'placeholder:text-amber-600/50 dark:placeholder:text-amber-400/50',
+                  )}
+                  placeholder="Search artists, albums, songs..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  autoFocus
+                />
+                <Icons.Search className="absolute left-5 top-5 h-5 w-5 text-amber-600/50 dark:text-amber-400/50" />
+              </div>
 
-                          <div>
-                            <Typography
-                              variant="small"
-                              className={`font-medium ${selected ? 'text-amber-800 dark:text-amber-200' : 'text-gray-900 dark:text-gray-100'}`}
-                            >
-                              {getItemTitle(result)}
-                            </Typography>
-                            <Typography variant="small" className="text-gray-500">
-                              {result.type.charAt(0).toUpperCase() + result.type.slice(1)}
+              <div className="max-h-[60vh] overflow-y-auto">
+                {query === '' ? (
+                  <div className="px-4 py-3">
+                    <Typography variant="small" className="text-gray-500">
+                      Start typing to search...
+                    </Typography>
+                  </div>
+                ) : Object.entries(groupedResults).every(([_, items]) => items.length === 0) ? (
+                  <div className="px-4 py-3">
+                    <Typography variant="small" className="text-gray-500">
+                      No results found
+                    </Typography>
+                  </div>
+                ) : (
+                  Object.entries(groupedResults).map(
+                    ([type, items]) =>
+                      items.length > 0 && (
+                        <div key={type} className="px-2">
+                          <div className="px-2 py-1.5">
+                            <Typography variant="small" className="text-amber-600 dark:text-amber-400 font-medium">
+                              {type.charAt(0).toUpperCase() + type.slice(1)}
                             </Typography>
                           </div>
+                          {items.map((result) => (
+                            <NextLink key={result.href} href={result.href} className="block">
+                              <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-amber-50/50 dark:hover:bg-amber-900/30 transition-colors">
+                                <div className="relative h-10 w-10 flex-shrink-0 overflow-hidden rounded-lg bg-amber-50/50 dark:bg-amber-900/20">
+                                  {getItemImage(result)}
+                                </div>
+                                <div>
+                                  <Typography variant="small" className="font-medium text-gray-900 dark:text-gray-100">
+                                    {getItemTitle(result)}
+                                  </Typography>
+                                  <Typography variant="small" className="text-gray-500">
+                                    {getItemSubtitle(result)}
+                                  </Typography>
+                                </div>
+                              </div>
+                            </NextLink>
+                          ))}
                         </div>
-                      </NextLink>
-                    )}
-                  </ComboboxOption>
-                ))
-              )}
-            </ComboboxOptions>
-          </Transition>
-        </div>
-      </Combobox>
-    </div>
+                      ),
+                  )
+                )}
+              </div>
+            </div>
+          </PopoverPanel>
+        </Transition>
+      </>
+    </Popover>
   );
 }
 
@@ -150,4 +180,15 @@ function getItemImage(result: SearchResult) {
   }
 
   return <Image src={imageSrc} alt="" fill className="object-cover" />;
+}
+
+function getItemSubtitle(result: SearchResult): string {
+  switch (result.type) {
+    case 'artist':
+      return `${(result.item as Artist).audienceSize?.toLocaleString()} followers`;
+    case 'album':
+      return (result.item as Album).artist.name;
+    case 'gem':
+      return (result.item as MusicGem).artist.name;
+  }
 }

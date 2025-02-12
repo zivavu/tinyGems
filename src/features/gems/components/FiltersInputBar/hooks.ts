@@ -29,7 +29,7 @@ export function useParamFilters() {
       params.delete(id);
     }
 
-    router.push(`/seek?${params.toString()}`, { scroll: false });
+    router.push(`/discover?${params.toString()}`, { scroll: false });
   };
 
   const handleContentTypeChange = (type: ContentType) => {
@@ -53,7 +53,7 @@ export function useParamFilters() {
       }
     });
 
-    router.push(`/seek?${params.toString()}`, { scroll: false });
+    router.push(`/discover?${params.toString()}`, { scroll: false });
   };
 
   const getContentType = (): ContentType => {
@@ -71,7 +71,7 @@ export function useParamFilters() {
     const params = new URLSearchParams();
     const contentType = getContentType();
     params.set('type', contentType);
-    router.push(`/seek?category=music&${params.toString()}`, { scroll: false });
+    router.push(`/discover?category=music&${params.toString()}`, { scroll: false });
   };
 
   const getAllParams = () => {
@@ -108,7 +108,7 @@ export function useParamFilters() {
       debounceTimeout.current = setTimeout(() => {
         const params = new URLSearchParams(searchParams.toString());
         params.set(id, values.join(','));
-        router.push(`/seek?${params.toString()}`, { scroll: false });
+        router.push(`/discover?${params.toString()}`, { scroll: false });
       }, 300);
     },
     [router, searchParams],

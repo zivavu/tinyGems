@@ -129,7 +129,6 @@ export function GemCard({ gem, className, index }: GemCardProps) {
 
           <div className="flex items-center justify-between">
             <StatsSection totalLikes={gem?.likes?.total} />
-            <LikeButton id={gem.id} type="song" />
           </div>
         </Link>
       </motion.div>
