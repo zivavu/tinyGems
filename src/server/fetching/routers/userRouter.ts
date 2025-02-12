@@ -1,6 +1,7 @@
+import { protectedProcedure } from '@/server/trpc';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { createTRPCRouter } from '../trpc';
 
 export const likeTypeEnum = z.enum(['song', 'album', 'artist']);
 export type LikeType = z.infer<typeof likeTypeEnum>;

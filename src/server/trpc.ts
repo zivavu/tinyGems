@@ -1,8 +1,23 @@
 import { auth } from '@/lib/auth';
-import { TRPCError } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import { headers } from 'next/headers';
-import { t } from './trpc';
+import { connectToDb } from './db/db';
 
+export async function createContext() {
+  const db = await connectToDb();
+  const session = auth;
+
+  return {
+    db,
+    session,
+  };
+}
+
+export type Context = Awaited<ReturnType<typeof createContext>>;
+
+const t = initTRPC.context<Context>().create();
+
+export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
