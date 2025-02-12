@@ -1,7 +1,35 @@
 import { MediaStatus } from '../gems/types';
 
 export type ArtistGender = 'male' | 'female' | 'non-binary' | 'other' | 'group';
-export type AudienceSize = 'microscopic' | 'tiny' | 'little' | 'small' | 'substantial' | 'giant';
+export type AudiencePerPlatform = {
+  spotify?: {
+    monthlyListeners?: number;
+    followers?: number;
+    popularity?: number;
+  };
+  bandcamp?: {
+    followers?: number;
+    supporterCount?: number;
+    albumsSold?: number;
+    tracksSold?: number;
+  };
+  soundcloud?: {
+    followers?: number;
+    trackPlays?: number;
+    reposts?: number;
+    likes?: number;
+    commentsCount?: number;
+  };
+  youtube?: {
+    subscribers?: number;
+    totalViews?: number;
+    averageViewsPerVideo?: number;
+  };
+  appleMusic?: {
+    followers?: number;
+    popularity?: number;
+  };
+};
 export type VerificationType = 'platform_verified' | 'claimed';
 
 export interface ArtistRevision {
@@ -23,7 +51,8 @@ export interface Artist {
   };
   language?: string[];
   gender?: ArtistGender;
-  audienceSize?: AudienceSize;
+  platformAudience?: AudiencePerPlatform;
+  combinedPopularity?: number;
 
   links: {
     website?: string;
@@ -52,4 +81,4 @@ export interface Artist {
   revisionHistory: ArtistRevision[];
 }
 
-export type ArtistSnapshot = Pick<Artist, 'id' | 'name' | 'location' | 'avatar' | 'gender' | 'audienceSize'>;
+export type ArtistSnapshot = Pick<Artist, 'id' | 'name' | 'location' | 'avatar' | 'gender' | 'combinedPopularity'>;

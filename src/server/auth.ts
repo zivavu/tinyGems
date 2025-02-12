@@ -1,9 +1,9 @@
 import 'server-only';
 
+import { client } from '@/server/db/db';
 import { betterAuth } from 'better-auth';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { username } from 'better-auth/plugins';
-import { client } from '@/server/db/db';
 
 export interface UserProfile {
   id: string;

@@ -10,12 +10,6 @@ export function ArtistProperties({ artist }: ArtistPropertiesProps) {
   return (
     <div className="mb-4 space-y-2">
       <div className="flex flex-wrap gap-3">
-        {artist.audienceSize && (
-          <Typography variant="small" className="text-gray-500 flex items-center gap-1">
-            <Icons.TrendingUp className="w-4 h-4" />
-            {artist.audienceSize.charAt(0).toUpperCase() + artist.audienceSize.slice(1)} audience
-          </Typography>
-        )}
         {artist.gender && (
           <Typography variant="small" className="text-gray-500 flex items-center gap-1">
             <Icons.User className="w-4 h-4" />

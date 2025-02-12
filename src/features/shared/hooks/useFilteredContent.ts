@@ -68,7 +68,7 @@ const baseFilters = {
     field: 'artist.gender',
   },
   audienceSize: {
-    field: 'artist.audienceSize',
+    field: 'artist.platformAudience',
   },
   mood: {
     field: 'properties.moods',
@@ -93,8 +93,8 @@ const additionalFilters = {
   },
   additional: {
     customCheck: (gem: MusicGem, values: string[]) => {
-      if (values.includes('has-music-video') && !gem.properties.features?.hasMusicVideo) return false;
-      if (values.includes('has-lyrics') && !gem.properties.features?.hasLyrics) return false;
+      if (values.includes('has-music-video') && !gem.properties.features?.musicVideo) return false;
+      if (values.includes('has-lyrics') && !gem.properties.features?.lyrics) return false;
       return true;
     },
   },

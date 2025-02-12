@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/server/auth';
 import { initTRPC, TRPCError } from '@trpc/server';
 import { headers } from 'next/headers';
 import { connectToDb } from './db/db';

@@ -73,7 +73,7 @@ export function SearchBar() {
                       Start typing to search...
                     </Typography>
                   </div>
-                ) : Object.entries(groupedResults).every(([_, items]) => items.length === 0) ? (
+                ) : Object.entries(groupedResults).every(([, items]) => items.length === 0) ? (
                   <div className="px-4 py-3">
                     <Typography variant="small" className="text-gray-500">
                       No results found
@@ -185,7 +185,7 @@ function getItemImage(result: SearchResult) {
 function getItemSubtitle(result: SearchResult): string {
   switch (result.type) {
     case 'artist':
-      return `${(result.item as Artist).audienceSize?.toLocaleString()} followers`;
+      return ``;
     case 'album':
       return (result.item as Album).artist.name;
     case 'gem':

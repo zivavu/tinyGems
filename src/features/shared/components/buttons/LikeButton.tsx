@@ -12,7 +12,6 @@ interface LikeButtonProps {
   itemId: string;
   type: LikeType;
   className?: string;
-  initialAuthState: boolean;
 }
 
 export function LikeButton({ itemId, type, className }: LikeButtonProps) {

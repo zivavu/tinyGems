@@ -19,7 +19,7 @@ const filterGroups: Record<ContentType, { title: string; filters: AllFilterId[] 
   singles: [
     {
       title: 'Artist Properties',
-      filters: ['gender', 'audienceSize'],
+      filters: ['gender', 'combinedPopularity'],
     },
     {
       title: 'Music Properties',
@@ -33,7 +33,7 @@ const filterGroups: Record<ContentType, { title: string; filters: AllFilterId[] 
   albums: [
     {
       title: 'Artist Properties',
-      filters: ['gender', 'audienceSize'],
+      filters: ['gender', 'combinedPopularity'],
     },
     {
       title: 'Music Properties',
@@ -47,7 +47,7 @@ const filterGroups: Record<ContentType, { title: string; filters: AllFilterId[] 
   artists: [
     {
       title: 'Artist Properties',
-      filters: ['gender', 'audienceSize', 'location', 'verification', 'activity'],
+      filters: ['gender', 'combinedPopularity', 'location', 'verification', 'activity'],
     },
     {
       title: 'Music Properties',
@@ -106,7 +106,7 @@ export function FiltersInputBar() {
                         min={filter.min}
                         max={filter.max}
                         step={filter.step}
-                        values={getRangeValues(filter.id) ?? filter.defaultValues}
+                        values={getRangeValues(filter.id) ?? [filter.min, filter.max]}
                         onChange={(values) => handleRangeChange(filter.id, values)}
                         label={filter.title}
                         icon={filter.icon}

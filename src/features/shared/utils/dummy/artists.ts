@@ -1,6 +1,6 @@
-import { audienceSizes, genderOptions, languages, musicGenres } from '@/features/gems/components/FiltersInputBar/filterOptions';
+import { genderOptions, languages, musicGenres } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { faker } from '@faker-js/faker';
-import { Artist, ArtistGender, ArtistSnapshot, AudienceSize, VerificationType } from '../../../artists/types';
+import { Artist, ArtistGender, ArtistSnapshot, VerificationType } from '../../../artists/types';
 
 faker.seed(42);
 
@@ -19,14 +19,6 @@ export function generateDummyArtists(count = 50): Artist[] {
     const hasBanner = faker.datatype.boolean(0.7);
     const followers = faker.number.int({ min: 0, max: 150000 });
 
-    const audienceSize: AudienceSize =
-      (audienceSizes.find((size) => {
-        const [min, max] = size.description?.split(' - ').map((str) => {
-          return parseInt(str.replace(/[^0-9]/g, '')) || 0;
-        }) || [0, 0];
-        return followers >= min && followers <= max;
-      })?.id as AudienceSize) || 'microscopic';
-
     const artist: Artist = {
       id: faker.string.uuid(),
       name,
@@ -35,7 +27,24 @@ export function generateDummyArtists(count = 50): Artist[] {
         { min: 1, max: 3 },
       ),
       gender: generateGender(),
-      audienceSize,
+      combinedPopularity: faker.number.int({ min: 0, max: 100 }),
+      platformAudience: {
+        spotify: {
+          monthlyListeners: faker.number.int({ min: 0, max: 1000000 }),
+          followers: faker.number.int({ min: 0, max: 1000000 }),
+          popularity: faker.number.int({ min: 0, max: 100 }),
+        },
+        bandcamp: {
+          followers: faker.number.int({ min: 0, max: 1000000 }),
+        },
+        soundcloud: {
+          followers: faker.number.int({ min: 0, max: 1000000 }),
+        },
+        appleMusic: {
+          followers: faker.number.int({ min: 0, max: 1000000 }),
+          popularity: faker.number.int({ min: 0, max: 100 }),
+        },
+      },
 
       ...(hasAvatar && {
         avatar: `https://i.pravatar.cc/300?u=${faker.string.uuid()}`,
@@ -102,7 +111,7 @@ export function createArtistSnapshot(artist: Artist): ArtistSnapshot {
     location: artist.location,
     avatar: artist.avatar,
     gender: artist.gender,
-    audienceSize: artist.audienceSize,
+    combinedPopularity: artist.combinedPopularity,
   };
 }
 

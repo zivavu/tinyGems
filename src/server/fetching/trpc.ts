@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { auth } from '@/lib/auth';
+import { auth } from '@/server/auth';
 import { initTRPC } from '@trpc/server';
 import { connectToDb } from '../db/db';
 

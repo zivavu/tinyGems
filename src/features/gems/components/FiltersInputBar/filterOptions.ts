@@ -106,19 +106,6 @@ export type FilterOption = {
   isHiddenInAddPage?: boolean;
 };
 
-export const audienceSizes = [
-  {
-    id: 'microscopic',
-    label: 'Microscopic',
-    description: 'Less than 100 followers',
-  },
-  { id: 'tiny', label: 'Tiny', description: '100 - 1k followers' },
-  { id: 'little', label: 'Little', description: '1k - 10k followers' },
-  { id: 'substantial', label: 'Substantial', description: '10k - 50k followers' },
-  { id: 'big', label: 'Big', description: '50k - 100k followers' },
-  { id: 'giant', label: 'Giant', description: 'More than 100k followers' },
-] as FilterOption[];
-
 export const musicGenres: FilterOptionsGroup[] = [
   {
     id: 'electronic',
@@ -389,7 +376,7 @@ export const additionalOptions: FilterOption[] = [
   },
 ] as const;
 
-export const commonFilterIds = ['genre', 'lang', 'platform', 'gender', 'audienceSize', 'mood', 'lyricsTopics'] as const;
+export const commonFilterIds = ['genre', 'lang', 'platform', 'gender', 'mood', 'lyricsTopics', 'combinedPopularity'] as const;
 export const singleFilterIds = [...commonFilterIds, 'bpm', 'additional'] as const;
 export const albumFilterIds = [...commonFilterIds, 'albumType', 'releaseYear', 'trackCount'] as const;
 export const artistFilterIds = [...commonFilterIds, 'location', 'verification', 'activity'] as const;
@@ -401,13 +388,12 @@ export type SingleFilterId = (typeof singleFilterIds)[number];
 export type AlbumFilterId = (typeof albumFilterIds)[number];
 export type ArtistFilterId = (typeof artistFilterIds)[number];
 
-export type RangeFilterId = 'bpm' | 'releaseYear';
+export type RangeFilterId = 'bpm' | 'releaseYear' | 'combinedPopularity';
 export type SelectFilterId =
   | 'genre'
   | 'mood'
   | 'lyricsTopics'
   | 'gender'
-  | 'audienceSize'
   | 'platform'
   | 'additional'
   | 'albumType'
@@ -438,7 +424,6 @@ export interface RangeFilter extends BaseFilter {
   min: number;
   max: number;
   step: number;
-  defaultValues: [number, number];
   formatValue?: (value: number) => string;
 }
 
@@ -473,14 +458,15 @@ const commonFilters: FilterObject[] = [
     showFilterChips: false,
   },
   {
-    type: 'select',
-    title: 'Audience Size',
-    options: audienceSizes,
-    id: 'audienceSize',
-    icon: 'Users',
-    isSearchable: false,
-    showFilterChips: false,
+    type: 'range',
+    title: 'Combined Popularity',
+    id: 'combinedPopularity',
+    icon: 'Heart',
+    min: 0,
+    max: 100,
+    step: 1,
   },
+
   {
     type: 'select',
     title: 'Platform',
@@ -511,7 +497,6 @@ const bpmFilter: RangeFilter = {
   min: 30,
   max: 200,
   step: 1,
-  defaultValues: [60, 160],
   formatValue: (value) => `${value} BPM`,
 };
 
@@ -523,7 +508,6 @@ const yearFilter: RangeFilter = {
   min: 1900,
   max: new Date().getFullYear(),
   step: 1,
-  defaultValues: [2000, new Date().getFullYear()],
 };
 
 export const singlesFilter: FilterObject[] = [
@@ -606,7 +590,6 @@ export const artistFilters: FilterObject[] = [
   },
 ];
 
-// Type guard to check filter types
 export function isRangeFilter(filter: FilterObject): filter is RangeFilter {
   return filter.type === 'range';
 }
