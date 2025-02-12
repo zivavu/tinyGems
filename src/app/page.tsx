@@ -6,6 +6,7 @@ import { platformIconsMap } from '@/features/gems/utils/platformIconsMap';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
+import { cn } from '@/features/shared/utils/utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import dynamic from 'next/dynamic';
 import NextLink from 'next/link';
@@ -26,7 +27,7 @@ export default function Home() {
       <ParticlesBackground />
 
       <div className="z-10 relative">
-        <section className={`min-h-screen flex items-center justify-center`}>
+        <section className="min-h-screen flex items-center justify-center">
           <div className="max-w-6xl px-6 space-y-12 mx-auto flex flex-col items-center justify-center text-center">
             <div className="relative inline-block">
               <div className="absolute z-10 inset-0 bg-gradient-to-r from-amber-400 to-purple-900 blur-3xl opacity-30 rounded-full animate-pulse" />
@@ -43,8 +44,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-6 justify-center items-center">
               <NextLink
                 href="/discover?category=music"
-                className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-white bg-gradient-to-br from-amber-600 to-purple-700 
-                  rounded-[2rem] shadow-xl transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl group"
+                className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-white bg-gradient-to-br from-amber-600 to-purple-700 rounded-[2rem] shadow-xl transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl group"
               >
                 <Icons.Compass className="w-6 h-6 group-hover:rotate-[360deg] transition-transform duration-700" />
                 Seek for gems
@@ -52,9 +52,7 @@ export default function Home() {
 
               <NextLink
                 href="/add-gem"
-                className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-stone-900 dark:text-stone-100 bg-white/90 
-                  dark:bg-stone-800/90 backdrop-blur-md border-2 border-stone-200 dark:border-stone-700 rounded-[2rem] shadow-lg 
-                  transition-all duration-300 hover:translate-y-[-4px] hover:shadow-xl group"
+                className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-stone-900 dark:text-stone-100 bg-white/90 dark:bg-stone-800/90 backdrop-blur-md border-2 border-stone-200 dark:border-stone-700 rounded-[2rem] shadow-lg transition-all duration-300 hover:translate-y-[-4px] hover:shadow-xl group"
               >
                 <Icons.Upload className="w-6 h-6 transition-transform duration-300 group-hover:translate-y-[-4px]" />
                 Share your favorite music
@@ -64,7 +62,7 @@ export default function Home() {
         </section>
 
         <div className="flex flex-col [&>section]:py-30">
-          <section className={`px-6`}>
+          <section className="px-6">
             <div className="max-w-6xl mx-auto space-y-16">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                 {[
@@ -89,10 +87,12 @@ export default function Home() {
                 ].map((feature) => (
                   <div
                     key={feature.title}
-                    className={`p-8 rounded-3xl bg-gradient-to-br ${feature.gradient} backdrop-blur-xl 
-                      border border-white/10 shadow-xl transition-all duration-300 hover:shadow-2xl hover:translate-y-[-4px]`}
+                    className={cn(
+                      'p-8 rounded-3xl backdrop-blur-xl border border-white/10 shadow-xl transition-all duration-300 hover:shadow-2xl hover:translate-y-[-4px]',
+                      `bg-gradient-to-br ${feature.gradient}`,
+                    )}
                   >
-                    <feature.icon className={`w-12 h-12 ${feature.iconColor} mb-6`} />
+                    <feature.icon className={cn('w-12 h-12 mb-6', feature.iconColor)} />
                     <Typography variant="h3" className="text-3xl font-bold mb-4">
                       {feature.title}
                     </Typography>
@@ -103,8 +103,7 @@ export default function Home() {
                       {feature.tags.map((tag) => (
                         <div
                           key={tag}
-                          className="px-3 py-1 bg-white/20 dark:bg-black/20 rounded-full backdrop-blur-sm 
-                            transition-transform duration-300 hover:scale-105"
+                          className="px-3 py-1 bg-white/20 dark:bg-black/20 rounded-full backdrop-blur-sm transition-transform duration-300 hover:scale-105"
                         >
                           <Typography variant="small">{tag}</Typography>
                         </div>
@@ -143,12 +142,13 @@ export default function Home() {
                 ].map((step) => (
                   <div
                     key={step.title}
-                    className={`p-6 rounded-2xl bg-gradient-to-br ${step.gradient} backdrop-blur-xl 
-                      border border-white/10 shadow-lg transition-all duration-300 hover:shadow-xl 
-                      hover:translate-y-[-4px] relative overflow-hidden`}
+                    className={cn(
+                      'p-6 rounded-2xl backdrop-blur-xl border border-white/10 shadow-lg transition-all duration-300 hover:shadow-xl hover:translate-y-[-4px] relative overflow-hidden',
+                      `bg-gradient-to-br ${step.gradient}`,
+                    )}
                   >
                     <div className="absolute top-3 right-3 opacity-10 text-4xl font-black">{step.step}</div>
-                    <step.icon className={`w-8 h-8 ${step.iconColor} mb-4`} />
+                    <step.icon className={cn('w-8 h-8 mb-4', step.iconColor)} />
                     <Typography variant="h4" className="mb-2">
                       {step.title}
                     </Typography>
@@ -163,8 +163,7 @@ export default function Home() {
                 {platforms.map((platform) => (
                   <div
                     key={platform.label}
-                    className="p-4 flex flex-col items-center gap-2 bg-white/5 backdrop-blur-sm rounded-xl 
-                      border border-white/10 transition-all duration-300 hover:scale-105"
+                    className="p-4 flex flex-col items-center gap-2 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 transition-all duration-300 hover:scale-105"
                   >
                     <FontAwesomeIcon
                       icon={platformIconsMap[platform.platformName]}
@@ -179,7 +178,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section className={`px-6`}>
+          <section className="px-6">
             <div className="max-w-7xl mx-auto">
               <Typography variant="h2" className="text-4xl font-bold text-center mb-12">
                 Discover Newest Gems
@@ -192,7 +191,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section className={`px-6 !pb-54 text-center`}>
+          <section className="px-6 !pb-54 text-center">
             <div className="max-w-4xl mx-auto flex flex-col items-center">
               <Typography variant="h2" className="mb-2">
                 Base of the Underground
@@ -202,8 +201,7 @@ export default function Home() {
               </Typography>
               <NextLink
                 href="/discover?category=music"
-                className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-white bg-gradient-to-br from-amber-600 to-purple-700 
-                  rounded-[2rem] shadow-xl transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl group"
+                className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-white bg-gradient-to-br from-amber-600 to-purple-700 rounded-[2rem] shadow-xl transition-all duration-300 hover:translate-y-[-4px] hover:shadow-2xl group"
               >
                 <Icons.Compass className="w-6 h-6 group-hover:rotate-[360deg] transition-transform duration-700" />
                 Seek for gems

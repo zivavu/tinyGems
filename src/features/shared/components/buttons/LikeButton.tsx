@@ -1,4 +1,5 @@
 'use client';
+import 'client-only';
 
 import { Icons } from '@/features/shared/components/Icons';
 import { useLike } from '@/features/shared/hooks/useLike';
@@ -8,15 +9,19 @@ import { motion } from 'motion/react';
 import { AuthCTAPopover } from '../auth/AuthCTAPopover';
 
 interface LikeButtonProps {
-  id: string;
+  itemId: string;
   type: LikeType;
   className?: string;
+  initialAuthState: boolean;
 }
 
-export function LikeButton({ id, type, className }: LikeButtonProps) {
-  const { isLiked, handleLike, isPending, isAuthenticated } = useLike({ id, type });
+export function LikeButton({ itemId, type, className }: LikeButtonProps) {
+  const { isLiked, handleLike, isPending, isAuthenticated } = useLike({
+    itemId,
+    type,
+  });
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isPending) {
     return (
       <AuthCTAPopover className={cn('p-2 rounded-full backdrop-blur-sm transition-colors', 'group/like bg-black/20', className)}>
         <Icons.Heart className="w-5 h-5 text-white group-hover/like:text-rose-500 transition-colors" />

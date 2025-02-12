@@ -1,6 +1,7 @@
 'use client';
 
 import { ThemeToggle } from '@/features/global/components/ThemeToggle';
+import { SettingsDrawer } from '@/features/settings/components/SettingsDrawer';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
@@ -9,11 +10,13 @@ import { authClient } from '@/lib/authClient';
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
+import { useState } from 'react';
 import { SearchBar } from '../SearchBar/SearchBar';
 
 export function Header() {
   const { data } = authClient.useSession();
   const user = data?.user;
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-amber-200 backdrop-blur-sm dark:border-amber-950 bg-white/80 dark:bg-gray-950/80">
@@ -138,6 +141,7 @@ export function Header() {
           </div>
         </div>
       </div>
+      <SettingsDrawer isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </header>
   );
 }

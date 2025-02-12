@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { client } from '@/server/db';
 import { betterAuth } from 'better-auth';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';

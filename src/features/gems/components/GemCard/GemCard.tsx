@@ -70,7 +70,7 @@ export function GemCard({ gem, className, index }: GemCardProps) {
 
       <div className="flex items-center justify-between px-4 py-2 border-b dark:border-gray-700">
         <div className="flex items-center gap-2">
-          <LikeButton id={gem.id} type="song" />
+          <LikeButton itemId={gem.id} type="song" />
           <motion.button
             whileHover={{ scale: 1.05 }}
             className="p-2 rounded-full text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"

@@ -1,27 +1,27 @@
 'use client';
 
 import { authClient } from '@/lib/authClient';
-import { trpc } from '@/lib/trpc';
+import { trpcReact } from '@/lib/trpcReact';
 import { LikeType } from '@/server/routers/userRouter';
 import { toast } from 'sonner';
 
 interface UseLikeProps {
-  id: string;
+  itemId: string;
   type: LikeType;
   title?: string;
 }
 
-export function useLike({ id, type, title }: UseLikeProps) {
+export function useLike({ itemId, type, title }: UseLikeProps) {
   const session = authClient.useSession();
   const isAuthenticated = !!session.data?.user;
 
-  const { data: likes } = trpc.userRouter.getLikes.useQuery({ type });
+  const { data: likes } = trpcReact.userRouter.getLikes.useQuery({ type }, { enabled: isAuthenticated });
 
-  const utils = trpc.useUtils();
+  const utils = trpcReact.useUtils();
 
-  const isLiked = likes?.includes(id);
+  const isLiked = likes?.includes(itemId);
 
-  const { mutate: toggleLike, isPending } = trpc.userRouter.toggleLike.useMutation({
+  const { mutate: toggleLike, isPending } = trpcReact.userRouter.toggleLike.useMutation({
     onMutate: async () => {
       // Cancel outgoing refetches
       await utils.userRouter.getLikes.cancel({ type });
@@ -31,8 +31,8 @@ export function useLike({ id, type, title }: UseLikeProps) {
 
       // Optimistically update likes
       utils.userRouter.getLikes.setData({ type }, (old) => {
-        if (!old) return [id];
-        return isLiked ? old.filter((likeId) => likeId !== id) : [...old, id];
+        if (!old) return [itemId];
+        return isLiked ? old.filter((likeId) => likeId !== itemId) : [...old, itemId];
       });
 
       // Show toast with undo button
@@ -43,7 +43,7 @@ export function useLike({ id, type, title }: UseLikeProps) {
         action: {
           label: 'Undo',
           onClick: () => {
-            toggleLike({ id, type });
+            toggleLike({ id: itemId, type });
           },
         },
         duration: 4000,
@@ -63,7 +63,7 @@ export function useLike({ id, type, title }: UseLikeProps) {
 
   function handleLike() {
     if (isPending) return;
-    toggleLike({ id, type });
+    toggleLike({ id: itemId, type });
   }
 
   if (!isAuthenticated) {

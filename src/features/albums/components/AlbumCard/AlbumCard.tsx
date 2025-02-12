@@ -75,7 +75,7 @@ export function AlbumCard({ album, className, index }: AlbumCardProps) {
 
       <div className="flex items-center justify-between px-4 py-2 border-b dark:border-gray-700">
         <div className="flex items-center gap-2">
-          <LikeButton id={album.id} type="album" />
+          <LikeButton itemId={album.id} type="album" />
           <motion.button
             whileHover={{ scale: 1.05 }}
             className="p-2 rounded-full text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"

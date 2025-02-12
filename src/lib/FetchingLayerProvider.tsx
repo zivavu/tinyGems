@@ -3,12 +3,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { httpBatchLink, loggerLink } from '@trpc/client';
 import { useState } from 'react';
-import { trpc } from './trpc';
+import { trpcReact } from './trpcReact';
 
 export function FetchingLayerProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
-    trpc.createClient({
+    trpcReact.createClient({
       links: [
         loggerLink({
           enabled: (opts) => process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
@@ -19,8 +19,8 @@ export function FetchingLayerProvider({ children }: { children: React.ReactNode 
   );
 
   return (
-    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+    <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </trpc.Provider>
+    </trpcReact.Provider>
   );
 }

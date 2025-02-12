@@ -9,7 +9,7 @@ import { MusicGem } from '@/features/gems/types';
 import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
-import { trpc } from '@/lib/trpc';
+import { trpcReact } from '@/lib/trpcReact';
 import { LikeType } from '@/server/routers/userRouter';
 import { Typography } from '../../Typography';
 
@@ -18,7 +18,7 @@ interface LibraryContentProps {
 }
 
 export function LibraryContent({ type }: LibraryContentProps) {
-  const { data: likedIds } = trpc.userRouter.getLikes.useQuery({ type });
+  const { data: likedIds } = trpcReact.userRouter.getLikes.useQuery({ type });
 
   const itemsMap = {
     song: dummyGems,
