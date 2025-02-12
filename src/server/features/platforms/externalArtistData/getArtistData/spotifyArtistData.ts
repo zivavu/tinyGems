@@ -13,9 +13,9 @@ async function getAccessToken() {
   spotifyApi.setAccessToken(auth.body.access_token);
 }
 
-export async function fetchSpotifyArtistData(url: string) {
+export async function fetchSpotifyArtistData(platformUrl: string) {
   try {
-    const match = url.match(/artist\/([a-zA-Z0-9]+)/);
+    const match = platformUrl.match(/artist\/([a-zA-Z0-9]+)/);
     const artistId = match?.[1];
 
     if (!artistId) {
