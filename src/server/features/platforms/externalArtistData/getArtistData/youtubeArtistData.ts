@@ -3,6 +3,45 @@ import { PlatformArtistData } from '../types';
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 
+interface YoutubeChannelData {
+  id: string;
+  kind?: string;
+  snippet: {
+    title: string;
+    description?: string;
+    customUrl?: string;
+    publishedAt?: string;
+    thumbnails?: {
+      default?: {
+        url?: string;
+        width?: number;
+        height?: number;
+      };
+      medium?: {
+        url?: string;
+        width?: number;
+        height?: number;
+      };
+      high?: {
+        url?: string;
+        width?: number;
+        height?: number;
+      };
+    };
+    localized?: {
+      title?: string;
+      description?: string;
+    };
+    country?: string;
+  };
+  statistics?: {
+    viewCount?: string;
+    subscriberCount?: string;
+    hiddenSubscriberCount?: boolean;
+    videoCount?: string;
+  };
+}
+
 async function fetchChannelData(identifier: string, type: 'id' | 'handle' = 'id') {
   const params = new URLSearchParams({
     part: 'snippet,statistics',
@@ -25,15 +64,10 @@ async function fetchChannelData(identifier: string, type: 'id' | 'handle' = 'id'
   const data = await response.json();
 
   if (!data.items?.length) {
-    // If handle search fails, try searching by channel ID
-    if (type === 'handle') {
-      // Try searching by channel ID as fallback
-      return fetchChannelData(identifier, 'id');
-    }
     throw new Error('YouTube channel not found');
   }
 
-  return data.items[0];
+  return data.items[0] as YoutubeChannelData;
 }
 
 function extractChannelIdentifier(url: string): { identifier: string; type: 'id' | 'handle' } {
@@ -62,26 +96,26 @@ function extractChannelIdentifier(url: string): { identifier: string; type: 'id'
 export async function fetchYoutubeArtistData(url: string): Promise<PlatformArtistData> {
   try {
     const { identifier, type } = extractChannelIdentifier(url);
-    console.log('Fetching YouTube channel with:', { identifier, type });
 
     const channel = await fetchChannelData(identifier, type);
 
-    console.log('Channel:', channel);
+    console.log(channel);
     return {
-      name: channel.snippet.title,
-      platformId: channel.id,
-      avatar: channel.snippet.thumbnails.high?.url,
+      name: channel?.snippet?.title,
+      platformId: channel?.id,
+      avatar: channel?.snippet?.thumbnails?.high?.url,
       links: {
-        youtube: `https://youtube.com/channel/${channel.id}`,
+        youtube: `https://youtube.com/channel/${channel?.id}`,
       },
       audience: {
         youtube: {
-          subscribers: parseInt(channel.statistics.subscriberCount) || 0,
-          totalViews: parseInt(channel.statistics.viewCount) || 0,
+          subscribers: parseInt(channel.statistics?.subscriberCount || '0') || 0,
+          totalViews: parseInt(channel.statistics?.viewCount || '0') || 0,
+          videosCount: parseInt(channel.statistics?.videoCount || '0') || 0,
         },
       },
       metadata: {
-        description: channel.snippet.description,
+        description: channel.snippet?.description,
       },
     };
   } catch (error) {
@@ -115,14 +149,14 @@ export async function searchYoutubeArtist(query: string): Promise<PlatformArtist
         return {
           name: channelData.snippet.title,
           platformId: channelData.id,
-          avatar: channelData.snippet.thumbnails.high?.url,
+          avatar: channelData?.snippet?.thumbnails?.high?.url,
           links: {
             youtube: `https://youtube.com/channel/${channelData.id}`,
           },
           audience: {
             youtube: {
-              subscribers: parseInt(channelData.statistics.subscriberCount) || 0,
-              totalViews: parseInt(channelData.statistics.viewCount) || 0,
+              subscribers: parseInt(channelData.statistics?.subscriberCount || '0') || 0,
+              totalViews: parseInt(channelData.statistics?.viewCount || '0') || 0,
             },
           },
           metadata: {

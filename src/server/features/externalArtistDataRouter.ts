@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
+
 import { fetchSoundcloudArtistData, searchSoundcloudArtist } from './platforms/externalArtistData/getArtistData/soundcloudArtistData';
 import { fetchSpotifyArtistData, searchSpotifyArtist } from './platforms/externalArtistData/getArtistData/spotifyArtistData';
 import { fetchYoutubeArtistData, searchYoutubeArtist } from './platforms/externalArtistData/getArtistData/youtubeArtistData';
@@ -15,6 +16,7 @@ const searchQuerySchema = z.object({
 
 export const externalArtistDataRouter = createTRPCRouter({
   fetchFromUrl: protectedProcedure.input(platformLinkSchema).mutation(async ({ input }) => {
+    console.log('Fetching artist data from URL:', input.url);
     try {
       if (input.url.includes('spotify.com')) {
         const artistData = await fetchSpotifyArtistData(input.url);
@@ -33,7 +35,7 @@ export const externalArtistDataRouter = createTRPCRouter({
 
       throw new TRPCError({
         code: 'BAD_REQUEST',
-        message: 'Only Spotify, SoundCloud, and YouTube links are supported at the moment',
+        message: 'Only Spotify, SoundCloud, YouTube, and Bandcamp links are supported at the moment',
       });
     } catch (error) {
       console.error('Error fetching artist data:', error);

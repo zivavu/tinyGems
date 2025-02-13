@@ -9,16 +9,17 @@ export interface PlatformArtistData {
   };
   audience?: {
     spotify?: {
-      followers: number;
-      popularity: number;
+      followers?: number;
+      popularity?: number;
     };
     youtube?: {
-      subscribers: number;
-      totalViews: number;
+      subscribers?: number;
+      totalViews?: number;
+      videosCount?: number;
     };
     soundcloud?: {
-      followers: number;
-      trackPlays: number;
+      followers?: number;
+      trackPlays?: number;
     };
   };
   metadata?: {
