@@ -128,17 +128,11 @@ export async function fetchSoundcloudArtistData(url: string): Promise<PlatformAr
       audience: {
         soundcloud: {
           followers: artist.followers_count,
-          following: artist.followings_count,
-          likes: artist.likes_count,
-          tracks: artist.track_count,
         },
       },
       metadata: {
         description: artist.description,
         location: artist.city || artist.country,
-        fullName: artist.full_name,
-        websiteTitle: artist.website_title,
-        lastModified: artist.last_modified,
       },
     };
   } catch (error) {

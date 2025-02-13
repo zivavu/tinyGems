@@ -21,6 +21,11 @@ export interface PlatformArtistData {
       followers?: number;
       trackPlays?: number;
     };
+    tidal?: {
+      popularity?: number;
+      topTracks?: number;
+      albums?: number;
+    };
   };
   metadata?: {
     genres?: string[];

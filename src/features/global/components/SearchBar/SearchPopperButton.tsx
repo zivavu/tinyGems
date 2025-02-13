@@ -33,14 +33,14 @@ export function SearchPopperButton() {
 
   return (
     <Popover className="relative">
-      {({ close }) => (
+      {({ close, open }) => (
         <>
           <PopoverButton className="group flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50/50 hover:bg-amber-100/80 dark:bg-amber-900/20 dark:hover:bg-amber-900/40 transition-all">
             <Icons.Search className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             <Typography className="font-medium text-amber-900 dark:text-amber-100 hidden sm:block">Search</Typography>
           </PopoverButton>
 
-          <PopoverTransition>
+          <PopoverTransition show={open}>
             <PopoverPanel className="absolute left-1/2 mt-2 w-screen max-w-md -translate-x-1/2 transform" onBlur={() => close()}>
               <div className="overflow-hidden rounded-lg bg-white dark:bg-gray-900 shadow-lg pb-2">
                 <div className="p-2">
@@ -94,7 +94,7 @@ export function SearchPopperButton() {
                                       {getItemTitle(result)}
                                     </Typography>
                                     <Typography variant="small" className="text-gray-500">
-                                      {getItemSubtitle(result)}
+                                      {' '}
                                     </Typography>
                                   </div>
                                 </div>
@@ -175,15 +175,4 @@ function getItemImage(result: SearchResult) {
   }
 
   return <Image src={imageSrc} alt="" fill className="object-cover" />;
-}
-
-function getItemSubtitle(result: SearchResult): string {
-  switch (result.type) {
-    case 'artist':
-      return `${(result.item as Artist).audienceSize?.toLocaleString()} followers`;
-    case 'album':
-      return (result.item as Album).artist.name;
-    case 'gem':
-      return (result.item as MusicGem).artist.name;
-  }
 }
