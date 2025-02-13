@@ -59,28 +59,33 @@ async function getAccessToken(): Promise<string> {
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('SoundCloud token error:', errorText);
-      throw new Error('Failed to obtain SoundCloud access token');
+    const responseText = await response.text();
+    let responseData;
+
+    try {
+      responseData = JSON.parse(responseText);
+    } catch {
+      throw new Error('Invalid response from SoundCloud auth service');
     }
 
-    const token = (await response.json()) as SoundCloudToken;
+    if (!response.ok) {
+      throw new Error(`SoundCloud auth failed: ${responseData.error || 'Unknown error'}`);
+    }
+
+    const token = responseData as SoundCloudToken;
     currentToken = token;
     tokenExpirationTime = Date.now() + (token.expires_in - 300) * 1000;
 
     return token.access_token;
   } catch (error) {
     console.error('Error getting SoundCloud access token:', error);
-    throw error;
+    throw new Error('Failed to authenticate with SoundCloud');
   }
 }
 
 async function resolveUrl(url: string): Promise<SoundCloudArtist> {
-  console.log('Resolving SoundCloud URL:', url);
   try {
     const token = await getAccessToken();
-    console.log('Token:', token);
     const response = await fetch(
       `${SOUNDCLOUD_API_URL}/resolve?` +
         new URLSearchParams({
@@ -114,7 +119,6 @@ async function resolveUrl(url: string): Promise<SoundCloudArtist> {
 
 export async function fetchSoundcloudArtistData(url: string): Promise<PlatformArtistData> {
   try {
-    console.log('Fetching SoundCloud artist data for URL:', url);
     const artist = await resolveUrl(url);
 
     return {

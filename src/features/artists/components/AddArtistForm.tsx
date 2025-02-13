@@ -10,18 +10,69 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+interface PlatformStatus {
+  status: 'idle' | 'searching' | 'found' | 'not-found' | 'error';
+  data?: PlatformArtistData;
+  confidence?: number;
+}
+
+interface PlatformStatuses {
+  spotify: PlatformStatus;
+  soundcloud: PlatformStatus;
+  youtube: PlatformStatus;
+  tidal: PlatformStatus;
+}
+
 export function AddArtistForm() {
   const [step, setStep] = useState<'link' | 'review' | 'details'>('link');
   const [url, setUrl] = useState('');
   const [artistData, setArtistData] = useState<PlatformArtistData | null>(null);
+  const [platformStatuses, setPlatformStatuses] = useState<PlatformStatuses>({
+    spotify: { status: 'idle' },
+    soundcloud: { status: 'idle' },
+    youtube: { status: 'idle' },
+    tidal: { status: 'idle' },
+  });
 
   const fetchArtistMutation = trpcReact.artistRouter.fetchFromUrl.useMutation({
     onSuccess: (data) => {
       setArtistData(data.artistData);
+      // Initialize cross-platform search
+      findAcrossPlatformsMutation.mutate({ artistName: data.artistData.name });
       setStep('review');
     },
     onError: (error) => {
       toast.error(error.message);
+    },
+  });
+
+  const findAcrossPlatformsMutation = trpcReact.artistRouter.findAcrossPlatforms.useMutation({
+    onSuccess: (matches) => {
+      const newStatuses = { ...platformStatuses };
+      Object.keys(newStatuses).forEach((platform) => {
+        const match = matches.find((m) => m.platform === platform);
+        if (match) {
+          newStatuses[platform as keyof PlatformStatuses] = {
+            status: 'found',
+            data: match.artistData,
+            confidence: match.confidence,
+          };
+        } else {
+          newStatuses[platform as keyof PlatformStatuses] = {
+            status: 'not-found',
+          };
+        }
+      });
+      setPlatformStatuses(newStatuses);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      setPlatformStatuses({
+        spotify: { status: 'error' },
+        soundcloud: { status: 'error' },
+        youtube: { status: 'error' },
+        tidal: { status: 'error' },
+      });
     },
   });
 
@@ -31,7 +82,30 @@ export function AddArtistForm() {
       return;
     }
 
+    // Reset platform statuses
+    setPlatformStatuses({
+      spotify: { status: 'searching' },
+      soundcloud: { status: 'searching' },
+      youtube: { status: 'searching' },
+      tidal: { status: 'searching' },
+    });
+
     fetchArtistMutation.mutate({ url });
+  }
+
+  function getStatusIcon(status: PlatformStatus['status']) {
+    switch (status) {
+      case 'searching':
+        return <Icons.Loader className="h-5 w-5 animate-spin text-amber-500" />;
+      case 'found':
+        return <Icons.CheckCircle className="h-5 w-5 text-green-500" />;
+      case 'not-found':
+        return <Icons.AlertCircle className="h-5 w-5 text-yellow-500" />;
+      case 'error':
+        return <Icons.AlertCircle className="h-5 w-5 text-red-500" />;
+      default:
+        return null;
+    }
   }
 
   return (
@@ -125,6 +199,42 @@ export function AddArtistForm() {
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="space-y-4">
+            <Typography variant="h4">Found on other platforms</Typography>
+            {Object.entries(platformStatuses).map(([platform, status]) => (
+              <div key={platform} className="flex items-center justify-between rounded-lg border border-gray-200 p-4">
+                <div className="flex items-center gap-3">
+                  {getStatusIcon(status.status)}
+                  <div>
+                    <Typography variant="h5" className="capitalize">
+                      {platform}
+                    </Typography>
+                    {status.status === 'found' && (
+                      <Typography variant="small" className="text-gray-500">
+                        Match found with {(status.confidence! * 100).toFixed(0)}% confidence
+                      </Typography>
+                    )}
+                    {status.status === 'not-found' && (
+                      <Typography variant="small" className="text-gray-500">
+                        No match found
+                      </Typography>
+                    )}
+                  </div>
+                </div>
+                {status.data && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => window.open(status.data?.links[platform as keyof typeof status.data.links], '_blank')}
+                  >
+                    <Icons.ExternalLink className="w-4 h-4" />
+                    View
+                  </Button>
+                )}
+              </div>
+            ))}
           </div>
 
           <div className="flex justify-between">

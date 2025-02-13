@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
+import { findArtistAcrossPlatforms } from './platforms/externalArtistData/crossPlatformSearch';
 
 import { fetchSoundcloudArtistData, searchSoundcloudArtist } from './platforms/externalArtistData/getArtistData/soundcloudArtistData';
 import { fetchSpotifyArtistData, searchSpotifyArtist } from './platforms/externalArtistData/getArtistData/spotifyArtistData';
@@ -13,6 +14,10 @@ const platformLinkSchema = z.object({
 
 const searchQuerySchema = z.object({
   query: z.string().min(2, 'Search query must be at least 2 characters long'),
+});
+
+const artistNameSchema = z.object({
+  artistName: z.string().min(2, 'Artist name must be at least 2 characters long'),
 });
 
 export const externalArtistDataRouter = createTRPCRouter({
@@ -84,6 +89,37 @@ export const externalArtistDataRouter = createTRPCRouter({
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
         message: error instanceof Error ? error.message : 'Failed to search for artists',
+      });
+    }
+  }),
+
+  findAcrossPlatforms: protectedProcedure.input(artistNameSchema).mutation(async ({ input }) => {
+    try {
+      const matches = await findArtistAcrossPlatforms(input.artistName);
+
+      if (!matches.length) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'No matches found across platforms',
+        });
+      }
+
+      return matches.map((match) => ({
+        platform: match.platform,
+        artistData: match.artistData,
+        confidence: match.confidence,
+        reasoning: match.reasoning,
+        matchingFactors: match.matchingFactors,
+      }));
+    } catch (error) {
+      if (error instanceof TRPCError) {
+        throw error;
+      }
+
+      console.error('Error finding artist across platforms:', error);
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: error instanceof Error ? error.message : 'Failed to find artist across platforms',
       });
     }
   }),
