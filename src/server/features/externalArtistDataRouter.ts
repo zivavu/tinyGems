@@ -59,7 +59,7 @@ export const externalArtistDataRouter = createTRPCRouter({
 
   searchArtists: protectedProcedure.input(searchQuerySchema).query(async ({ input }) => {
     try {
-      const [spotifyResults, soundcloudResults, youtubeResults, tidalResults] = await Promise.all([
+      const [spotifyResults, soundcloudResults, youtubeResults, tidalResults] = await Promise.allSettled([
         searchSpotifyArtist(input.query).catch((error) => {
           console.error('Spotify search error:', error);
           return [];
@@ -77,6 +77,11 @@ export const externalArtistDataRouter = createTRPCRouter({
           return [];
         }),
       ]);
+
+      console.log('spotifyResults', spotifyResults);
+      console.log('soundcloudResults', soundcloudResults);
+      console.log('youtubeResults', youtubeResults);
+      console.log('tidalResults', tidalResults);
 
       return {
         spotify: spotifyResults,
@@ -97,20 +102,26 @@ export const externalArtistDataRouter = createTRPCRouter({
     try {
       const matches = await findArtistAcrossPlatforms(input.artistName);
 
-      if (!matches.length) {
+      if (!matches?.length) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'No matches found across platforms',
         });
       }
 
-      return matches.map((match) => ({
-        platform: match.platform,
-        artistData: match.artistData,
-        confidence: match.confidence,
-        reasoning: match.reasoning,
-        matchingFactors: match.matchingFactors,
-      }));
+      // Update platform statuses based on matches
+      const platformMatches = matches[0]?.platformMatches || [];
+
+      return platformMatches.reduce(
+        (acc, platformMatch) => {
+          acc[platformMatch.platform] = {
+            status: 'found',
+            matches: platformMatch.matches,
+          };
+          return acc;
+        },
+        {} as Record<string, { status: 'found'; matches: typeof platformMatch.matches }>,
+      );
     } catch (error) {
       if (error instanceof TRPCError) {
         throw error;

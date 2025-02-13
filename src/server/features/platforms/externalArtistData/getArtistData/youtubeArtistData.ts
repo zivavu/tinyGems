@@ -131,8 +131,9 @@ export async function searchYoutubeArtist(query: string): Promise<PlatformArtist
         new URLSearchParams({
           part: 'snippet',
           type: 'channel',
+          sort: 'relevance',
           q: query,
-          maxResults: '5',
+          maxResults: '8',
           key: YOUTUBE_API_KEY || '',
         }),
     );
@@ -146,25 +147,7 @@ export async function searchYoutubeArtist(query: string): Promise<PlatformArtist
     const channels = await Promise.all(
       searchData.items.map(async (item: { snippet: { channelId: string } }) => {
         const channelData = await fetchChannelData(item.snippet.channelId);
-        return {
-          name: channelData.snippet.title,
-          platformId: channelData.id,
-          avatar: channelData?.snippet?.thumbnails?.high?.url,
-          links: {
-            youtube: `https://youtube.com/channel/${channelData.id}`,
-          },
-          audience: {
-            youtube: {
-              subscribers: parseInt(channelData.statistics?.subscriberCount || '0') || 0,
-              totalViews: parseInt(channelData.statistics?.viewCount || '0') || 0,
-            },
-          },
-          metadata: {
-            description: channelData.snippet.description,
-            customUrl: channelData.snippet.customUrl,
-            country: channelData.snippet.country,
-          },
-        };
+        return channelData;
       }),
     );
 

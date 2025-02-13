@@ -53,3 +53,20 @@ export type PlatformLinkParseResult = {
   isValid: boolean;
   error?: string;
 };
+
+export interface CrossPlatformMatch {
+  name: string;
+  platformMatches: {
+    platform: 'spotify' | 'soundcloud' | 'youtube' | 'tidal';
+    matches: {
+      platformId: string;
+      name: string;
+      thumbnailImageUrl?: string;
+      confidence: number;
+    }[];
+  }[];
+}
+
+export interface CrossPlatformSearchResponse {
+  matches: CrossPlatformMatch[];
+}

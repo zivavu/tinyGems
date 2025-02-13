@@ -54,25 +54,9 @@ export async function fetchSpotifyArtistData(platformUrl: string) {
 export async function searchSpotifyArtist(query: string) {
   try {
     await getAccessToken();
-    const response = await spotifyApi.searchArtists(query, { limit: 5 });
+    const response = await spotifyApi.searchArtists(query, { limit: 10 });
 
-    return response.body.artists?.items.map((artist) => ({
-      name: artist.name,
-      platformId: artist.id,
-      avatar: artist.images[0]?.url,
-      links: {
-        spotify: `https://open.spotify.com/artist/${artist.id}`,
-      },
-      audience: {
-        spotify: {
-          followers: artist.followers.total,
-          popularity: artist.popularity,
-        },
-      },
-      metadata: {
-        genres: artist.genres,
-      },
-    }));
+    return response.body.artists;
   } catch (error) {
     console.error('Error searching Spotify artists:', error);
     throw error;

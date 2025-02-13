@@ -4,7 +4,7 @@ import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { trpcReact } from '@/lib/trpcReact';
-import { PlatformArtistData } from '@/server/features/platforms/externalArtistData/types';
+import { CrossPlatformMatch, PlatformArtistData } from '@/server/features/platforms/externalArtistData/types';
 import { Transition } from '@headlessui/react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 interface PlatformStatus {
   status: 'idle' | 'searching' | 'found' | 'not-found' | 'error';
   data?: PlatformArtistData;
-  confidence?: number;
+  matches?: CrossPlatformMatch['platformMatches'][0]['matches'];
 }
 
 interface PlatformStatuses {
@@ -47,22 +47,22 @@ export function AddArtistForm() {
   });
 
   const findAcrossPlatformsMutation = trpcReact.artistRouter.findAcrossPlatforms.useMutation({
-    onSuccess: (matches) => {
+    onSuccess: (platformResults) => {
       const newStatuses = { ...platformStatuses };
+
+      // Reset all platforms to not-found initially
       Object.keys(newStatuses).forEach((platform) => {
-        const match = matches.find((m) => m.platform === platform);
-        if (match) {
-          newStatuses[platform as keyof PlatformStatuses] = {
-            status: 'found',
-            data: match.artistData,
-            confidence: match.confidence,
-          };
-        } else {
-          newStatuses[platform as keyof PlatformStatuses] = {
-            status: 'not-found',
-          };
-        }
+        newStatuses[platform as keyof PlatformStatuses] = { status: 'not-found' };
       });
+
+      // Update platforms that have matches
+      Object.entries(platformResults).forEach(([platform, result]) => {
+        newStatuses[platform as keyof PlatformStatuses] = {
+          status: result.status,
+          matches: result.matches,
+        };
+      });
+
       setPlatformStatuses(newStatuses);
     },
     onError: (error) => {
@@ -204,34 +204,48 @@ export function AddArtistForm() {
           <div className="space-y-4">
             <Typography variant="h4">Found on other platforms</Typography>
             {Object.entries(platformStatuses).map(([platform, status]) => (
-              <div key={platform} className="flex items-center justify-between rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center gap-3">
-                  {getStatusIcon(status.status)}
-                  <div>
-                    <Typography variant="h5" className="capitalize">
-                      {platform}
-                    </Typography>
-                    {status.status === 'found' && (
-                      <Typography variant="small" className="text-gray-500">
-                        Match found with {(status.confidence! * 100).toFixed(0)}% confidence
+              <div key={platform} className="space-y-2">
+                <div className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                  <div className="flex items-center gap-3">
+                    {getStatusIcon(status.status)}
+                    <div>
+                      <Typography variant="h5" className="capitalize">
+                        {platform}
                       </Typography>
-                    )}
-                    {status.status === 'not-found' && (
-                      <Typography variant="small" className="text-gray-500">
-                        No match found
-                      </Typography>
-                    )}
+                      {status.status === 'found' && status.matches && (
+                        <Typography variant="small" className="text-gray-500">
+                          {status.matches.length} potential matches found
+                        </Typography>
+                      )}
+                    </div>
                   </div>
                 </div>
-                {status.data && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(status.data?.links[platform as keyof typeof status.data.links], '_blank')}
-                  >
-                    <Icons.ExternalLink className="w-4 h-4" />
-                    View
-                  </Button>
+
+                {status.status === 'found' && status.matches && (
+                  <div className="pl-4 space-y-2">
+                    {status.matches.map((match) => (
+                      <div
+                        key={match.platformId}
+                        className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                      >
+                        {match.thumbnailImageUrl && (
+                          <Image
+                            src={match.thumbnailImageUrl}
+                            alt={match.name}
+                            width={40}
+                            height={40}
+                            className="rounded-md object-cover"
+                          />
+                        )}
+                        <div className="flex-1">
+                          <Typography variant="h6">{match.name}</Typography>
+                          <Typography variant="small" className="text-gray-500">
+                            Match confidence: {(match.confidence * 100).toFixed(0)}%
+                          </Typography>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             ))}

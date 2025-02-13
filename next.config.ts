@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'yt3.ggpht.com' },
       { protocol: 'https', hostname: 'i1.sndcdn.com' },
       { protocol: 'https', hostname: 'resources.tidal.com' },
+      { protocol: 'https', hostname: 'i.tidal.com' },
+      { protocol: 'https', hostname: 'a1.sndcdn.com' },
     ],
   },
   reactStrictMode: true,

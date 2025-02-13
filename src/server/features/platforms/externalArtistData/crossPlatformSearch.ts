@@ -3,7 +3,7 @@ import { searchSoundcloudArtist } from './getArtistData/soundcloudArtistData';
 import { searchSpotifyArtist } from './getArtistData/spotifyArtistData';
 import { searchTidalArtist } from './getArtistData/tidalArtistData';
 import { searchYoutubeArtist } from './getArtistData/youtubeArtistData';
-import { PlatformArtistData } from './types';
+import { CrossPlatformSearchResponse } from './types';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_STUDIO_API_KEY!);
 
@@ -14,72 +14,50 @@ const matchingSchema = {
       type: SchemaType.ARRAY,
       items: {
         type: SchemaType.OBJECT,
+        required: ['name', 'platformMatches'],
         properties: {
-          platform: {
-            type: SchemaType.STRING,
-            description: 'Platform name (spotify, soundcloud, youtube, or tidal)',
-            enum: ['spotify', 'soundcloud', 'youtube', 'tidal'],
-          },
-          artistId: {
-            type: SchemaType.STRING,
-            description: 'Platform-specific artist ID',
-          },
-          confidence: {
-            type: SchemaType.NUMBER,
-            description: 'Confidence score between 0 and 1',
-            minimum: 0,
-            maximum: 1,
-          },
-          reasoning: {
-            type: SchemaType.STRING,
-            description: 'Explanation of why this is likely the same artist',
-          },
-          matchingFactors: {
-            type: SchemaType.OBJECT,
-            properties: {
-              nameSimilarity: {
-                type: SchemaType.NUMBER,
-                description: 'How similar the artist names are (0-1)',
-              },
-              audienceMatch: {
-                type: SchemaType.NUMBER,
-                description: 'How well the audience sizes correlate (0-1)',
-              },
-              genreOverlap: {
-                type: SchemaType.NUMBER,
-                description: 'How much the genres overlap (0-1)',
-              },
-              locationMatch: {
-                type: SchemaType.BOOLEAN,
-                description: 'Whether the locations match',
+          name: { type: SchemaType.STRING },
+          description: { type: SchemaType.STRING },
+          platformMatches: {
+            type: SchemaType.ARRAY,
+            minItems: 4,
+            items: {
+              type: SchemaType.OBJECT,
+              required: ['platform', 'matches'],
+              properties: {
+                platform: {
+                  type: SchemaType.STRING,
+                  enum: ['spotify', 'soundcloud', 'youtube', 'tidal'],
+                },
+                matches: {
+                  type: SchemaType.ARRAY,
+                  minItems: 1,
+                  maxItems: 6,
+                  items: {
+                    type: SchemaType.OBJECT,
+                    required: ['platformId', 'confidence', 'name'],
+                    properties: {
+                      platformId: { type: SchemaType.STRING },
+                      name: { type: SchemaType.STRING },
+                      thumbnailImageUrl: { type: SchemaType.STRING },
+                      confidence: {
+                        type: SchemaType.NUMBER,
+                        minimum: 0,
+                        maximum: 1,
+                      },
+                    },
+                  },
+                },
               },
             },
-            required: ['nameSimilarity'],
           },
         },
-        required: ['platform', 'artistId', 'confidence', 'reasoning', 'matchingFactors'],
       },
     },
   },
-  required: ['matches'],
 };
 
-interface PlatformSearchResults {
-  spotify: PlatformArtistData[];
-  soundcloud: PlatformArtistData[];
-  youtube: PlatformArtistData[];
-  tidal: PlatformArtistData[];
-}
-
-interface ArtistMatch {
-  platform: keyof PlatformSearchResults;
-  artistData: PlatformArtistData;
-  confidence: number;
-  reasoning: string;
-  matchingFactors: any;
-}
-
-export async function findArtistAcrossPlatforms(artistName: string): Promise<ArtistMatch[]> {
+export async function findArtistAcrossPlatforms(artistName: string) {
   const [spotify, soundcloud, youtube, tidal] = await Promise.all([
     searchSpotifyArtist(artistName).catch(() => []),
     searchSoundcloudArtist(artistName).catch(() => []),
@@ -87,20 +65,19 @@ export async function findArtistAcrossPlatforms(artistName: string): Promise<Art
     searchTidalArtist(artistName).catch(() => []),
   ]);
 
-  const searchResults: PlatformSearchResults = {
+  const searchResults = {
     spotify,
     soundcloud,
     youtube,
     tidal,
   };
 
-  // Only proceed with Gemini if we have results
-  if (Object.values(searchResults).every((results) => results.length === 0)) {
+  if (Object.values(searchResults).every((results) => Array.isArray(results) && !results?.length)) {
     throw new Error('No artists found on any platform');
   }
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-pro',
+    model: 'gemini-2.0-flash',
     generationConfig: {
       responseMimeType: 'application/json',
       responseSchema: matchingSchema,
@@ -109,33 +86,48 @@ export async function findArtistAcrossPlatforms(artistName: string): Promise<Art
 
   const prompt = `
     Analyze these search results for an artist named "${artistName}" from different music platforms
-    and identify which entries likely represent the same artist.
-    
-    Search results:
-    ${JSON.stringify(searchResults, null, 2)}
+    and find best matching artists across all platforms.
 
-    Consider:
-    - Name similarity (including variations/aliases)
-    - Audience size correlation across platforms
-    - Genre overlap
-    - Location matches if available
-    - Profile description similarities
+
+    ///////////////////
+    SPOTIFY RESULTS:
+    ${JSON.stringify(searchResults.spotify)}
+
+    ///////////////////
+    SOUNDCLOUD RESULTS:
+    ${JSON.stringify(searchResults.soundcloud)}
+
+    ///////////////////
+    YOUTUBE RESULTS:
+    ${JSON.stringify(searchResults.youtube)}
+
+    ///////////////////
+    TIDAL RESULTS:
+    ${JSON.stringify(searchResults.tidal)}
+
+    IMPORTANT:
+    - Return 3-5 best possible matches, ordered by overall confidence
+    - For each match:
+      - Find 3-5 best matching profiles from EACH platform (spotify, soundcloud, youtube, tidal)
+      - For each platform match:
+        - Assign a confidence score (0-1) based on similarity. Don't be too generous.
     
-    Only include matches with confidence > 0.7
-    Provide detailed reasoning for each match.
-    Calculate matching factors based on available data.
+    Consider:
+    - Exact or similar artist names
+    - Similar genres and styles
+    - Matching locations if available
+    - Similar audience sizes
+    - Similar release dates and activity periods
+    
+    Return multiple unified artist profiles, each with multiple matches from each platform.
+    Order results by overall confidence, with highest confidence first.
   `;
 
   const result = await model.generateContent(prompt);
   const response = await result.response;
-  const matches = JSON.parse(response.text());
+  const artistProfiles = JSON.parse(response.text()) as CrossPlatformSearchResponse;
 
-  // Convert Gemini response to our internal format
-  return matches.matches.map((match: any) => ({
-    platform: match.platform,
-    artistData: searchResults[match.platform].find((artist) => artist.platformId === match.artistId)!,
-    confidence: match.confidence,
-    reasoning: match.reasoning,
-    matchingFactors: match.matchingFactors,
-  }));
+  console.log('artistProfiles', JSON.stringify(artistProfiles, null, 2));
+
+  return artistProfiles.matches;
 }

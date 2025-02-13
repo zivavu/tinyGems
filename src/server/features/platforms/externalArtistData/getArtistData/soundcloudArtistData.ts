@@ -36,6 +36,39 @@ interface SoundCloudArtist {
   website_title: string;
 }
 
+interface SoundCloudSearchRecord {
+  avatar_url: string;
+  id: number;
+  kind: string;
+  permalink_url: string;
+  uri: string;
+  username: string;
+  permalink: string;
+  created_at: string;
+  last_modified: string;
+  first_name: string | null;
+  last_name: string | null;
+  full_name: string;
+  city: string | null;
+  description: string | null;
+  country: string | null;
+  track_count: number;
+  public_favorites_count: number;
+  reposts_count: number;
+  followers_count: number;
+  followings_count: number;
+  plan: string;
+  myspace_name: string | null;
+  discogs_name: string | null;
+  website_title: string | null;
+  website: string | null;
+  comments_count: number;
+  online: boolean;
+  likes_count: number;
+  playlist_count: number;
+  subscriptions: Array<unknown>;
+}
+
 let currentToken: SoundCloudToken | null = null;
 let tokenExpirationTime: number | null = null;
 
@@ -145,7 +178,7 @@ export async function fetchSoundcloudArtistData(url: string): Promise<PlatformAr
   }
 }
 
-export async function searchSoundcloudArtist(query: string): Promise<PlatformArtistData[]> {
+export async function searchSoundcloudArtist(query: string) {
   try {
     const token = await getAccessToken();
     const response = await fetch(
@@ -167,32 +200,8 @@ export async function searchSoundcloudArtist(query: string): Promise<PlatformArt
       throw new Error('Failed to search SoundCloud artists');
     }
 
-    const artists = (await response.json()) as SoundCloudArtist[];
-
-    return artists.map((artist) => ({
-      name: artist.username,
-      platformId: artist.id.toString(),
-      avatar: artist.avatar_url,
-      links: {
-        soundcloud: artist.permalink_url,
-        website: artist.website,
-      },
-      audience: {
-        soundcloud: {
-          followers: artist.followers_count,
-          following: artist.followings_count,
-          likes: artist.likes_count,
-          tracks: artist.track_count,
-        },
-      },
-      metadata: {
-        description: artist.description,
-        location: artist.city || artist.country,
-        fullName: artist.full_name,
-        websiteTitle: artist.website_title,
-        lastModified: artist.last_modified,
-      },
-    }));
+    const data: SoundCloudSearchRecord[] = await response.json();
+    return data;
   } catch (error) {
     console.error('Error searching SoundCloud artists:', error);
     throw error;

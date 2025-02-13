@@ -236,7 +236,7 @@ export async function fetchTidalArtistData(url: string): Promise<PlatformArtistD
   }
 }
 
-export async function searchTidalArtist(query: string): Promise<PlatformArtistData[]> {
+export async function searchTidalArtist(query: string) {
   try {
     const data = (await makeAuthorizedRequest(`/searchresults/${encodeURIComponent(query)}/relationships/artists`, {
       include: 'artists',
@@ -246,26 +246,7 @@ export async function searchTidalArtist(query: string): Promise<PlatformArtistDa
       return [];
     }
 
-    return data.included.slice(0, 5).map((artist) => ({
-      name: artist.attributes?.name || 'Unknown Artist',
-      platformId: artist.id || '',
-      avatar: artist.attributes?.picture?.[0]?.url || artist.attributes?.imageLinks?.[0]?.href,
-      links: {
-        tidal: `https://tidal.com/artist/${artist.id}`,
-      },
-      audience: {
-        tidal: {
-          popularity: artist.attributes?.popularity || 0,
-          albums: 0,
-          tracks: 0,
-        },
-      },
-      metadata: {
-        roles: artist.attributes?.roles?.map((role) => role.name) || [],
-        description: artist.attributes?.biography || '',
-        location: artist.attributes?.location || '',
-      },
-    }));
+    return data.included.slice(0, 10);
   } catch (error) {
     console.error('Error searching Tidal artists:', error);
     throw error;
