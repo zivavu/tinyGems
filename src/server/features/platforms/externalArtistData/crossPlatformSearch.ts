@@ -79,20 +79,34 @@ const matchingSchema = {
   },
 };
 
-export async function findArtistAcrossPlatforms(artistName: string) {
-  const [spotify, soundcloud, youtube, tidal] = await Promise.all([
-    searchSpotifyArtist(artistName).catch(() => []),
-    searchSoundcloudArtist(artistName).catch(() => []),
-    searchYoutubeArtist(artistName).catch(() => []),
-    searchTidalArtist(artistName).catch(() => []),
-  ]);
-
-  const searchResults = {
-    spotify,
-    soundcloud,
-    youtube,
-    tidal,
+export async function findArtistAcrossPlatforms(artistName: string, skipPlatform?: Platform) {
+  // Create a map of platform search functions
+  const platformSearches = {
+    spotify: () => searchSpotifyArtist(artistName),
+    soundcloud: () => searchSoundcloudArtist(artistName),
+    youtube: () => searchYoutubeArtist(artistName),
+    tidal: () => searchTidalArtist(artistName),
   };
+
+  // Remove the platform to skip
+  if (skipPlatform) {
+    delete platformSearches[skipPlatform];
+  }
+
+  // Execute remaining searches
+  const results = await Promise.all(
+    Object.entries(platformSearches).map(async ([platform, searchFn]) => {
+      try {
+        const data = await searchFn();
+        return { [platform]: data };
+      } catch {
+        return { [platform]: [] };
+      }
+    }),
+  );
+
+  // Combine results
+  const searchResults = results.reduce((acc, result) => ({ ...acc, ...result }), {});
 
   if (Object.values(searchResults).every((results) => Array.isArray(results) && !results?.length)) {
     throw new Error('No artists found on any platform');
@@ -106,31 +120,25 @@ export async function findArtistAcrossPlatforms(artistName: string) {
     },
   });
 
+  // Update prompt to only include searched platforms
   const prompt = `
     Analyze these search results for an artist named "${artistName}" from different music platforms
     and find best matching artists across all platforms.
 
-
-    ///////////////////
-    SPOTIFY RESULTS:
-    ${JSON.stringify(searchResults.spotify)}
-
-    ///////////////////
-    SOUNDCLOUD RESULTS:
-    ${JSON.stringify(searchResults.soundcloud)}
-
-    ///////////////////
-    YOUTUBE RESULTS:
-    ${JSON.stringify(searchResults.youtube)}
-
-    ///////////////////
-    TIDAL RESULTS:
-    ${JSON.stringify(searchResults.tidal)}
+    ${Object.entries(searchResults)
+      .map(
+        ([platform, results]) => `
+        ///////////////////
+        ${platform.toUpperCase()} RESULTS:
+        ${JSON.stringify(results)}
+      `,
+      )
+      .join('\n')}
 
     IMPORTANT:
     - Return 3-5 best possible matches, ordered by overall confidence
     - For each match:
-      - Find 3-5 best matching profiles from EACH platform (spotify, soundcloud, youtube, tidal)
+      - Find 3-5 best matching profiles from EACH platform
       - For each platform match:
         - Assign a confidence score (0-1) based on similarity. Don't be too generous.
     
