@@ -1,160 +1,99 @@
 'use client';
 
+import { PlatformType } from '@/features/gems/types';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { trpcReact } from '@/lib/trpcReact';
-import { MatchingSchema } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
 import { PlatformArtistData } from '@/server/features/platforms/externalArtistData/types';
 import { Transition } from '@headlessui/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { OriginalArtistProfile } from './OriginalArtistProfile';
 import { PlatformMatcher } from './PlatformMatcher';
-import { ProgressIndicator } from './ProgressIndicator';
 
-interface PlatformStatus {
-  status: 'idle' | 'searching' | 'found' | 'not-found' | 'error';
-  data?: PlatformArtistData;
-  matches?: MatchingSchema['matches'][0]['platformMatches'][0]['matches'];
+interface ConnectedPlatform {
+  platformId: string;
+  name: string;
+  thumbnailImageUrl?: string;
+  url: string;
+  platformData: PlatformArtistData;
 }
 
-interface PlatformStatuses {
-  spotify: PlatformStatus;
-  soundcloud: PlatformStatus;
-  youtube: PlatformStatus;
-  tidal: PlatformStatus;
-}
-
-interface SelectedMatches {
-  [platform: string]: {
-    platformId: string;
-    name: string;
-    thumbnailImageUrl?: string;
-    customUrl?: string;
-  } | null;
-}
-
-const keyframes = {
-  indeterminate: `
-    @keyframes indeterminate {
-      0% { left: -35%; right: 100% }
-      60% { left: 100%; right: -90% }
-      100% { left: 100%; right: -90% }
-    }
-  `,
-  indeterminateShort: `
-    @keyframes indeterminate-short {
-      0% { left: -200%; right: 100% }
-      60% { left: 107%; right: -8% }
-      100% { left: 107%; right: -8% }
-    }
-  `,
-};
-
-// Add the keyframes to the document
-if (typeof document !== 'undefined') {
-  const style = document.createElement('style');
-  style.innerHTML = keyframes.indeterminate + keyframes.indeterminateShort;
-  document.head.appendChild(style);
+interface ConnectedPlatforms {
+  [platform: string]: ConnectedPlatform | null;
 }
 
 export function AddArtistForm() {
   const [step, setStep] = useState<'link' | 'review' | 'details'>('link');
-  const [url, setUrl] = useState('');
-  const [artistData, setArtistData] = useState<PlatformArtistData | null>(null);
-  const [selectedMatches, setSelectedMatches] = useState<SelectedMatches>({});
-  const [platformStatuses, setPlatformStatuses] = useState<PlatformStatuses>({
-    spotify: { status: 'idle' },
-    soundcloud: { status: 'idle' },
-    youtube: { status: 'idle' },
-    tidal: { status: 'idle' },
-  });
+  const [initialArtistUrl, setInitialArtistUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [originalArtist, setOriginalArtist] = useState<{
+    platform: PlatformType;
+    data: PlatformArtistData;
+  } | null>(null);
+  const [connectedPlatforms, setConnectedPlatforms] = useState<ConnectedPlatforms>({});
 
   const fetchArtistMutation = trpcReact.artistRouter.fetchFromUrl.useMutation({
     onSuccess: (data) => {
-      setArtistData(data.artistData);
-      handleInitialPlatformMatch(data);
-      findAcrossPlatformsMutation.mutate({
-        artistName: data.artistData.name,
-        skipPlatform: data.platform,
+      setOriginalArtist({
+        platform: data.platform,
+        data: data.artistData,
+      });
+      setConnectedPlatforms({
+        [data.platform]: {
+          platformId: data.artistData.platformId,
+          name: data.artistData.name,
+          thumbnailImageUrl: data.artistData.avatar,
+          url: data.artistData.url,
+          platformData: data.artistData,
+        },
       });
       setStep('review');
+      setIsLoading(false);
     },
     onError: (error) => {
       toast.error(error.message);
+      setIsLoading(false);
     },
   });
-
-  const findAcrossPlatformsMutation = trpcReact.artistRouter.findAcrossPlatforms.useMutation({
-    onSuccess: (platformResults) => {
-      setPlatformStatuses((current) => ({
-        ...current,
-        ...platformResults,
-      }));
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      handleSearchError();
-    },
-  });
-
-  function handleInitialPlatformMatch(data: { platform: Platform; artistData: PlatformArtistData }) {
-    const newStatuses = Object.keys(platformStatuses).reduce((acc, platform) => {
-      acc[platform] =
-        platform === data.platform
-          ? {
-              status: 'found',
-              matches: [
-                {
-                  platformId: data.artistData.platformId,
-                  name: data.artistData.name,
-                  thumbnailImageUrl: data.artistData.avatar,
-                  confidence: 1,
-                },
-              ],
-            }
-          : { status: 'searching' };
-      return acc;
-    }, {} as PlatformStatuses);
-
-    setPlatformStatuses(newStatuses);
-    setSelectedMatches({
-      [data.platform]: {
-        platformId: data.artistData.platformId,
-        name: data.artistData.name,
-        thumbnailImageUrl: data.artistData.avatar,
-      },
-    });
-  }
-
-  function handleSearchError() {
-    setPlatformStatuses((current) => {
-      const newStatuses = { ...current };
-      Object.keys(newStatuses).forEach((platform) => {
-        if (newStatuses[platform].status === 'searching') {
-          newStatuses[platform] = { status: 'error' };
-        }
-      });
-      return newStatuses;
-    });
-  }
-
-  function handleMatchSelect(platform: string, match: MatchingSchema['matches'][0]['platformMatches'][0]['matches'][0] | null) {
-    setSelectedMatches((prev) => ({
-      ...prev,
-      [platform]: match,
-    }));
-  }
 
   async function handleUrlSubmit() {
-    if (!url) {
+    if (!initialArtistUrl) {
       toast.error('Please enter a valid URL');
       return;
     }
-    console.log('url', url);
-    fetchArtistMutation.mutate({ url });
+    setIsLoading(true);
+    fetchArtistMutation.mutate({ url: initialArtistUrl });
   }
+
+  async function handleCustomUrlSubmit(platform: string, customUrl: string) {
+    setIsLoading(true);
+    fetchArtistMutation.mutate(
+      { url: customUrl },
+      {
+        onSuccess: (data) => {
+          if (data.platform !== platform) {
+            toast.error(`Please provide a valid ${platform} URL`);
+            return;
+          }
+          setConnectedPlatforms((prev) => ({
+            ...prev,
+            [platform]: {
+              platformId: data.artistData.platformId,
+              name: data.artistData.name,
+              thumbnailImageUrl: data.artistData.avatar,
+              url: data.artistData.url,
+              platformData: data.artistData,
+            },
+          }));
+          setIsLoading(false);
+        },
+      },
+    );
+  }
+
+  const platforms: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal'];
 
   return (
     <div className="bg-white dark:bg-gray-800/50 rounded-xl p-6 shadow-sm">
@@ -167,8 +106,8 @@ export function AddArtistForm() {
             <input
               type="url"
               placeholder="Paste artist profile URL..."
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              value={initialArtistUrl}
+              onChange={(e) => setInitialArtistUrl(e.target.value)}
               className="w-full px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700"
             />
             <Button onClick={handleUrlSubmit} disabled={fetchArtistMutation.isPending} className="w-full">
@@ -178,23 +117,29 @@ export function AddArtistForm() {
         </div>
       </Transition>
 
-      <Transition show={step === 'review' && artistData !== null}>
+      <Transition show={step === 'review' && originalArtist !== null}>
         <div className="space-y-6">
-          {artistData && <OriginalArtistProfile artistData={artistData} />}
-          <ProgressIndicator platformStatuses={platformStatuses} />
+          {originalArtist?.platform && originalArtist?.data && (
+            <OriginalArtistProfile artistData={originalArtist.data} platform={originalArtist?.platform} />
+          )}
+
+          {isLoading && (
+            <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div className="h-full bg-amber-500 animate-pulse" />
+            </div>
+          )}
 
           <div className="space-y-4">
             <Typography variant="h4">Connect platforms</Typography>
-            {Object.entries(platformStatuses)
-              .filter(([platform]) => platform !== artistData?.platform)
-              .map(([platform, status]) => (
+            {platforms
+              .filter((platform) => platform !== originalArtist?.platform)
+              .map((platform) => (
                 <PlatformMatcher
                   key={platform}
                   platform={platform}
-                  status={status}
-                  selectedMatch={selectedMatches[platform]}
-                  onMatchSelect={handleMatchSelect}
-                  onCustomUrlSubmit={(url) => fetchArtistMutation.mutate({ url })}
+                  connectedPlatform={connectedPlatforms[platform]}
+                  onCustomUrlSubmit={(url) => handleCustomUrlSubmit(platform, url)}
+                  isLoading={isLoading}
                 />
               ))}
           </div>
@@ -206,7 +151,7 @@ export function AddArtistForm() {
             </Button>
             <Button
               onClick={() => setStep('details')}
-              disabled={Object.keys(selectedMatches).length === 0}
+              disabled={Object.keys(connectedPlatforms).length === 0}
               className="flex items-center gap-2"
             >
               <Icons.ArrowRight className="w-5 h-5" />

@@ -1,7 +1,7 @@
 import 'server-only';
 
 import SpotifyWebApi from 'spotify-web-api-node';
-import { PlatformArtistData } from '../types';
+import { ExternalPlatformArtistData } from '../crossPlatformSearch';
 
 const spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
@@ -24,9 +24,9 @@ export async function fetchSpotifyArtistData(platformUrl: string) {
 
     await getAccessToken();
 
-    const [artist] = await Promise.all([spotifyApi.getArtist(artistId)]);
+    const artist = await spotifyApi.getArtist(artistId);
 
-    const artistData: PlatformArtistData = {
+    const artistData: ExternalPlatformArtistData = {
       name: artist.body.name,
       platformId: artist.body.id,
       avatar: artist.body.images[0]?.url,

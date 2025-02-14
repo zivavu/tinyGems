@@ -103,19 +103,7 @@ export const externalArtistDataRouter = createTRPCRouter({
         });
       }
 
-      // Update platform statuses based on matches
-      const platformMatches = matches[0]?.platformMatches || [];
-
-      return platformMatches.reduce(
-        (acc, platformMatch) => {
-          acc[platformMatch.platform] = {
-            status: 'found',
-            matches: platformMatch.matches,
-          };
-          return acc;
-        },
-        {} as Record<string, { status: 'found'; matches: typeof platformMatch.matches }>,
-      );
+      return matches;
     } catch (error) {
       if (error instanceof TRPCError) {
         throw error;

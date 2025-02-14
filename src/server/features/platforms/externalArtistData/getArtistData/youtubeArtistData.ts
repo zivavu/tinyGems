@@ -1,5 +1,4 @@
-import { PlatformArtistData } from '../types';
-
+import { ExternalPlatformArtistData } from '../crossPlatformSearch';
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3';
 
@@ -93,14 +92,13 @@ function extractChannelIdentifier(url: string): { identifier: string; type: 'id'
   return { identifier: cleanUrl, type: 'handle' };
 }
 
-export async function fetchYoutubeArtistData(url: string): Promise<PlatformArtistData> {
+export async function fetchYoutubeArtistData(url: string) {
   try {
     const { identifier, type } = extractChannelIdentifier(url);
 
     const channel = await fetchChannelData(identifier, type);
 
-    console.log(channel);
-    return {
+    const normalizedData: ExternalPlatformArtistData = {
       name: channel?.snippet?.title,
       platformId: channel?.id,
       avatar: channel?.snippet?.thumbnails?.high?.url,
@@ -118,13 +116,15 @@ export async function fetchYoutubeArtistData(url: string): Promise<PlatformArtis
         description: channel.snippet?.description,
       },
     };
+
+    return normalizedData;
   } catch (error) {
     console.error('Error fetching YouTube artist data:', error);
     throw error;
   }
 }
 
-export async function searchYoutubeArtist(query: string): Promise<PlatformArtistData[]> {
+export async function searchYoutubeArtist(query: string) {
   try {
     const searchResponse = await fetch(
       `${YOUTUBE_API_URL}/search?` +
@@ -150,6 +150,9 @@ export async function searchYoutubeArtist(query: string): Promise<PlatformArtist
         return channelData;
       }),
     );
+
+    console.log(searchData, 'searchData');
+    console.log(channels, 'channels');
 
     return channels;
   } catch (error) {

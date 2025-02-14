@@ -1,5 +1,3 @@
-import { PlatformArtistData } from '../types';
-
 const SOUNDCLOUD_CLIENT_ID = process.env.SOUNDCLOUD_CLIENT_ID;
 const SOUNDCLOUD_CLIENT_SECRET = process.env.SOUNDCLOUD_CLIENT_SECRET;
 const SOUNDCLOUD_API_URL = 'https://api.soundcloud.com';
@@ -72,7 +70,7 @@ interface SoundCloudSearchRecord {
 let currentToken: SoundCloudToken | null = null;
 let tokenExpirationTime: number | null = null;
 
-async function getAccessToken(): Promise<string> {
+async function getAccessToken() {
   if (currentToken && tokenExpirationTime && Date.now() < tokenExpirationTime) {
     return currentToken.access_token;
   }
@@ -116,20 +114,12 @@ async function getAccessToken(): Promise<string> {
   }
 }
 
-async function resolveUrl(url: string): Promise<SoundCloudArtist> {
+async function resolveUrl(url: string) {
   try {
     const token = await getAccessToken();
-    const response = await fetch(
-      `${SOUNDCLOUD_API_URL}/resolve?` +
-        new URLSearchParams({
-          url: url,
-        }),
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const response = await fetch(`${SOUNDCLOUD_API_URL}/resolve?` + new URLSearchParams({ url: url }), {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -137,7 +127,7 @@ async function resolveUrl(url: string): Promise<SoundCloudArtist> {
       throw new Error('Failed to resolve SoundCloud URL');
     }
 
-    const data = await response.json();
+    const data: SoundCloudArtist = await response.json();
 
     if (data.kind !== 'user') {
       throw new Error('URL does not point to a SoundCloud artist');
@@ -150,7 +140,7 @@ async function resolveUrl(url: string): Promise<SoundCloudArtist> {
   }
 }
 
-export async function fetchSoundcloudArtistData(url: string): Promise<PlatformArtistData> {
+export async function fetchSoundcloudArtistData(url: string) {
   try {
     const artist = await resolveUrl(url);
 

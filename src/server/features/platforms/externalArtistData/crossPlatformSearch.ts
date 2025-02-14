@@ -1,3 +1,4 @@
+import { PlatformType } from '@/features/gems/types';
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { searchSoundcloudArtist } from './getArtistData/soundcloudArtistData';
 import { searchSpotifyArtist } from './getArtistData/spotifyArtistData';
@@ -6,27 +7,48 @@ import { searchYoutubeArtist } from './getArtistData/youtubeArtistData';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_STUDIO_API_KEY!);
 
-type Platform = 'spotify' | 'soundcloud' | 'youtube' | 'tidal';
-
-interface PlatformMatch {
+export interface ExternalPlatformArtistData {
+  name: string;
   platformId: string;
-  name: string;
-  thumbnailImageUrl?: string | null;
-  confidence: number;
-}
-
-interface PlatformMatches {
-  platform: Platform;
-  matches: PlatformMatch[];
-}
-
-interface ArtistMatch {
-  name: string;
-  platformMatches: PlatformMatches[];
-}
-
-export interface MatchingSchema {
-  matches: ArtistMatch[];
+  avatar?: string;
+  links?: {
+    [key: string]: string;
+  };
+  audience?: {
+    spotify?: {
+      followers?: number;
+      popularity?: number;
+    };
+    youtube?: {
+      subscribers?: number;
+      totalViews?: number;
+      videosCount?: number;
+    };
+    soundcloud?: {
+      followers?: number;
+      trackPlays?: number;
+    };
+    tidal?: {
+      popularity?: number;
+      topTracks?: number;
+      albums?: number;
+    };
+  };
+  metadata?: {
+    genres?: string[];
+    description?: string;
+    location?: string;
+    topTracks?: Array<{
+      id: string;
+      name: string;
+      previewUrl?: string;
+    }>;
+    relatedArtists?: Array<{
+      id: string;
+      name: string;
+      popularity: number;
+    }>;
+  };
 }
 
 const matchingSchema = {
@@ -36,31 +58,35 @@ const matchingSchema = {
       type: SchemaType.ARRAY,
       items: {
         type: SchemaType.OBJECT,
-        required: ['name', 'platformMatches'],
+        required: ['platformName', 'platformMatches'],
         properties: {
-          name: { type: SchemaType.STRING },
+          platformName: { type: SchemaType.STRING },
           platformMatches: {
             type: SchemaType.ARRAY,
-            minItems: 4,
             items: {
               type: SchemaType.OBJECT,
-              required: ['platform', 'matches'],
+              required: ['platform', 'possibleArtists'],
               properties: {
                 platform: {
                   type: SchemaType.STRING,
                   enum: ['spotify', 'soundcloud', 'youtube', 'tidal'],
                 },
-                matches: {
+                possibleArtists: {
                   type: SchemaType.ARRAY,
                   nullable: true,
-                  minItems: 0,
-                  maxItems: 5,
                   items: {
                     type: SchemaType.OBJECT,
-                    required: ['platformId', 'confidence', 'name'],
+                    required: ['artistId', 'artistName', 'confidence'],
                     properties: {
-                      platformId: { type: SchemaType.STRING },
-                      name: { type: SchemaType.STRING },
+                      artistId: {
+                        type: SchemaType.STRING,
+                        description: 'The ID of the artist on the platform',
+                      },
+                      artistName: { type: SchemaType.STRING },
+                      artistUrl: {
+                        type: SchemaType.STRING,
+                        description: 'The URL of the artist that points to the his page on the platform',
+                      },
                       thumbnailImageUrl: { type: SchemaType.STRING, nullable: true },
                       confidence: {
                         type: SchemaType.NUMBER,
@@ -79,18 +105,41 @@ const matchingSchema = {
   },
 };
 
-export async function findArtistAcrossPlatforms(artistName: string, skipPlatform?: Platform) {
-  // Create a map of platform search functions
+type MathedArtist = {
+  artistId: string;
+  artistUrl: string;
+  artistName: string;
+  thumbnailImageUrl?: string | null;
+  confidence: number;
+};
+
+type MatchedPlatformArtists = {
+  platform: PlatformType;
+  possibleArtists: MathedArtist[] | null;
+};
+
+type Match = {
+  platformName: string;
+  platformMatches: MatchedPlatformArtists[];
+};
+
+type MatchingSchema = {
+  matches: Match[];
+};
+
+export async function findArtistAcrossPlatforms(artistName: string, skipPlatform?: PlatformType) {
   const platformSearches = {
     spotify: () => searchSpotifyArtist(artistName),
     soundcloud: () => searchSoundcloudArtist(artistName),
     youtube: () => searchYoutubeArtist(artistName),
     tidal: () => searchTidalArtist(artistName),
-  };
+  } as const;
 
-  // Remove the platform to skip
   if (skipPlatform) {
-    delete platformSearches[skipPlatform];
+    if (!Object.keys(platformSearches).includes(skipPlatform)) {
+      throw new Error(`Invalid platform to skip: ${skipPlatform}`);
+    }
+    delete platformSearches[skipPlatform as keyof typeof platformSearches];
   }
 
   // Execute remaining searches
@@ -105,7 +154,6 @@ export async function findArtistAcrossPlatforms(artistName: string, skipPlatform
     }),
   );
 
-  // Combine results
   const searchResults = results.reduce((acc, result) => ({ ...acc, ...result }), {});
 
   if (Object.values(searchResults).every((results) => Array.isArray(results) && !results?.length)) {
@@ -120,7 +168,6 @@ export async function findArtistAcrossPlatforms(artistName: string, skipPlatform
     },
   });
 
-  // Update prompt to only include searched platforms
   const prompt = `
     Analyze these search results for an artist named "${artistName}" from different music platforms
     and find best matching artists across all platforms.
