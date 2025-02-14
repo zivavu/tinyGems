@@ -22,7 +22,6 @@ const artistNameSchema = z.object({
 
 export const externalArtistDataRouter = createTRPCRouter({
   fetchFromUrl: protectedProcedure.input(platformLinkSchema).mutation(async ({ input }) => {
-    console.log('Fetching artist data from URL:', input.url);
     try {
       if (input.url.includes('spotify.com')) {
         const artistData = await fetchSpotifyArtistData(input.url);
@@ -78,11 +77,6 @@ export const externalArtistDataRouter = createTRPCRouter({
         }),
       ]);
 
-      console.log('spotifyResults', spotifyResults);
-      console.log('soundcloudResults', soundcloudResults);
-      console.log('youtubeResults', youtubeResults);
-      console.log('tidalResults', tidalResults);
-
       return {
         spotify: spotifyResults,
         soundcloud: soundcloudResults,
@@ -98,40 +92,46 @@ export const externalArtistDataRouter = createTRPCRouter({
     }
   }),
 
-  findAcrossPlatforms: protectedProcedure.input(artistNameSchema).mutation(async ({ input }) => {
-    try {
-      const matches = await findArtistAcrossPlatforms(input.artistName);
+  findAcrossPlatforms: protectedProcedure
+    .input(
+      z.object({
+        artistName: z.string().min(2, 'Artist name must be at least 2 characters long'),
+        skipPlatform: z.enum(['spotify', 'soundcloud', 'youtube', 'tidal']).optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        const matches = await findArtistAcrossPlatforms(input.artistName, input.skipPlatform);
 
-      if (!matches?.length) {
+        if (!matches?.length) {
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'No matches found across platforms',
+          });
+        }
+
+        const platformMatches = matches[0]?.platformMatches || [];
+
+        return platformMatches.reduce(
+          (acc, platformMatch) => {
+            acc[platformMatch.platform] = {
+              status: 'found',
+              matches: platformMatch.matches,
+            };
+            return acc;
+          },
+          {} as Record<string, { status: 'found'; matches: typeof platformMatch.matches }>,
+        );
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        console.error('Error finding artist across platforms:', error);
         throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'No matches found across platforms',
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error instanceof Error ? error.message : 'Failed to find artist across platforms',
         });
       }
-
-      // Update platform statuses based on matches
-      const platformMatches = matches[0]?.platformMatches || [];
-
-      return platformMatches.reduce(
-        (acc, platformMatch) => {
-          acc[platformMatch.platform] = {
-            status: 'found',
-            matches: platformMatch.matches,
-          };
-          return acc;
-        },
-        {} as Record<string, { status: 'found'; matches: typeof platformMatch.matches }>,
-      );
-    } catch (error) {
-      if (error instanceof TRPCError) {
-        throw error;
-      }
-
-      console.error('Error finding artist across platforms:', error);
-      throw new TRPCError({
-        code: 'INTERNAL_SERVER_ERROR',
-        message: error instanceof Error ? error.message : 'Failed to find artist across platforms',
-      });
-    }
-  }),
+    }),
 });

@@ -242,11 +242,13 @@ export async function searchTidalArtist(query: string) {
       include: 'artists',
     })) as TidalSearchResponse;
 
+    console.log('response Tidal', JSON.stringify(data.included?.slice(0, 5), null, 1));
+
     if (!data.included?.length) {
       return [];
     }
 
-    return data.included.slice(0, 10);
+    return data.included.slice(0, 5);
   } catch (error) {
     console.error('Error searching Tidal artists:', error);
     throw error;

@@ -3,9 +3,31 @@ import { searchSoundcloudArtist } from './getArtistData/soundcloudArtistData';
 import { searchSpotifyArtist } from './getArtistData/spotifyArtistData';
 import { searchTidalArtist } from './getArtistData/tidalArtistData';
 import { searchYoutubeArtist } from './getArtistData/youtubeArtistData';
-import { CrossPlatformSearchResponse } from './types';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_STUDIO_API_KEY!);
+
+type Platform = 'spotify' | 'soundcloud' | 'youtube' | 'tidal';
+
+interface PlatformMatch {
+  platformId: string;
+  name: string;
+  thumbnailImageUrl?: string | null;
+  confidence: number;
+}
+
+interface PlatformMatches {
+  platform: Platform;
+  matches: PlatformMatch[];
+}
+
+interface ArtistMatch {
+  name: string;
+  platformMatches: PlatformMatches[];
+}
+
+export interface MatchingSchema {
+  matches: ArtistMatch[];
+}
 
 const matchingSchema = {
   type: SchemaType.OBJECT,
@@ -17,7 +39,6 @@ const matchingSchema = {
         required: ['name', 'platformMatches'],
         properties: {
           name: { type: SchemaType.STRING },
-          description: { type: SchemaType.STRING },
           platformMatches: {
             type: SchemaType.ARRAY,
             minItems: 4,
@@ -31,15 +52,16 @@ const matchingSchema = {
                 },
                 matches: {
                   type: SchemaType.ARRAY,
-                  minItems: 1,
-                  maxItems: 6,
+                  nullable: true,
+                  minItems: 0,
+                  maxItems: 5,
                   items: {
                     type: SchemaType.OBJECT,
                     required: ['platformId', 'confidence', 'name'],
                     properties: {
                       platformId: { type: SchemaType.STRING },
                       name: { type: SchemaType.STRING },
-                      thumbnailImageUrl: { type: SchemaType.STRING },
+                      thumbnailImageUrl: { type: SchemaType.STRING, nullable: true },
                       confidence: {
                         type: SchemaType.NUMBER,
                         minimum: 0,
@@ -125,9 +147,7 @@ export async function findArtistAcrossPlatforms(artistName: string) {
 
   const result = await model.generateContent(prompt);
   const response = await result.response;
-  const artistProfiles = JSON.parse(response.text()) as CrossPlatformSearchResponse;
-
-  console.log('artistProfiles', JSON.stringify(artistProfiles, null, 2));
+  const artistProfiles = JSON.parse(response.text()) as MatchingSchema;
 
   return artistProfiles.matches;
 }
