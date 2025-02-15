@@ -1,7 +1,7 @@
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { Button } from '@/features/shared/components/buttons/Button';
-import { PlatformArtistData } from '@/server/features/platforms/externalArtistData/types';
+import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -16,7 +16,7 @@ interface PlatformMatch {
 interface PlatformMatcherProps {
   platform: string;
   suggestedMatch?: PlatformMatch;
-  connectedPlatform?: PlatformArtistData;
+  connectedPlatform?: ExternalPlatformArtistData;
   onCustomUrlSubmit: (url: string) => void;
   isLoading: boolean;
 }

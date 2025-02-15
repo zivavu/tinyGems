@@ -1,10 +1,10 @@
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
-import { PlatformArtistData } from '@/server/features/platforms/externalArtistData/types';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
 
-export function OriginalArtistProfile({ artistData }: { artistData: PlatformArtistData }) {
+export function OriginalArtistProfile({ artistData }: { artistData: ExternalPlatformArtistData }) {
   return (
     <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-2 border-amber-200 dark:border-amber-800">
       <Typography variant="small" className="text-amber-700 dark:text-amber-300 mb-2">

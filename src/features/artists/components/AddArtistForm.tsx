@@ -5,8 +5,8 @@ import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { trpcReact } from '@/lib/trpcReact';
-import { PlatformArtistData } from '@/server/features/platforms/externalArtistData/types';
-import { Transition } from '@headlessui/react';
+import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
+import { Input, Transition } from '@headlessui/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { OriginalArtistProfile } from './OriginalArtistProfile';
@@ -17,7 +17,7 @@ interface ConnectedPlatform {
   name: string;
   thumbnailImageUrl?: string;
   url: string;
-  platformData: PlatformArtistData;
+  platformData: ExternalPlatformArtistData;
 }
 
 interface ConnectedPlatforms {
@@ -28,15 +28,15 @@ export function AddArtistForm() {
   const [step, setStep] = useState<'link' | 'review' | 'details'>('link');
   const [initialArtistUrl, setInitialArtistUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [originalArtist, setOriginalArtist] = useState<{
+  const [firstPlatformArtist, setFirstPlatformArtist] = useState<{
     platform: PlatformType;
-    data: PlatformArtistData;
+    data: ExternalPlatformArtistData;
   } | null>(null);
   const [connectedPlatforms, setConnectedPlatforms] = useState<ConnectedPlatforms>({});
 
-  const fetchArtistMutation = trpcReact.artistRouter.fetchFromUrl.useMutation({
+  const firstPlatformMutation = trpcReact.artistRouter.fetchFromUrl.useMutation({
     onSuccess: (data) => {
-      setOriginalArtist({
+      setFirstPlatformArtist({
         platform: data.platform,
         data: data.artistData,
       });
@@ -58,39 +58,28 @@ export function AddArtistForm() {
     },
   });
 
+  const otherPlatformsMutation = trpcReact.artistRouter.fetchFromUrl.useMutation({
+    onSuccess: (data) => {
+      setConnectedPlatforms((prev) => ({
+        ...prev,
+        [data.platform]: {
+          platformId: data.artistData.platformId,
+          name: data.artistData.name,
+          thumbnailImageUrl: data.artistData.avatar,
+          url: data.artistData.url,
+          platformData: data.artistData,
+        },
+      }));
+    },
+  });
+
   async function handleUrlSubmit() {
     if (!initialArtistUrl) {
       toast.error('Please enter a valid URL');
       return;
     }
     setIsLoading(true);
-    fetchArtistMutation.mutate({ url: initialArtistUrl });
-  }
-
-  async function handleCustomUrlSubmit(platform: string, customUrl: string) {
-    setIsLoading(true);
-    fetchArtistMutation.mutate(
-      { url: customUrl },
-      {
-        onSuccess: (data) => {
-          if (data.platform !== platform) {
-            toast.error(`Please provide a valid ${platform} URL`);
-            return;
-          }
-          setConnectedPlatforms((prev) => ({
-            ...prev,
-            [platform]: {
-              platformId: data.artistData.platformId,
-              name: data.artistData.name,
-              thumbnailImageUrl: data.artistData.avatar,
-              url: data.artistData.url,
-              platformData: data.artistData,
-            },
-          }));
-          setIsLoading(false);
-        },
-      },
-    );
+    firstPlatformMutation.mutate({ url: initialArtistUrl });
   }
 
   const platforms: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal'];
@@ -103,25 +92,23 @@ export function AddArtistForm() {
           <Typography>Share an underground artist with the community. Start by pasting a link from any major platform.</Typography>
 
           <div className="space-y-2">
-            <input
+            <Input
               type="url"
               placeholder="Paste artist profile URL..."
               value={initialArtistUrl}
               onChange={(e) => setInitialArtistUrl(e.target.value)}
               className="w-full px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700"
             />
-            <Button onClick={handleUrlSubmit} disabled={fetchArtistMutation.isPending} className="w-full">
-              {fetchArtistMutation.isPending ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Continue'}
+            <Button onClick={handleUrlSubmit} disabled={firstPlatformMutation.isPending} className="w-full">
+              {firstPlatformMutation.isPending ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Continue'}
             </Button>
           </div>
         </div>
       </Transition>
 
-      <Transition show={step === 'review' && originalArtist !== null}>
+      <Transition show={step === 'review' && firstPlatformArtist !== null}>
         <div className="space-y-6">
-          {originalArtist?.platform && originalArtist?.data && (
-            <OriginalArtistProfile artistData={originalArtist.data} platform={originalArtist?.platform} />
-          )}
+          {firstPlatformArtist?.platform && firstPlatformArtist?.data && <OriginalArtistProfile artistData={firstPlatformArtist.data} />}
 
           {isLoading && (
             <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
@@ -132,13 +119,13 @@ export function AddArtistForm() {
           <div className="space-y-4">
             <Typography variant="h4">Connect platforms</Typography>
             {platforms
-              .filter((platform) => platform !== originalArtist?.platform)
+              .filter((platform) => platform !== firstPlatformArtist?.platform)
               .map((platform) => (
                 <PlatformMatcher
                   key={platform}
                   platform={platform}
-                  connectedPlatform={connectedPlatforms[platform]}
-                  onCustomUrlSubmit={(url) => handleCustomUrlSubmit(platform, url)}
+                  connectedPlatform={connectedPlatforms[platform]?.platformData}
+                  onCustomUrlSubmit={(url) => otherPlatformsMutation.mutate({ url })}
                   isLoading={isLoading}
                 />
               ))}
