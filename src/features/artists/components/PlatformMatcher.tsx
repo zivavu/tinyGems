@@ -3,7 +3,7 @@ import { Typography } from '@/features/shared/components/Typography';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface PlatformMatch {
   platformId: string;
@@ -25,6 +25,12 @@ export function PlatformMatcher({ platform, suggestedMatch, connectedPlatform, o
   const [isAddingUrl, setIsAddingUrl] = useState(false);
   const [customUrl, setCustomUrl] = useState('');
 
+  useEffect(() => {
+    if (suggestedMatch && !connectedPlatform) {
+      onCustomUrlSubmit(suggestedMatch.url);
+    }
+  }, [suggestedMatch, connectedPlatform, onCustomUrlSubmit]);
+
   if (connectedPlatform) {
     return (
       <div className="rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 p-4">
@@ -43,6 +49,35 @@ export function PlatformMatcher({ platform, suggestedMatch, connectedPlatform, o
             </Typography>
           </div>
           <Icons.Check className="w-5 h-5 text-green-500" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading && suggestedMatch) {
+    return (
+      <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-4">
+        <div className="flex items-center gap-3">
+          {suggestedMatch.thumbnailImageUrl ? (
+            <Image
+              src={suggestedMatch.thumbnailImageUrl}
+              alt={suggestedMatch.name}
+              width={40}
+              height={40}
+              className="rounded-md object-cover"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-md bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+              <Icons.Music className="w-6 h-6 text-gray-400" />
+            </div>
+          )}
+          <div className="flex-1">
+            <Typography variant="h6">{suggestedMatch.name}</Typography>
+            <Typography variant="small" className="text-amber-600 dark:text-amber-400">
+              Connecting... ({Math.round(suggestedMatch.confidence * 100)}% confidence)
+            </Typography>
+          </div>
+          <Icons.Loader className="w-5 h-5 animate-spin" />
         </div>
       </div>
     );
