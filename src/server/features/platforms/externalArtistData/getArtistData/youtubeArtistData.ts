@@ -151,9 +151,6 @@ export async function searchYoutubeArtist(query: string) {
       }),
     );
 
-    console.log(searchData, 'searchData');
-    console.log(channels, 'channels');
-
     return channels;
   } catch (error) {
     console.error('Error searching YouTube channels:', error);

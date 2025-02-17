@@ -21,7 +21,7 @@ const artistNameSchema = z.object({
 });
 
 export const externalArtistDataRouter = createTRPCRouter({
-  fetchFromUrl: protectedProcedure.input(platformLinkSchema).mutation(async ({ input }) => {
+  fetchFromUrl: protectedProcedure.input(platformLinkSchema).query(async ({ input }) => {
     try {
       if (input.url.includes('spotify.com')) {
         const artistData = await fetchSpotifyArtistData(input.url);
@@ -92,7 +92,7 @@ export const externalArtistDataRouter = createTRPCRouter({
     }
   }),
 
-  findAcrossPlatforms: protectedProcedure.input(artistNameSchema).mutation(async ({ input }) => {
+  findAcrossPlatforms: protectedProcedure.input(artistNameSchema).query(async ({ input }) => {
     try {
       const matches = await findArtistAcrossPlatforms(input.artistName);
 

@@ -201,7 +201,7 @@ export async function findArtistAcrossPlatforms(artistName: string, skipPlatform
   `;
 
   const result = await model.generateContent(prompt);
-  const response = await result.response;
+  const response = result.response;
   const artistProfiles = JSON.parse(response.text()) as MatchingSchema;
 
   return artistProfiles.matches;

@@ -4,7 +4,7 @@ import { userRouter } from './userRouter';
 
 export const appRouter = createTRPCRouter({
   userRouter,
-  artistRouter: externalArtistDataRouter,
+  externalArtistDataRouter,
 });
 
 export type AppRouter = typeof appRouter;

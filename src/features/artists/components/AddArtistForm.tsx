@@ -9,8 +9,8 @@ import { ExternalPlatformArtistData } from '@/server/features/platforms/external
 import { Input, Transition } from '@headlessui/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { OriginalArtistProfile } from './OriginalArtistProfile';
 import { PlatformMatcher } from './PlatformMatcher';
+import { UserProvidedURLArtistProfile } from './UserProvidedURLArtistProfile';
 
 interface ConnectedPlatform {
   platformId: string;
@@ -20,73 +20,84 @@ interface ConnectedPlatform {
   platformData: ExternalPlatformArtistData;
 }
 
-interface ConnectedPlatforms {
-  [platform: string]: ConnectedPlatform | null;
-}
-
 export function AddArtistForm() {
-  const [step, setStep] = useState<'link' | 'review' | 'details'>('link');
+  const [currentFormStep, setCurrentFormStep] = useState<'link' | 'review'>('link');
   const [initialArtistUrl, setInitialArtistUrl] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [firstPlatformArtist, setFirstPlatformArtist] = useState<{
-    platform: PlatformType;
-    data: ExternalPlatformArtistData;
-  } | null>(null);
-  const [connectedPlatforms, setConnectedPlatforms] = useState<ConnectedPlatforms>({});
-
-  const firstPlatformMutation = trpcReact.artistRouter.fetchFromUrl.useMutation({
-    onSuccess: (data) => {
-      setFirstPlatformArtist({
-        platform: data.platform,
-        data: data.artistData,
-      });
-      setConnectedPlatforms({
-        [data.platform]: {
-          platformId: data.artistData.platformId,
-          name: data.artistData.name,
-          thumbnailImageUrl: data.artistData.avatar,
-          url: data.artistData.url,
-          platformData: data.artistData,
-        },
-      });
-      setStep('review');
-      setIsLoading(false);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      setIsLoading(false);
-    },
+  const [connectedPlatforms, setConnectedPlatforms] = useState<Record<PlatformType, ConnectedPlatform | null>>({
+    spotify: null,
+    soundcloud: null,
+    youtube: null,
+    tidal: null,
+    bandcamp: null,
+    appleMusic: null,
+    other: null,
   });
 
-  const otherPlatformsMutation = trpcReact.artistRouter.fetchFromUrl.useMutation({
-    onSuccess: (data) => {
-      setConnectedPlatforms((prev) => ({
-        ...prev,
-        [data.platform]: {
-          platformId: data.artistData.platformId,
-          name: data.artistData.name,
-          thumbnailImageUrl: data.artistData.avatar,
-          url: data.artistData.url,
-          platformData: data.artistData,
-        },
-      }));
-    },
-  });
+  const initialArtistQuery = trpcReact.externalArtistDataRouter.fetchFromUrl.useQuery({ url: initialArtistUrl }, { enabled: false });
 
+  const initialPlatform = Object.entries(connectedPlatforms).find(([, data]) => data !== null)?.[0] as PlatformType;
+  const crossPlatformSearchQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
+    { artistName: connectedPlatforms[initialPlatform]?.name || '' },
+    { enabled: Boolean(connectedPlatforms[initialPlatform]?.name) },
+  );
+
+  // Handle URL submission
   async function handleUrlSubmit() {
     if (!initialArtistUrl) {
       toast.error('Please enter a valid URL');
       return;
     }
-    setIsLoading(true);
-    firstPlatformMutation.mutate({ url: initialArtistUrl });
+
+    const result = await initialArtistQuery.refetch();
+
+    if (result.data) {
+      setConnectedPlatforms((prev) => ({
+        ...prev,
+        [result.data.platform]: {
+          platformId: result.data.artistData.platformId,
+          name: result.data.artistData.name,
+          thumbnailImageUrl: result.data.artistData.avatar,
+          url: result.data.artistData.links?.[result.data.platform] || '',
+          platformData: result.data.artistData,
+        },
+      }));
+      setCurrentFormStep('review');
+    }
   }
+
+  // Handle connecting additional platforms
+  const connectPlatformQuery = trpcReact.externalArtistDataRouter.fetchFromUrl.useQuery({ url: '' }, { enabled: false });
+
+  async function handlePlatformConnect(url: string) {
+    const result = await connectPlatformQuery.refetch({});
+
+    if (result.data) {
+      setConnectedPlatforms((prev) => ({
+        ...prev,
+        [result.data.platform]: {
+          platformId: result.data.artistData.platformId,
+          name: result.data.artistData.name,
+          thumbnailImageUrl: result.data.artistData.avatar,
+          url: result.data.artistData.links?.[result.data.platform] || '',
+          platformData: result.data.artistData,
+        },
+      }));
+      toast.success(`Connected ${result.data.platform} profile`);
+    }
+  }
+
+  // Derive loading states - only consider isFetching since we're using enabled: false
+  const isLoading = initialArtistQuery.isFetching || connectPlatformQuery.isFetching;
 
   const platforms: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal'];
 
+  // Separate loading states for initial cross-platform search and connecting platforms
+  const isCrossPlatformSearching = crossPlatformSearchQuery.isFetching;
+  const isConnectingPlatform = connectPlatformQuery.isFetching;
+
   return (
     <div className="bg-white dark:bg-gray-800/50 rounded-xl p-6 shadow-sm">
-      <Transition show={step === 'link'}>
+      <Transition show={currentFormStep === 'link'}>
         <div className="space-y-4">
           <Typography variant="h3">Add an artist</Typography>
           <Typography>Share an underground artist with the community. Start by pasting a link from any major platform.</Typography>
@@ -99,46 +110,55 @@ export function AddArtistForm() {
               onChange={(e) => setInitialArtistUrl(e.target.value)}
               className="w-full px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700"
             />
-            <Button onClick={handleUrlSubmit} disabled={firstPlatformMutation.isPending} className="w-full">
-              {firstPlatformMutation.isPending ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Continue'}
+            <Button onClick={handleUrlSubmit} disabled={isLoading} className="w-full">
+              {isLoading ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Continue'}
             </Button>
           </div>
         </div>
       </Transition>
 
-      <Transition show={step === 'review' && firstPlatformArtist !== null}>
+      <Transition show={currentFormStep === 'review'}>
         <div className="space-y-6">
-          {firstPlatformArtist?.platform && firstPlatformArtist?.data && <OriginalArtistProfile artistData={firstPlatformArtist.data} />}
-
-          {isLoading && (
-            <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-              <div className="h-full bg-amber-500 animate-pulse" />
-            </div>
+          {initialPlatform && connectedPlatforms[initialPlatform]?.platformData && (
+            <UserProvidedURLArtistProfile artistData={connectedPlatforms[initialPlatform].platformData} />
           )}
 
           <div className="space-y-4">
-            <Typography variant="h4">Connect platforms</Typography>
+            <div className="flex items-center justify-between">
+              <Typography variant="h4">Connect other platforms</Typography>
+              {isCrossPlatformSearching && (
+                <div className="flex items-center gap-2 text-amber-600">
+                  <Icons.Loader className="w-4 h-4 animate-spin" />
+                  <Typography variant="small">Finding matches...</Typography>
+                </div>
+              )}
+            </div>
+
             {platforms
-              .filter((platform) => platform !== firstPlatformArtist?.platform)
+              .filter((platform) => platform !== initialPlatform)
               .map((platform) => (
                 <PlatformMatcher
                   key={platform}
                   platform={platform}
                   connectedPlatform={connectedPlatforms[platform]?.platformData}
-                  onCustomUrlSubmit={(url) => otherPlatformsMutation.mutate({ url })}
-                  isLoading={isLoading}
+                  suggestedMatches={crossPlatformSearchQuery.data?.[0]?.platformMatches.find((p) => p.platform === platform)}
+                  onConnect={handlePlatformConnect}
+                  isLoading={isConnectingPlatform}
+                  isSearching={isCrossPlatformSearching}
                 />
               ))}
           </div>
 
           <div className="flex justify-between">
-            <Button onClick={() => setStep('link')} variant="outline" className="flex items-center gap-2">
+            <Button onClick={() => setCurrentFormStep('link')} variant="outline" className="flex items-center gap-2">
               <Icons.ArrowLeft className="w-5 h-5" />
               Back
             </Button>
             <Button
-              onClick={() => setStep('details')}
-              disabled={Object.keys(connectedPlatforms).length === 0}
+              onClick={() => {
+                /* Handle submission */
+              }}
+              disabled={Object.values(connectedPlatforms).every((p) => p === null)}
               className="flex items-center gap-2"
             >
               <Icons.ArrowRight className="w-5 h-5" />

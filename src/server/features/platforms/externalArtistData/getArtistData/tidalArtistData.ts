@@ -1,4 +1,4 @@
-import { PlatformArtistData } from '../types';
+import { ExternalPlatformArtistData } from '../crossPlatformSearch';
 
 const TIDAL_AUTH_URL = 'https://auth.tidal.com/v1/oauth2/token';
 const TIDAL_API_URL = 'https://openapi.tidal.com/v2';
@@ -202,7 +202,7 @@ function extractTidalId(url: string): string {
   throw new Error('Invalid Tidal artist URL');
 }
 
-export async function fetchTidalArtistData(url: string): Promise<PlatformArtistData> {
+export async function fetchTidalArtistData(url: string): Promise<ExternalPlatformArtistData> {
   try {
     const artistId = extractTidalId(url);
     const data = (await makeAuthorizedRequest(`/artists/${artistId}`, {
@@ -241,8 +241,6 @@ export async function searchTidalArtist(query: string) {
     const data = (await makeAuthorizedRequest(`/searchresults/${encodeURIComponent(query)}/relationships/artists`, {
       include: 'artists',
     })) as TidalSearchResponse;
-
-    console.log('response Tidal', JSON.stringify(data.included?.slice(0, 5), null, 1));
 
     if (!data.included?.length) {
       return [];
