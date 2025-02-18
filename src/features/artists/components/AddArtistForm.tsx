@@ -33,67 +33,78 @@ export function AddArtistForm() {
     other: null,
   });
 
-  const initialArtistQuery = trpcReact.externalArtistDataRouter.fetchFromUrl.useQuery({ url: initialArtistUrl }, { enabled: false });
+  // Convert to mutation since it's triggered by user action
+  const initialArtistMutation = trpcReact.externalArtistDataRouter.fetchFromUrl.useMutation({
+    onSuccess: (data) => {
+      setConnectedPlatforms((prev) => ({
+        ...prev,
+        [data.platform]: {
+          platformId: data.artistData.platformId,
+          name: data.artistData.name,
+          thumbnailImageUrl: data.artistData.avatar,
+          url: data.artistData.links?.[data.platform] || '',
+          platformData: data.artistData,
+        },
+      }));
+      setCurrentFormStep('review');
+      // Trigger cross-platform search
+      if (data.artistData.name) {
+        crossPlatformSearchQuery.refetch();
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-  const initialPlatform = Object.entries(connectedPlatforms).find(([, data]) => data !== null)?.[0] as PlatformType;
-  const crossPlatformSearchQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
-    { artistName: connectedPlatforms[initialPlatform]?.name || '' },
-    { enabled: Boolean(connectedPlatforms[initialPlatform]?.name) },
-  );
-
-  // Handle URL submission
   async function handleUrlSubmit() {
     if (!initialArtistUrl) {
       toast.error('Please enter a valid URL');
       return;
     }
-
-    const result = await initialArtistQuery.refetch();
-
-    if (result.data) {
-      setConnectedPlatforms((prev) => ({
-        ...prev,
-        [result.data.platform]: {
-          platformId: result.data.artistData.platformId,
-          name: result.data.artistData.name,
-          thumbnailImageUrl: result.data.artistData.avatar,
-          url: result.data.artistData.links?.[result.data.platform] || '',
-          platformData: result.data.artistData,
-        },
-      }));
-      setCurrentFormStep('review');
-    }
+    await initialArtistMutation.mutate({ url: initialArtistUrl });
   }
 
-  // Handle connecting additional platforms
-  const connectPlatformQuery = trpcReact.externalArtistDataRouter.fetchFromUrl.useQuery({ url: '' }, { enabled: false });
+  // This remains a query since it's fetching data based on existing state
+  const crossPlatformSearchQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
+    { artistName: Object.values(connectedPlatforms).find((p) => p !== null)?.name || '' },
+    {
+      enabled: Boolean(Object.values(connectedPlatforms).find((p) => p !== null)?.name),
+    },
+  );
 
-  async function handlePlatformConnect(url: string) {
-    const result = await connectPlatformQuery.refetch({});
-
-    if (result.data) {
+  // Replace connectPlatformQuery with a mutation
+  const connectPlatformMutation = trpcReact.externalArtistDataRouter.fetchFromUrl.useMutation({
+    onSuccess: (data) => {
       setConnectedPlatforms((prev) => ({
         ...prev,
-        [result.data.platform]: {
-          platformId: result.data.artistData.platformId,
-          name: result.data.artistData.name,
-          thumbnailImageUrl: result.data.artistData.avatar,
-          url: result.data.artistData.links?.[result.data.platform] || '',
-          platformData: result.data.artistData,
+        [data.platform]: {
+          platformId: data.artistData.platformId,
+          name: data.artistData.name,
+          thumbnailImageUrl: data.artistData.avatar,
+          url: data.artistData.links?.[data.platform] || '',
+          platformData: data.artistData,
         },
       }));
-      toast.success(`Connected ${result.data.platform} profile`);
-    }
+      toast.success(`Connected ${data.platform} profile`);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  async function handlePlatformConnect(url: string) {
+    connectPlatformMutation.mutate({ url });
   }
 
   // Derive loading states - only consider isFetching since we're using enabled: false
-  const isLoading = initialArtistQuery.isFetching || connectPlatformQuery.isFetching;
+  const isLoading = initialArtistMutation.isPending || connectPlatformMutation.isPending;
 
   const platforms: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal'];
 
-  // Separate loading states for initial cross-platform search and connecting platforms
+  // Update loading states
   const isCrossPlatformSearching = crossPlatformSearchQuery.isFetching;
-  const isConnectingPlatform = connectPlatformQuery.isFetching;
+  const isConnectingPlatform = connectPlatformMutation.isPending;
 
   return (
     <div className="bg-white dark:bg-gray-800/50 rounded-xl p-6 shadow-sm">
@@ -119,9 +130,14 @@ export function AddArtistForm() {
 
       <Transition show={currentFormStep === 'review'}>
         <div className="space-y-6">
-          {initialPlatform && connectedPlatforms[initialPlatform]?.platformData && (
-            <UserProvidedURLArtistProfile artistData={connectedPlatforms[initialPlatform].platformData} />
-          )}
+          {(Object.entries(connectedPlatforms).find(([, data]) => data !== null)?.[0] as PlatformType) &&
+            connectedPlatforms[Object.entries(connectedPlatforms).find(([, data]) => data !== null)?.[0] as PlatformType].platformData && (
+              <UserProvidedURLArtistProfile
+                artistData={
+                  connectedPlatforms[Object.entries(connectedPlatforms).find(([, data]) => data !== null)?.[0] as PlatformType].platformData
+                }
+              />
+            )}
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -135,7 +151,9 @@ export function AddArtistForm() {
             </div>
 
             {platforms
-              .filter((platform) => platform !== initialPlatform)
+              .filter(
+                (platform) => platform !== (Object.entries(connectedPlatforms).find(([, data]) => data !== null)?.[0] as PlatformType),
+              )
               .map((platform) => (
                 <PlatformMatcher
                   key={platform}

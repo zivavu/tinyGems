@@ -21,7 +21,7 @@ const artistNameSchema = z.object({
 });
 
 export const externalArtistDataRouter = createTRPCRouter({
-  fetchFromUrl: protectedProcedure.input(platformLinkSchema).query(async ({ input }) => {
+  fetchFromUrl: protectedProcedure.input(platformLinkSchema).mutation(async ({ input }) => {
     try {
       if (input.url.includes('spotify.com')) {
         const artistData = await fetchSpotifyArtistData(input.url);

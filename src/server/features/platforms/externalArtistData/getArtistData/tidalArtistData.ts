@@ -188,7 +188,7 @@ async function makeAuthorizedRequest(
 
 function extractTidalId(url: string): string {
   const patterns = {
-    artist: /tidal\.com\/artist\/(\d+)/,
+    artist: /tidal\.com\/(?:browse\/)?artist\/(\d+)/,
     shortUrl: /tidal\.com\/a\/(\d+)/,
   };
 
