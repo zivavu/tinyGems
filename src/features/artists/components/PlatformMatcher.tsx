@@ -39,67 +39,53 @@ export function PlatformMatcher({
   const [customUrl, setCustomUrl] = useState('');
 
   return (
-    <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-      <div className="flex items-center justify-between">
-        <Typography variant="h6" className="capitalize">
-          {platform}
-        </Typography>
-        {isLoading && <Icons.Loader className="w-4 h-4 animate-spin text-amber-500" />}
+    <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-900/50">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Typography variant="h6" className="capitalize">
+            {platform}
+          </Typography>
+          {isSearching && <Icons.Search className="w-4 h-4 text-amber-500 animate-pulse" />}
+        </div>
       </div>
 
-      <Transition
-        show={Boolean(connectedPlatform)}
-        enter="transition-all duration-300 ease-out"
-        enterFrom="opacity-0 -translate-y-2"
-        enterTo="opacity-100 translate-y-0"
-        leave="transition-all duration-200 ease-in"
-        leaveFrom="opacity-100 translate-y-0"
-        leaveTo="opacity-0 translate-y-2"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {connectedPlatform?.avatar ? (
-              <Image
-                src={connectedPlatform.avatar}
-                alt={connectedPlatform.name}
-                width={40}
-                height={40}
-                className="rounded-md object-cover"
-              />
-            ) : (
-              <div className="w-10 h-10 rounded-md bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                <Icons.Music className="w-6 h-6 text-gray-400" />
+      {connectedPlatform ? (
+        <Transition show={true} enter="transition-all duration-300" enterFrom="opacity-0 translate-y-2" enterTo="opacity-100 translate-y-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {connectedPlatform.avatar ? (
+                <Image
+                  src={connectedPlatform.avatar}
+                  alt={connectedPlatform.name}
+                  width={40}
+                  height={40}
+                  className="rounded-md object-cover"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-md bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                  <Icons.Music className="w-6 h-6 text-gray-400" />
+                </div>
+              )}
+              <div className="flex-1">
+                <Typography variant="h6">{connectedPlatform.name}</Typography>
+                <Typography variant="small" className="text-gray-500">
+                  Connected to {platform}
+                </Typography>
               </div>
-            )}
-            <div className="flex-1">
-              <Typography variant="h6">{connectedPlatform?.name}</Typography>
-              <Typography variant="small" className="text-gray-500">
-                Connected to {platform}
-              </Typography>
+              <Icons.Check className="w-5 h-5 text-green-500" />
             </div>
-            <Icons.Check className="w-5 h-5 text-green-500" />
+            <Button onClick={onDisconnect} variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+              <Icons.Unlink className="w-4 h-4" />
+            </Button>
           </div>
-          <Button onClick={onDisconnect} variant="outline" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
-            <Icons.Unlink className="w-4 h-4" />
-          </Button>
-        </div>
-      </Transition>
-
-      <Transition
-        show={!connectedPlatform}
-        enter="transition-all duration-300 ease-out"
-        enterFrom="opacity-0 scale-95"
-        enterTo="opacity-100 scale-100"
-        leave="transition-all duration-200 ease-in"
-        leaveFrom="opacity-100 scale-100"
-        leaveTo="opacity-0 scale-95"
-      >
-        <div className="space-y-4">
+        </Transition>
+      ) : (
+        <div className="space-y-3">
           {isSearching ? (
-            <div className="flex items-center justify-center">
-              <Typography variant="small" className="text-gray-500">
-                Finding matches...
-              </Typography>
+            <div className="flex flex-col gap-2">
+              <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse" />
+              <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse opacity-60" />
+              <div className="h-12 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse opacity-30" />
             </div>
           ) : suggestedMatches?.possibleArtists?.length ? (
             <div className="space-y-2">
@@ -109,7 +95,7 @@ export function PlatformMatcher({
               {suggestedMatches.possibleArtists.map((artist) => (
                 <div
                   key={artist.artistId}
-                  className="flex items-center gap-3 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800"
+                  className="group flex items-center gap-3 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
                 >
                   {artist.thumbnailImageUrl ? (
                     <Image
@@ -124,65 +110,46 @@ export function PlatformMatcher({
                       <Icons.Music className="w-6 h-6 text-gray-400" />
                     </div>
                   )}
-                  <div className="flex-1">
-                    <Typography variant="h6">{artist.artistName}</Typography>
+
+                  <div className="flex-1 min-w-0">
+                    <a href={artist.artistUrl} target="_blank" rel="noopener noreferrer" className="block hover:underline">
+                      <Typography variant="h6" className="truncate">
+                        {artist.artistName}
+                      </Typography>
+                    </a>
                     <Typography variant="small" className="text-amber-600 dark:text-amber-400">
                       {Math.round(artist.confidence * 100)}% match
                     </Typography>
                   </div>
-                  <Button onClick={() => onConnect(artist.artistUrl)} disabled={isLoading} variant="outline" size="sm">
-                    {isLoading ? <Icons.Loader className="w-4 h-4 animate-spin" /> : 'Connect'}
+
+                  <Button
+                    onClick={() => onConnect(artist.artistUrl)}
+                    disabled={isLoading}
+                    className="bg-amber-500 hover:bg-amber-600 text-white"
+                  >
+                    {isLoading ? (
+                      <Icons.Loader className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <Icons.Link className="w-4 h-4" />
+                        Connect
+                      </div>
+                    )}
                   </Button>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="flex items-center justify-center">
-              <Typography variant="small" className="text-gray-500">
-                No matches found
-              </Typography>
-            </div>
+            <button
+              onClick={() => setIsAddingUrl(true)}
+              className="w-full flex items-center gap-3 p-3 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700 hover:border-amber-500 dark:hover:border-amber-500 transition-colors"
+            >
+              <Icons.Plus className="w-5 h-5" />
+              <Typography>Add {platform} profile</Typography>
+            </button>
           )}
-
-          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-            {isAddingUrl ? (
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <input
-                    type="url"
-                    placeholder={`Enter ${platform} profile URL...`}
-                    value={customUrl}
-                    onChange={(e) => setCustomUrl(e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-md border border-gray-200 dark:border-gray-700"
-                    disabled={isLoading}
-                  />
-                  <Button variant="outline" onClick={() => setIsAddingUrl(false)} disabled={isLoading} size="sm">
-                    <Icons.X className="w-4 h-4" />
-                  </Button>
-                </div>
-                <Button onClick={() => onConnect(customUrl)} disabled={!customUrl || isLoading} className="w-full" size="sm">
-                  Connect
-                </Button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setIsAddingUrl(true)}
-                className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-                disabled={isLoading}
-              >
-                <div className="w-10 h-10 rounded-md bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                  <Icons.Plus className="w-6 h-6 text-gray-400" />
-                </div>
-                <div className="flex-1 text-left">
-                  <Typography variant="small" className="text-gray-500">
-                    Or add custom URL
-                  </Typography>
-                </div>
-              </button>
-            )}
-          </div>
         </div>
-      </Transition>
+      )}
     </div>
   );
 }
