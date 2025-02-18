@@ -99,6 +99,7 @@ import {
   Upload,
   User,
   Users,
+  Unlink,
   Video,
   X,
   type LucideIcon,
@@ -207,6 +208,7 @@ export const Icons = {
   Radio,
   Compass,
   Network,
+  Unlink,
 } as const satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof Icons;
