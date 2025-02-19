@@ -64,7 +64,7 @@ export function AddArtistForm() {
 
   const crossPlatformSearchQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
     { artistName: initialPlatformData?.name ?? '' },
-    { enabled: Boolean(initialPlatformData?.name) },
+    { enabled: Boolean(initialPlatformData?.name), refetchOnMount: false, refetchOnWindowFocus: false },
   );
 
   const connectPlatformMutation = trpcReact.externalArtistDataRouter.fetchFromUrl.useMutation({
@@ -88,7 +88,7 @@ export function AddArtistForm() {
     },
   });
 
-  const platforms: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal', 'bandcamp', 'appleMusic', 'other'];
+  const platformNames: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal', 'bandcamp', 'appleMusic', 'other'];
 
   // Loading states
   const isLoading = initialArtistMutation.isPending || connectPlatformMutation.isPending;
@@ -100,7 +100,7 @@ export function AddArtistForm() {
       toast.error('Please enter a valid URL');
       return;
     }
-    await initialArtistMutation.mutate({ url: initialArtistUrl });
+    initialArtistMutation.mutate({ url: initialArtistUrl });
   }
 
   async function handlePlatformConnect(url: string) {
@@ -117,7 +117,7 @@ export function AddArtistForm() {
               platformId: data.artistData.platformId,
               name: data.artistData.name,
               thumbnailImageUrl: data.artistData.avatar,
-              url: data.artistData.links?.[data.platform] ?? '',
+              url: data.artistData.links?.[data.platform as keyof typeof data.artistData.links] ?? '',
               platformData: data.artistData,
             },
           }));
@@ -185,18 +185,18 @@ export function AddArtistForm() {
               )}
             </div>
 
-            {platforms
+            {platformNames
               .filter((platform) => platform !== initialPlatform)
-              .map((platform) => (
+              .map((platformName) => (
                 <PlatformMatcher
-                  key={platform}
-                  platform={platform}
-                  connectedPlatform={connectedPlatforms[platform]?.platformData}
+                  key={platformName}
+                  platform={platformName}
+                  connectedPlatform={connectedPlatforms[platformName]?.platformData}
                   suggestedMatches={crossPlatformSearchQuery.data?.[0]?.platformMatches.find(
-                    (p) => p.platform === platform && p.possibleArtists?.length > 0,
+                    (p) => p.platform === platformName && p?.possibleArtists?.length > 0,
                   )}
                   onConnect={handlePlatformConnect}
-                  onDisconnect={() => handlePlatformDisconnect(platform)}
+                  onDisconnect={() => handlePlatformDisconnect(platformName)}
                   isLoading={isConnectingPlatform}
                   isSearching={isCrossPlatformSearching}
                 />
