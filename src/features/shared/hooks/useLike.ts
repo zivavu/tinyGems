@@ -2,7 +2,7 @@
 
 import { authClient } from '@/lib/authClient';
 import { trpcReact } from '@/lib/trpcReact';
-import { LikeType } from '@/server/routers/userRouter';
+import { LikeType } from '@/server/fetching/routers/userRouter';
 import { toast } from 'sonner';
 
 interface UseLikeProps {
@@ -16,7 +16,6 @@ export function useLike({ itemId, type, title }: UseLikeProps) {
   const isAuthenticated = !!session.data?.user;
 
   const { data: likes } = trpcReact.userRouter.getLikes.useQuery({ type }, { enabled: isAuthenticated });
-
   const utils = trpcReact.useUtils();
 
   const isLiked = likes?.includes(itemId);

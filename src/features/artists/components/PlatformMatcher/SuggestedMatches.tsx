@@ -1,18 +1,6 @@
 import { Typography } from '@/features/shared/components/Typography';
 
-export interface SuggestedMatchesProps {
-  matches: Array<{
-    artistId: string;
-    artistName: string;
-    artistUrl: string;
-    thumbnailImageUrl?: string | null;
-    confidence: number;
-  }>;
-  onConnect: (url: string) => void;
-  isLoading: boolean;
-}
-
-export function SuggestedMatches({ matches, onConnect, isLoading }: SuggestedMatchesProps) {
+export function SuggestedMatches({ matches }) {
   return (
     <div className="space-y-2">
       <Typography variant="small" className="text-gray-500">

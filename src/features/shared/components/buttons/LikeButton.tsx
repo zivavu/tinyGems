@@ -4,9 +4,9 @@ import 'client-only';
 import { Icons } from '@/features/shared/components/Icons';
 import { useLike } from '@/features/shared/hooks/useLike';
 import { cn } from '@/features/shared/utils/utils';
-import { LikeType } from '@/server/routers/userRouter';
 import { motion } from 'motion/react';
 import { AuthCTAPopover } from '../auth/AuthCTAPopover';
+import { LikeType } from '@/server/fetching/routers/userRouter';
 
 interface LikeButtonProps {
   itemId: string;

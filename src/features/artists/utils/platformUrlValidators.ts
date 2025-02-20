@@ -10,7 +10,7 @@ const platformArtistUrlPatterns: Record<PlatformType, RegExp> = {
   other: /^https?:\/\/.+/,
 };
 
-const artistValidationErrorMessages: Record<PlatformType, string> = {
+const artistValidationErrorMessages: Record<PlatformType | 'generic', string> = {
   spotify: "Invalid Spotify artist URL. Example: 'https://open.spotify.com/artist/...'",
   soundcloud: "Invalid SoundCloud profile URL. Example: 'https://soundcloud.com/artist-name'",
   youtube: "Invalid YouTube channel URL. Example: 'https://youtube.com/@channel-name'",
@@ -18,16 +18,14 @@ const artistValidationErrorMessages: Record<PlatformType, string> = {
   bandcamp: "Invalid Bandcamp profile URL. Example: 'https://artist-name.bandcamp.com'",
   appleMusic: "Invalid Apple Music artist URL. Example: 'https://music.apple.com/artist/...'",
   other: "Please enter a valid URL starting with 'http://' or 'https://'",
+  generic: "Oops! That URL doesn't look right. Try pasting a link from Spotify, SoundCloud, YouTube, or Tidal.",
 };
 
-export function validatePlatformArtistUrl(url: string, platform: PlatformType): { isValid: boolean; error?: string } {
+export function validatePlatformArtistUrl(url: string) {
   if (!url) return { isValid: false, error: 'URL is required' };
-
-  const pattern = platformArtistUrlPatterns[platform];
-  const isValid = pattern.test(url);
-
+  const isValid = Object.entries(platformArtistUrlPatterns).some(([, pattern]) => pattern.test(url));
   return {
     isValid,
-    error: isValid ? undefined : artistValidationErrorMessages[platform],
+    error: isValid ? undefined : artistValidationErrorMessages.generic,
   };
 }
