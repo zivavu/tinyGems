@@ -3,7 +3,7 @@
 import { AlbumFilterId, ArtistFilterId, SingleFilterId } from '@/features/gems/components/FiltersInputBar/filterOptions';
 import { Button as HeadlessUiButton } from '@headlessui/react';
 import { useState } from 'react';
-import { cn } from '../utils/utils';
+import { cn } from '../utils/cn';
 import { IconName, Icons } from './Icons';
 import { Select } from './Select';
 import { Typography } from './Typography';

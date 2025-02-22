@@ -1,7 +1,7 @@
 'use client';
 
 import { Icons } from '@/features/shared/components/Icons';
-import { cn } from '@/features/shared/utils/utils';
+import { cn } from '@/features/shared/utils/cn';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { LibraryContent } from './LibraryContent';
 

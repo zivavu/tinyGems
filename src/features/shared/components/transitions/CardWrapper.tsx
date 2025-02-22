@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/features/shared/utils/utils';
+import { cn } from '@/features/shared/utils/cn';
 import { motion } from 'motion/react';
 import { ReactNode } from 'react';
 

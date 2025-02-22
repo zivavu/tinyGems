@@ -1,7 +1,7 @@
 import { Typography } from '@/features/shared/components/Typography';
+import { cn } from '@/features/shared/utils/cn';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
-import { cn } from '@/features/shared/utils/utils';
 import { faBandcamp, faInstagram, faSoundcloud, faSpotify, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

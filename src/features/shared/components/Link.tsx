@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
 import type { ComponentProps } from 'react';
-import { cn } from '../utils/utils';
+import { cn } from '../utils/cn';
 import { Typography } from './Typography';
 
 type LinkProps = ComponentProps<typeof NextLink> & {

@@ -1,13 +1,12 @@
 import { PlatformType } from '@/features/gems/types';
 
-const platformArtistUrlPatterns: Record<PlatformType, RegExp> = {
+const platformArtistUrlPatterns: Omit<Record<PlatformType, RegExp>, 'other'> = {
   spotify: /^https?:\/\/(?:open\.)?spotify\.com\/artist\/[a-zA-Z0-9]+(?:\?.*)?$/,
   soundcloud: /^https?:\/\/(?:www\.)?soundcloud\.com\/[a-zA-Z0-9-_]+(?:\/)?$/,
   youtube: /^https?:\/\/(?:www\.)?youtube\.com\/(?:c\/|channel\/|@)?[a-zA-Z0-9-_]+(?:\/)?$/,
   tidal: /^https?:\/\/(?:listen\.)?tidal\.com\/(?:artist|browse\/artist)\/\d+(?:\?.*)?$/,
   bandcamp: /^https?:\/\/[a-zA-Z0-9-]+\.bandcamp\.com(?:\/)?$/,
   appleMusic: /^https?:\/\/music\.apple\.com\/(?:[a-z]{2}\/)?artist\/[a-zA-Z0-9-]+\/\d+(?:\?.*)?$/,
-  other: /^https?:\/\/.+/,
 };
 
 const artistValidationErrorMessages: Record<PlatformType | 'generic', string> = {
@@ -21,11 +20,23 @@ const artistValidationErrorMessages: Record<PlatformType | 'generic', string> = 
   generic: "Oops! That URL doesn't look right. Try pasting a link from Spotify, SoundCloud, YouTube, or Tidal.",
 };
 
+const artistDataFetchingSupportedPlatforms: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal'];
+
 export function validatePlatformArtistUrl(url: string) {
-  if (!url) return { isValid: false, error: 'URL is required' };
+  if (!url) return { isValid: false, error: 'Please paste an artist URL' };
+
+  const platformFromUrl = Object.keys(platformArtistUrlPatterns).find((platform) => url.includes(platform));
+
+  if (!artistDataFetchingSupportedPlatforms.includes(platformFromUrl as PlatformType)) {
+    return {
+      isValid: false,
+      error: "We don't support this platform yet. Please paste an artist URL from Spotify, SoundCloud, YouTube, or Tidal.",
+    };
+  }
+
   const isValid = Object.entries(platformArtistUrlPatterns).some(([, pattern]) => pattern.test(url));
   return {
     isValid,
-    error: isValid ? undefined : artistValidationErrorMessages.generic,
+    error: isValid ? undefined : artistValidationErrorMessages[platformFromUrl as PlatformType] || artistValidationErrorMessages.generic,
   };
 }

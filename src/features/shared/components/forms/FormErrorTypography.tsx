@@ -1,4 +1,4 @@
-import { cn } from '../../utils/utils';
+import { cn } from '../../utils/cn';
 import { Typography } from '../Typography';
 
 interface FormErrorMessageProps {
@@ -6,7 +6,7 @@ interface FormErrorMessageProps {
   className?: string;
 }
 
-export function FormErrorMessage({ message, className }: FormErrorMessageProps) {
+export function FormErrorTypography({ message, className }: FormErrorMessageProps) {
   if (!message) return null;
 
   return (

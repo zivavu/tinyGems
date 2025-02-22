@@ -8,7 +8,7 @@ import { Icons } from '@/features/shared/components/Icons';
 import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { CardWrapper } from '@/features/shared/components/transitions/CardWrapper';
 import { Typography } from '@/features/shared/components/Typography';
-import { cn } from '@/features/shared/utils/utils';
+import { cn } from '@/features/shared/utils/cn';
 import { Button } from '@headlessui/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';

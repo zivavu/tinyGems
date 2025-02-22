@@ -2,7 +2,7 @@
 
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
-import { cn } from '@/features/shared/utils/utils';
+import { cn } from '@/features/shared/utils/cn';
 import { CardWrapper } from '../transitions/CardWrapper';
 
 interface CardErrorProps {

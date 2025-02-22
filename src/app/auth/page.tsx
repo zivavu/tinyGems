@@ -2,7 +2,7 @@
 
 import { platformIconsMap } from '@/features/gems/utils/platformIconsMap';
 import { Button } from '@/features/shared/components/buttons/Button';
-import { FormErrorMessage } from '@/features/shared/components/forms/FormErrorMessage';
+import { FormErrorTypography } from '@/features/shared/components/forms/FormErrorTypography';
 import { Typography } from '@/features/shared/components/Typography';
 import { authClient } from '@/lib/authClient';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -168,7 +168,7 @@ export default function AuthPage() {
                       autoComplete="email"
                       className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
-                    <FormErrorMessage message={loginForm.formState.errors.email?.message} />
+                    <FormErrorTypography message={loginForm.formState.errors.email?.message} />
                   </div>
 
                   <div>
@@ -178,7 +178,7 @@ export default function AuthPage() {
                       placeholder="Password"
                       className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
-                    <FormErrorMessage message={loginForm.formState.errors.password?.message} />
+                    <FormErrorTypography message={loginForm.formState.errors.password?.message} />
                   </div>
 
                   <Button type="submit" className="w-full" disabled={isLoading}>
@@ -196,7 +196,7 @@ export default function AuthPage() {
                       placeholder="Name"
                       className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
-                    <FormErrorMessage message={registerForm.formState.errors.name?.message} />
+                    <FormErrorTypography message={registerForm.formState.errors.name?.message} />
                   </div>
 
                   <div>
@@ -206,7 +206,7 @@ export default function AuthPage() {
                       autoComplete="email"
                       className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
-                    <FormErrorMessage message={registerForm.formState.errors.email?.message} />
+                    <FormErrorTypography message={registerForm.formState.errors.email?.message} />
                   </div>
 
                   <div>
@@ -216,7 +216,7 @@ export default function AuthPage() {
                       placeholder="Password"
                       className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
-                    <FormErrorMessage message={registerForm.formState.errors.password?.message} />
+                    <FormErrorTypography message={registerForm.formState.errors.password?.message} />
                   </div>
 
                   <div>
@@ -226,7 +226,7 @@ export default function AuthPage() {
                       placeholder="Confirm Password"
                       className="w-full rounded-lg border bg-transparent px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
-                    <FormErrorMessage message={registerForm.formState.errors.confirmPassword?.message} />
+                    <FormErrorTypography message={registerForm.formState.errors.confirmPassword?.message} />
                   </div>
 
                   <Button type="submit" className="w-full" disabled={isLoading}>

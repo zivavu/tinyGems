@@ -2,7 +2,7 @@
 
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
-import { cn } from '@/features/shared/utils/utils';
+import { cn } from '@/features/shared/utils/cn';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { motion } from 'motion/react';
 import NextLink from 'next/link';

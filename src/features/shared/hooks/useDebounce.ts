@@ -1,14 +1,17 @@
-import { useCallback } from 'react';
+import { useEffect, useState } from 'react';
 
-export function useDebounce<T extends (...args: Parameters<T>) => void>(fn: T, delay: number) {
-  const debouncedFn = useCallback(
-    (...args: Parameters<T>) => {
-      const handler = setTimeout(() => fn(...args), delay);
+export function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-      return () => clearTimeout(handler);
-    },
-    [fn, delay],
-  );
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
-  return debouncedFn;
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }
