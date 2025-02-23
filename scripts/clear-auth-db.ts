@@ -1,4 +1,4 @@
-import { closeDbConnection, connectToDb } from '../src/server/db';
+import { closeDbConnection, connectToDb } from '@/server/db/db';
 
 async function clearAuthCollections() {
   try {

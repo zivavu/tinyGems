@@ -25,18 +25,20 @@ const artistDataFetchingSupportedPlatforms: PlatformType[] = ['spotify', 'soundc
 export function validatePlatformArtistUrl(url: string) {
   if (!url) return { isValid: false, error: 'Please paste an artist URL' };
 
-  const platformFromUrl = Object.keys(platformArtistUrlPatterns).find((platform) => url.includes(platform));
+  const platform = Object.keys(platformArtistUrlPatterns).find((platform) => url.includes(platform));
 
-  if (!artistDataFetchingSupportedPlatforms.includes(platformFromUrl as PlatformType)) {
+  if (!artistDataFetchingSupportedPlatforms.includes(platform as PlatformType)) {
     return {
       isValid: false,
       error: "We don't support this platform yet. Please paste an artist URL from Spotify, SoundCloud, YouTube, or Tidal.",
     };
   }
 
-  const isValid = Object.entries(platformArtistUrlPatterns).some(([, pattern]) => pattern.test(url));
+  const isValid = Object.entries(platformArtistUrlPatterns).some(([, pattern]) => {
+    return pattern.test(url);
+  });
   return {
     isValid,
-    error: isValid ? undefined : artistValidationErrorMessages[platformFromUrl as PlatformType] || artistValidationErrorMessages.generic,
+    error: isValid ? undefined : artistValidationErrorMessages[platform as PlatformType] || artistValidationErrorMessages.generic,
   };
 }

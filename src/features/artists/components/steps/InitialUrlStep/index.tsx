@@ -27,7 +27,6 @@ export function InitialUrlStep({ onContinue }: InitialUrlStepProps) {
     },
   });
 
-  console.log(watch('url'), 'watch');
   const {
     data: artistData,
     isLoading,
@@ -41,8 +40,6 @@ export function InitialUrlStep({ onContinue }: InitialUrlStepProps) {
   async function onSubmit() {
     await refetch();
   }
-
-  console.log(errors, queryError, 'querry erorrs');
 
   const errorMessage = errors.url?.message || queryError?.message;
 

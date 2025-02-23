@@ -6,7 +6,9 @@ export const artistUrlSchema = z.object({
     .string()
     .url()
     .refine((url) => {
+      console.log('validation', url);
       const validation = validatePlatformArtistUrl(url);
+      console.log('validation', validation);
       return validation.isValid;
     }),
 });

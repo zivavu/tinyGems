@@ -35,12 +35,9 @@ type PlatformHandlerName = keyof typeof platformHandlers;
 
 export const externalArtistDataRouter = createTRPCRouter({
   fetchFromUrl: protectedProcedure.input(artistUrlSchema).query(async ({ input }) => {
-    console.log('GÓÓÓÓWNO');
     const platform: PlatformHandlerName | undefined = Object.entries(platformHandlers).find(([, handler]) =>
       handler.urlPattern.test(input.url),
     )?.[0] as PlatformHandlerName | undefined;
-
-    console.log(platform, input.url);
 
     if (!platform) {
       throw new TRPCError({
