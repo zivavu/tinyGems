@@ -101,6 +101,7 @@ import {
   Upload,
   User,
   Users,
+  Edit,
   Video,
   X,
   type LucideIcon,
@@ -108,6 +109,7 @@ import {
 
 export const Icons = {
   Mail,
+  Edit,
   AlertTriangle,
   ArrowLeft,
   EyeOff,

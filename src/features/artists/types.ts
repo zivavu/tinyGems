@@ -103,3 +103,22 @@ export interface ArtistTrack {
   likes?: number;
   views?: number;
 }
+
+// Types for cross-platform artist matching
+export interface MatchedArtist {
+  artistId: string;
+  artistUrl: string;
+  artistName: string;
+  thumbnailImageUrl?: string | null;
+  confidence: number;
+}
+
+export interface MatchedPlatformArtists {
+  platform: string;
+  possibleArtists: MatchedArtist[] | null;
+}
+
+export interface Match {
+  platformName: string;
+  platformMatches: MatchedPlatformArtists[];
+}
