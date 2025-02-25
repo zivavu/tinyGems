@@ -91,6 +91,61 @@ interface TidalSearchResponse {
   }>;
 }
 
+interface TidalTrack {
+  id: string;
+  type: string;
+  attributes: {
+    name: string;
+    duration: number;
+    trackNumber: number;
+    isrc: string;
+    copyright: string;
+    url: string;
+    explicit: boolean;
+    popularity: number;
+    imageLinks?: Array<{
+      href: string;
+      meta: {
+        width: number;
+        height: number;
+      };
+    }>;
+  };
+  relationships: {
+    album: {
+      data: {
+        id: string;
+        type: string;
+      };
+    };
+    artists: {
+      data: Array<{
+        id: string;
+        type: string;
+      }>;
+    };
+  };
+}
+
+interface TidalTracksResponse {
+  data: TidalTrack[];
+  included?: Array<{
+    id: string;
+    type: string;
+    attributes: {
+      name: string;
+      imageLinks?: Array<{
+        href: string;
+        meta: {
+          width: number;
+          height: number;
+        };
+      }>;
+      releaseDate?: string;
+    };
+  }>;
+}
+
 async function getAccessToken(): Promise<string> {
   if (currentToken && tokenExpirationTime && Date.now() < tokenExpirationTime) {
     return currentToken.access_token;
@@ -249,6 +304,45 @@ export async function searchTidalArtist(query: string) {
     return data.included.slice(0, 5);
   } catch (error) {
     console.error('Error searching Tidal artists:', error);
+    throw error;
+  }
+}
+
+export async function fetchTidalArtistTracks(artistId: string, limit: number = 10) {
+  try {
+    const topTracksResponse = (await makeAuthorizedRequest(`/artists/${artistId}/toptracks`, {
+      limit: limit.toString(),
+    })) as TidalTracksResponse;
+
+    const tracks = topTracksResponse.data.map((track) => {
+      // Find album information in the included data
+      const albumInfo = topTracksResponse.included?.find((item) => item.id === track.relationships.album.data.id && item.type === 'albums');
+
+      // Get the image URL from the album if available
+      const imageUrl = albumInfo?.attributes.imageLinks?.[0]?.href;
+
+      return {
+        id: track.id,
+        name: track.attributes.name,
+        duration: track.attributes.duration,
+        album: albumInfo
+          ? {
+              id: albumInfo.id,
+              name: albumInfo.attributes.name,
+              releaseDate: albumInfo.attributes.releaseDate,
+              image: imageUrl,
+            }
+          : undefined,
+        previewUrl: null, // Tidal doesn't provide preview URLs through API
+        externalUrl: track.attributes.url,
+        popularity: track.attributes.popularity,
+        isExplicit: track.attributes.explicit,
+      };
+    });
+
+    return tracks;
+  } catch (error) {
+    console.error('Error fetching Tidal artist tracks:', error);
     throw error;
   }
 }

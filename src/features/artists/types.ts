@@ -82,3 +82,24 @@ export interface Artist {
 }
 
 export type ArtistSnapshot = Pick<Artist, 'id' | 'name' | 'location' | 'avatar' | 'gender' | 'combinedPopularity'>;
+
+export interface ArtistTrack {
+  id: string;
+  name: string;
+  duration?: number;
+  album?: {
+    id: string;
+    name: string;
+    releaseDate?: string;
+    image?: string;
+  } | null;
+  previewUrl?: string | null;
+  externalUrl: string;
+  popularity?: number;
+  isExplicit?: boolean;
+  image?: string;
+  genre?: string | null;
+  publishedAt?: string;
+  likes?: number;
+  views?: number;
+}

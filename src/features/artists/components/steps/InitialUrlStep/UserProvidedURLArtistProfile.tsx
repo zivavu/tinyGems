@@ -1,10 +1,13 @@
+import { ArtistTrack } from '@/features/artists/types';
 import { platformIconsMap } from '@/features/gems/utils/platformIconsMap';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
+import { trpcReact } from '@/lib/trpcReact';
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const platformBaseUrls: Record<string, string> = {
   spotify: 'https://open.spotify.com/artist/',
@@ -57,8 +60,14 @@ const formatPlatformName = (name: string): string => {
 };
 
 export function UserProvidedURLArtistProfile({ artistData }: { artistData: ExternalPlatformArtistData }) {
+  const [tracks, setTracks] = useState<ArtistTrack[]>([]);
+  const [isLoadingTracks, setIsLoadingTracks] = useState(false);
+
   // Get the platform ID in lowercase for consistent handling
   const platformId = artistData.platformId?.toLowerCase();
+
+  // Get the actual platform name from the links object
+  const platformName = Object.keys(artistData.links || {})[0] as 'spotify' | 'soundcloud' | 'youtube' | 'tidal' | undefined;
 
   // Get the platform URL directly from links object if available
   const platformUrl =
@@ -88,6 +97,46 @@ export function UserProvidedURLArtistProfile({ artistData }: { artistData: Exter
     metricLabel = 'Popularity';
     metricValue = artistData.audience.tidal.popularity;
   }
+
+  // Fetch tracks when component mounts
+  const fetchTracks = trpcReact.externalArtistDataRouter.fetchArtistTracks.useQuery(
+    {
+      platformId: platformName as 'spotify' | 'soundcloud' | 'youtube' | 'tidal',
+      artistId: artistData.platformId,
+      limit: 5,
+    },
+    {
+      enabled: !!platformName && !!artistData.platformId,
+      // Don't refetch automatically to avoid hitting API rate limits
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      retry: 1,
+    },
+  );
+
+  useEffect(() => {
+    if (platformName && artistData.platformId) {
+      setIsLoadingTracks(true);
+    }
+  }, [platformName, artistData.platformId]);
+
+  useEffect(() => {
+    if (fetchTracks.data) {
+      setTracks(fetchTracks.data as ArtistTrack[]);
+      setIsLoadingTracks(false);
+    }
+    if (fetchTracks.error) {
+      setIsLoadingTracks(false);
+    }
+  }, [fetchTracks.data, fetchTracks.error]);
+
+  // Format track duration from milliseconds to mm:ss
+  const formatDuration = (ms?: number) => {
+    if (!ms) return '--:--';
+    const minutes = Math.floor(ms / 60000);
+    const seconds = ((ms % 60000) / 1000).toFixed(0);
+    return `${minutes}:${Number(seconds) < 10 ? '0' : ''}${seconds}`;
+  };
 
   return (
     <div className={`relative overflow-hidden rounded-xl border shadow-sm ${platformStyle.border}`}>
@@ -166,29 +215,77 @@ export function UserProvidedURLArtistProfile({ artistData }: { artistData: Exter
           </div>
         </div>
 
-        {artistData.metadata?.topTracks && artistData.metadata.topTracks.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-2">
-              <Typography variant="small" className="font-medium flex items-center gap-1.5">
-                <Icons.Music className="w-3.5 h-3.5" />
-                <span>Top tracks</span>
+        <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between mb-2">
+            <Typography variant="small" className="font-medium flex items-center gap-1.5">
+              <Icons.Music className="w-3.5 h-3.5" />
+              <span>Top tracks</span>
+            </Typography>
+          </div>
+
+          {isLoadingTracks && (
+            <div className="flex justify-center py-4">
+              <Icons.Loader className="w-6 h-6 animate-spin text-gray-400" />
+            </div>
+          )}
+
+          {!isLoadingTracks && fetchTracks.error && (
+            <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md">
+              <Typography variant="small" className="text-gray-500 dark:text-gray-400 text-center">
+                Couldn&apos;t load tracks at this time
               </Typography>
             </div>
+          )}
+
+          {!isLoadingTracks && tracks.length === 0 && !fetchTracks.error && (
+            <div className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md">
+              <Typography variant="small" className="text-gray-500 dark:text-gray-400 text-center">
+                No tracks available
+              </Typography>
+            </div>
+          )}
+
+          {!isLoadingTracks && tracks.length > 0 && (
             <div className="grid grid-cols-1 gap-1.5">
-              {artistData.metadata.topTracks.slice(0, 3).map((track, index) => (
-                <div
+              {tracks.map((track, index) => (
+                <Link
                   key={track.id}
-                  className="flex items-center p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors"
+                  href={track.externalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors group"
                 >
-                  <span className="font-mono text-xs text-gray-500 dark:text-gray-400 w-4">{index + 1}.</span>
-                  <Typography variant="small" className="ml-1 truncate">
-                    {track.name}
-                  </Typography>
-                </div>
+                  <span className="font-mono text-xs text-gray-500 dark:text-gray-400 w-4 mr-2">{index + 1}.</span>
+
+                  {track.image && (
+                    <div className="mr-2 w-8 h-8 flex-shrink-0 overflow-hidden rounded-sm border border-gray-200 dark:border-gray-700">
+                      <Image width={32} height={32} src={track.image} alt={track.name} className="w-full h-full object-cover" />
+                    </div>
+                  )}
+
+                  <div className="flex-1 min-w-0">
+                    <Typography variant="small" className="truncate flex items-center gap-1">
+                      {track.name}
+                      {track.isExplicit && (
+                        <span className="px-1 py-0.5 bg-gray-200 dark:bg-gray-700 text-[10px] uppercase font-bold rounded">E</span>
+                      )}
+                    </Typography>
+
+                    {track.album && (
+                      <Typography variant="small" className="text-gray-500 dark:text-gray-400 truncate text-xs">
+                        {track.album.name}
+                      </Typography>
+                    )}
+                  </div>
+
+                  <div className="ml-2 text-xs text-gray-500 dark:text-gray-400">{formatDuration(track.duration)}</div>
+
+                  <Icons.ExternalLink className="ml-2 w-3 h-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

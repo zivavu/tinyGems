@@ -67,6 +67,21 @@ interface SoundCloudSearchRecord {
   subscriptions: Array<unknown>;
 }
 
+interface SoundCloudTrack {
+  id: number;
+  kind: string;
+  title: string;
+  duration: number;
+  created_at: string;
+  permalink_url: string;
+  artwork_url: string | null;
+  stream_url: string;
+  playback_count: number;
+  likes_count: number;
+  genre: string | null;
+  description: string | null;
+}
+
 let currentToken: SoundCloudToken | null = null;
 let tokenExpirationTime: number | null = null;
 
@@ -194,6 +209,48 @@ export async function searchSoundcloudArtist(query: string) {
     return data;
   } catch (error) {
     console.error('Error searching SoundCloud artists:', error);
+    throw error;
+  }
+}
+
+export async function fetchSoundcloudArtistTracks(artistId: string, limit: number = 10) {
+  try {
+    const token = await getAccessToken();
+    const response = await fetch(
+      `${SOUNDCLOUD_API_URL}/users/${artistId}/tracks?` +
+        new URLSearchParams({
+          limit: limit.toString(),
+        }),
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('SoundCloud tracks fetch error:', errorText);
+      throw new Error('Failed to fetch SoundCloud tracks');
+    }
+
+    const data: SoundCloudTrack[] = await response.json();
+
+    const tracks = data.map((track) => ({
+      id: track.id.toString(),
+      name: track.title,
+      duration: track.duration,
+      album: null,
+      previewUrl: track.stream_url,
+      externalUrl: track.permalink_url,
+      popularity: track.playback_count,
+      image: track.artwork_url,
+      genre: track.genre,
+    }));
+
+    return tracks;
+  } catch (error) {
+    console.error('Error fetching SoundCloud artist tracks:', error);
     throw error;
   }
 }

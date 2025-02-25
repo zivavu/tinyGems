@@ -2,10 +2,26 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
 import { findArtistAcrossPlatforms } from './platforms/externalArtistData/crossPlatformSearch';
-import { fetchSoundcloudArtistData, searchSoundcloudArtist } from './platforms/externalArtistData/getArtistData/soundcloudArtistData';
-import { fetchSpotifyArtistData, searchSpotifyArtist } from './platforms/externalArtistData/getArtistData/spotifyArtistData';
-import { fetchTidalArtistData, searchTidalArtist } from './platforms/externalArtistData/getArtistData/tidalArtistData';
-import { fetchYoutubeArtistData, searchYoutubeArtist } from './platforms/externalArtistData/getArtistData/youtubeArtistData';
+import {
+  fetchSoundcloudArtistData,
+  fetchSoundcloudArtistTracks,
+  searchSoundcloudArtist,
+} from './platforms/externalArtistData/getArtistData/soundcloudArtistData';
+import {
+  fetchSpotifyArtistData,
+  fetchSpotifyArtistTracks,
+  searchSpotifyArtist,
+} from './platforms/externalArtistData/getArtistData/spotifyArtistData';
+import {
+  fetchTidalArtistData,
+  fetchTidalArtistTracks,
+  searchTidalArtist,
+} from './platforms/externalArtistData/getArtistData/tidalArtistData';
+import {
+  fetchYoutubeArtistData,
+  fetchYoutubeArtistTracks,
+  searchYoutubeArtist,
+} from './platforms/externalArtistData/getArtistData/youtubeArtistData';
 import { artistUrlSchema } from './schemas';
 
 const platformHandlers = {
@@ -60,36 +76,25 @@ export const externalArtistDataRouter = createTRPCRouter({
     )
     .query(async ({ input }) => {
       try {
-        // This is a placeholder - in a real implementation, we would call platform-specific
-        // functions to fetch tracks for the given artist ID
         const platform = input.platformId;
 
-        // Mock implementation - in production, you would replace this with actual API calls
-        // to each platform's track fetching functionality
         switch (platform) {
           case 'spotify':
-            // Call Spotify API to get tracks for this artist
-            // return await fetchSpotifyArtistTracks(input.artistId, input.limit);
-            break;
+            return await fetchSpotifyArtistTracks(input.artistId, input.limit);
           case 'soundcloud':
-            // Call SoundCloud API to get tracks for this artist
-            // return await fetchSoundcloudArtistTracks(input.artistId, input.limit);
-            break;
+            return await fetchSoundcloudArtistTracks(input.artistId, input.limit);
           case 'youtube':
-            // Call YouTube API to get tracks for this artist
-            // return await fetchYoutubeArtistTracks(input.artistId, input.limit);
-            break;
+            return await fetchYoutubeArtistTracks(input.artistId, input.limit);
           case 'tidal':
-            // Call Tidal API to get tracks for this artist
-            // return await fetchTidalArtistTracks(input.artistId, input.limit);
-            break;
+            return await fetchTidalArtistTracks(input.artistId, input.limit);
+          default:
+            throw new TRPCError({
+              code: 'BAD_REQUEST',
+              message: `Unknown platform: ${platform}`,
+            });
         }
-
-        throw new TRPCError({
-          code: 'NOT_IMPLEMENTED',
-          message: `Fetching tracks for ${platform} is not yet implemented`,
-        });
       } catch (error) {
+        console.error(`Error fetching tracks for ${input.platformId}:`, error);
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: `Failed to fetch artist tracks: ${(error as Error).message}`,

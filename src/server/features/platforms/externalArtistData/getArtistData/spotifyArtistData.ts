@@ -62,3 +62,32 @@ export async function searchSpotifyArtist(query: string) {
     throw error;
   }
 }
+
+export async function fetchSpotifyArtistTracks(artistId: string, limit: number = 10) {
+  try {
+    await getAccessToken();
+
+    const response = await spotifyApi.getArtistTopTracks(artistId, 'US');
+
+    const tracks = response.body.tracks.slice(0, limit).map((track) => ({
+      id: track.id,
+      name: track.name,
+      duration: track.duration_ms,
+      album: {
+        id: track.album.id,
+        name: track.album.name,
+        releaseDate: track.album.release_date,
+        image: track.album.images[0]?.url,
+      },
+      previewUrl: track.preview_url,
+      externalUrl: track.external_urls.spotify,
+      popularity: track.popularity,
+      isExplicit: track.explicit,
+    }));
+
+    return tracks;
+  } catch (error) {
+    console.error('Error fetching Spotify artist tracks:', error);
+    throw error;
+  }
+}
