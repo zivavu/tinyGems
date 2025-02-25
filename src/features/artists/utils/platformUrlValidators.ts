@@ -2,10 +2,10 @@ import { PlatformType } from '@/features/gems/types';
 
 const platformArtistUrlPatterns: Omit<Record<PlatformType, RegExp>, 'other'> = {
   spotify: /^https?:\/\/(?:open\.)?spotify\.com\/artist\/[a-zA-Z0-9]+(?:\?.*)?$/,
-  soundcloud: /^https?:\/\/(?:www\.)?soundcloud\.com\/[a-zA-Z0-9-_]+(?:\/)?$/,
-  youtube: /^https?:\/\/(?:www\.)?youtube\.com\/(?:c\/|channel\/|@)?[a-zA-Z0-9-_]+(?:\/)?$/,
+  soundcloud: /^https?:\/\/(?:www\.)?soundcloud\.com\/[a-zA-Z0-9-_]+(?:\/)?(?:\?.*)?$/,
+  youtube: /^https?:\/\/(?:www\.)?youtube\.com\/(?:c\/|channel\/|@)?[a-zA-Z0-9-_]+(?:\/)?(?:\?.*)?$/,
   tidal: /^https?:\/\/(?:listen\.)?tidal\.com\/(?:artist|browse\/artist)\/\d+(?:\?.*)?$/,
-  bandcamp: /^https?:\/\/[a-zA-Z0-9-]+\.bandcamp\.com(?:\/)?$/,
+  bandcamp: /^https?:\/\/[a-zA-Z0-9-]+\.bandcamp\.com(?:\/)?(?:\?.*)?$/,
   appleMusic: /^https?:\/\/music\.apple\.com\/(?:[a-z]{2}\/)?artist\/[a-zA-Z0-9-]+\/\d+(?:\?.*)?$/,
 };
 
@@ -25,20 +25,40 @@ const artistDataFetchingSupportedPlatforms: PlatformType[] = ['spotify', 'soundc
 export function validatePlatformArtistUrl(url: string) {
   if (!url) return { isValid: false, error: 'Please paste an artist URL' };
 
-  const platform = Object.keys(platformArtistUrlPatterns).find((platform) => url.includes(platform));
+  try {
+    // Basic URL validation
+    const urlObj = new URL(url);
+    if (!urlObj.protocol || !urlObj.hostname) {
+      return { isValid: false, error: "Please enter a valid URL starting with 'http://' or 'https://'" };
+    }
 
-  if (!artistDataFetchingSupportedPlatforms.includes(platform as PlatformType)) {
+    // Check if the URL matches one of our supported platforms
+    const platform = Object.keys(platformArtistUrlPatterns).find((p) => url.toLowerCase().includes(p.toLowerCase()));
+
+    if (!platform) {
+      return {
+        isValid: false,
+        error: "We don't support this platform yet. Please paste an artist URL from Spotify, SoundCloud, YouTube, or Tidal.",
+      };
+    }
+
+    if (!artistDataFetchingSupportedPlatforms.includes(platform as PlatformType)) {
+      return {
+        isValid: false,
+        error:
+          "We don't support this platform yet for fetching data. Please paste an artist URL from Spotify, SoundCloud, YouTube, or Tidal.",
+      };
+    }
+
+    // Check if the URL matches the platform-specific pattern
+    const pattern = platformArtistUrlPatterns[platform as keyof typeof platformArtistUrlPatterns];
+    const isValid = pattern.test(url);
+
     return {
-      isValid: false,
-      error: "We don't support this platform yet. Please paste an artist URL from Spotify, SoundCloud, YouTube, or Tidal.",
+      isValid,
+      error: isValid ? undefined : artistValidationErrorMessages[platform as PlatformType] || artistValidationErrorMessages.generic,
     };
+  } catch {
+    return { isValid: false, error: "Please enter a valid URL starting with 'http://' or 'https://'" };
   }
-
-  const isValid = Object.entries(platformArtistUrlPatterns).some(([, pattern]) => {
-    return pattern.test(url);
-  });
-  return {
-    isValid,
-    error: isValid ? undefined : artistValidationErrorMessages[platform as PlatformType] || artistValidationErrorMessages.generic,
-  };
 }

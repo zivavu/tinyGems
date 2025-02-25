@@ -1,4 +1,4 @@
-import { faLink } from '@fortawesome/free-solid-svg-icons';
+import { faLink, faMusic } from '@fortawesome/free-solid-svg-icons';
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faApple, faBandcamp, faGithub, faSoundcloud, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
@@ -11,5 +11,6 @@ export const platformIconsMap: Record<PlatformType | 'github', IconProp> = {
   youtube: faYoutube,
   github: faGithub,
   appleMusic: faApple,
+  tidal: faMusic,
   other: faLink,
 } as const;

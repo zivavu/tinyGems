@@ -50,6 +50,53 @@ export const externalArtistDataRouter = createTRPCRouter({
     return { platform, artistData };
   }),
 
+  fetchArtistTracks: protectedProcedure
+    .input(
+      z.object({
+        platformId: z.enum(['spotify', 'soundcloud', 'youtube', 'tidal']),
+        artistId: z.string(),
+        limit: z.number().min(1).max(50).default(10),
+      }),
+    )
+    .query(async ({ input }) => {
+      try {
+        // This is a placeholder - in a real implementation, we would call platform-specific
+        // functions to fetch tracks for the given artist ID
+        const platform = input.platformId;
+
+        // Mock implementation - in production, you would replace this with actual API calls
+        // to each platform's track fetching functionality
+        switch (platform) {
+          case 'spotify':
+            // Call Spotify API to get tracks for this artist
+            // return await fetchSpotifyArtistTracks(input.artistId, input.limit);
+            break;
+          case 'soundcloud':
+            // Call SoundCloud API to get tracks for this artist
+            // return await fetchSoundcloudArtistTracks(input.artistId, input.limit);
+            break;
+          case 'youtube':
+            // Call YouTube API to get tracks for this artist
+            // return await fetchYoutubeArtistTracks(input.artistId, input.limit);
+            break;
+          case 'tidal':
+            // Call Tidal API to get tracks for this artist
+            // return await fetchTidalArtistTracks(input.artistId, input.limit);
+            break;
+        }
+
+        throw new TRPCError({
+          code: 'NOT_IMPLEMENTED',
+          message: `Fetching tracks for ${platform} is not yet implemented`,
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Failed to fetch artist tracks: ${(error as Error).message}`,
+        });
+      }
+    }),
+
   searchArtists: protectedProcedure
     .input(z.object({ query: z.string().min(2, 'Search query must be at least 2 characters long') }))
     .query(async ({ input }) => {
