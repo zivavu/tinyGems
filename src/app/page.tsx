@@ -51,7 +51,7 @@ export default function Home() {
               </NextLink>
 
               <NextLink
-                href="/add-gem"
+                href="/add"
                 className="px-10 py-5 flex items-center gap-3 text-xl font-bold text-stone-900 dark:text-stone-100 bg-white/90 dark:bg-stone-800/90 backdrop-blur-md border-2 border-stone-200 dark:border-stone-700 rounded-[2rem] shadow-lg transition-all duration-300 hover:translate-y-[-4px] hover:shadow-xl group"
               >
                 <Icons.Upload className="w-6 h-6 transition-transform duration-300 group-hover:translate-y-[-4px]" />
