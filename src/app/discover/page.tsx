@@ -84,7 +84,9 @@ export default function SeekPage() {
         <FiltersInputBar />
       </Suspense>
 
-      <SeekContent />
+      <Suspense fallback={<div>Loading...</div>}>
+        <SeekContent />
+      </Suspense>
     </div>
   );
 }

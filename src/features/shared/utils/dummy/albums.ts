@@ -51,15 +51,13 @@ export function generateDummyAlbums(count = 20): Album[] {
 
     const albumType: AlbumType = albumGemsCount <= 4 ? 'ep' : albumGemsCount <= 6 ? faker.helpers.arrayElement(['ep', 'album']) : 'album';
 
-    const platform = faker.helpers.arrayElement(['spotify', 'bandcamp']);
-
     const album: Album = {
       id: faker.string.uuid(),
       type: albumType,
       title: faker.music.songName(),
       artist: createArtistSnapshot(randomArtist),
       createdAt: faker.date.past().toISOString(),
-
+      indexedAt: faker.date.recent(),
       metadata: {
         releaseDate: faker.date.past().toISOString(),
         submittedByUserId: faker.string.uuid(),
@@ -67,9 +65,14 @@ export function generateDummyAlbums(count = 20): Album[] {
       },
 
       likes: {
-        likes: faker.number.int({ min: 0, max: 1000 }),
-        saves: faker.number.int({ min: 0, max: 500 }),
-        views: faker.number.int({ min: 0, max: 2000 }),
+        total: faker.number.int({ min: 0, max: 1000 }),
+        breakdown: {
+          daily: faker.number.int({ min: 0, max: 100 }),
+          weekly: faker.number.int({ min: 0, max: 500 }),
+          monthly: faker.number.int({ min: 0, max: 2000 }),
+          yearly: faker.number.int({ min: 0, max: 10000 }),
+          allTime: faker.number.int({ min: 0, max: 100000 }),
+        },
       },
 
       tracks: albumGems.map((gem, index) => ({
@@ -83,13 +86,7 @@ export function generateDummyAlbums(count = 20): Album[] {
         media: {
           coverImage: faker.helpers.maybe(() => `https://picsum.photos/seed/${faker.string.uuid()}/800/800`, { probability: 0.9 }),
         },
-        platforms: [
-          {
-            name: platform,
-            url: faker.helpers.arrayElement(platform === 'spotify' ? SAMPLE_ALBUMS_URLS.spotify : SAMPLE_ALBUMS_URLS.bandcamp),
-          },
-        ],
-
+        platforms: [],
         duration: calculateAlbumDuration(albumGems),
         genres: faker.helpers.arrayElements(
           musicGenres.flatMap((group) => group.options.map((option) => option.id)),

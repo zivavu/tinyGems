@@ -118,7 +118,7 @@ export const externalArtistDataRouter = createTRPCRouter({
 
   findAcrossPlatforms: protectedProcedure
     .input(z.object({ artistName: z.string().min(2, 'Artist name must be at least 2 characters long') }))
-    .mutation(async ({ input }) => {
+    .query(async ({ input }) => {
       const matches = await findArtistAcrossPlatforms(input.artistName);
       if (!matches?.length) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'No matches found across platforms' });

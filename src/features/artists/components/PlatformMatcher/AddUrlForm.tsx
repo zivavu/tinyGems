@@ -32,7 +32,7 @@ export function AddUrlForm({ platform, onSubmit, onCancel, isLoading }: AddUrlFo
   });
 
   function handleFormSubmit(data: PlatformUrlForm) {
-    const validation = validatePlatformArtistUrl(data.url, platform);
+    const validation = validatePlatformArtistUrl(data.url);
     if (!validation.isValid) {
       return { url: validation.error };
     }

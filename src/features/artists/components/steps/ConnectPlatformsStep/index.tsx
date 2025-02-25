@@ -15,7 +15,7 @@ interface ConnectPlatformsStepProps {
 }
 
 export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: ConnectPlatformsStepProps) {
-  const [matches, setMatches] = useState<Match[]>([]);
+  const [matches] = useState<Match[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedMatches, setSelectedMatches] = useState<Record<string, string>>({});
   const [manualLinks, setManualLinks] = useState<Record<string, string>>({});
@@ -33,20 +33,14 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
   const otherPlatforms = ['bandcamp', 'appleMusic', 'instagram', 'twitter'].filter((platform) => !manualLinks[platform]);
 
   // Find artist across platforms
-  const findAcrossPlatformsMutation = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useMutation({
-    onSuccess: (data) => {
-      setMatches(data);
-      setIsSearching(false);
-    },
-    onError: () => {
-      setIsSearching(false);
-    },
+  const findAcrossPlatformsQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery({
+    artistName: artistData.name,
   });
 
   // Start the search process
   function handleSearch() {
     setIsSearching(true);
-    findAcrossPlatformsMutation.mutate({ artistName: artistData.name });
+    findAcrossPlatformsQuery.refetch();
   }
 
   // Toggle selection of a match
@@ -158,16 +152,16 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
           </Button>
         </div>
 
-        {!isSearching && !matches.length && !findAcrossPlatformsMutation.error && (
+        {!isSearching && !matches.length && !findAcrossPlatformsQuery.error && (
           <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
             <Typography variant="muted">Click &quot;Search&quot; to find this artist on other platforms automatically.</Typography>
           </div>
         )}
 
-        {findAcrossPlatformsMutation.error && (
+        {findAcrossPlatformsQuery.error && (
           <div className="p-4 bg-red-50 dark:bg-red-950/30 rounded-lg border border-red-200 dark:border-red-800 text-center">
             <Typography variant="small" className="text-red-700 dark:text-red-400">
-              {findAcrossPlatformsMutation.error.message || 'Couldn&apos;t find matches for this artist. Try adding links manually.'}
+              {findAcrossPlatformsQuery.error.message || 'Couldn&apos;t find matches for this artist. Try adding links manually.'}
             </Typography>
           </div>
         )}

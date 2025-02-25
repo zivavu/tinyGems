@@ -10,7 +10,7 @@ import { dummyAlbums } from '@/features/shared/utils/dummy/albums';
 import { dummyArtists } from '@/features/shared/utils/dummy/artists';
 import { dummyGems } from '@/features/shared/utils/dummy/gems';
 import { trpcReact } from '@/lib/trpcReact';
-import { LikeType } from '@/server/routers/userRouter';
+import { LikeType } from '@/server/fetching/routers/userRouter';
 import { Typography } from '../../Typography';
 
 interface LibraryContentProps {
@@ -25,7 +25,8 @@ export function LibraryContent({ type }: LibraryContentProps) {
     album: dummyAlbums,
     artist: dummyArtists,
   } as const;
-  const items = itemsMap[type].filter((item) => likedIds?.includes(item.id));
+
+  const items = itemsMap[type].filter((item) => likedIds?.includes(item.id)) as (MusicGem | Album | Artist)[];
 
   if (!items?.length) {
     return (

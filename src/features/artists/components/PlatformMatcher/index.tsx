@@ -42,7 +42,7 @@ export function PlatformMatcher({
     initialArtistName: suggestedMatches?.possibleArtists[0]?.artistName,
   });
 
-  const platformMatches = suggestedMatches?.possibleArtists?.find((p) => p.platform === platform);
+  const platformMatches = suggestedMatches?.possibleArtists?.find((p) => !!p.artistUrl);
 
   return (
     <div className="rounded-lg border border-gray-200 dark:border-gray-700 p-4 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-900/50">
@@ -59,8 +59,8 @@ export function PlatformMatcher({
         <ConnectedPlatform connectedPlatform={connectedPlatform} platform={platform} onDisconnect={onDisconnect} />
       ) : isSearching ? (
         <LoadingState />
-      ) : platformMatches?.possibleArtists?.length ? (
-        <SuggestedMatches matches={platformMatches.possibleArtists} onConnect={onConnect} isLoading={isConnecting} />
+      ) : platformMatches ? (
+        <SuggestedMatches />
       ) : isAddingUrl ? (
         <AddUrlForm platform={platform} onSubmit={onConnect} onCancel={() => setIsAddingUrl(false)} isLoading={isConnecting} />
       ) : (

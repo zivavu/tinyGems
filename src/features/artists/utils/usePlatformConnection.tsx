@@ -1,30 +1,22 @@
 import { trpcReact } from '@/lib/trpcReact';
-import { toast } from 'sonner';
 
 interface UsePlatformConnectionProps {
   initialArtistName?: string;
+  initialArtistUrl?: string;
 }
 
-export function usePlatformConnection({ initialArtistName }: UsePlatformConnectionProps = {}) {
+export function usePlatformConnection({ initialArtistName, initialArtistUrl }: UsePlatformConnectionProps = {}) {
   const crossPlatformSearch = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
     { artistName: initialArtistName ?? '' },
     { enabled: Boolean(initialArtistName), refetchOnMount: false, refetchOnWindowFocus: false },
   );
 
-  const connectPlatform = trpcReact.externalArtistDataRouter.fetchFromUrl.useMutation({
-    onSuccess: (data) => {
-      if (!data.platform || !data.artistData) return;
-      toast.success(`Connected ${data.platform} profile`);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const connectPlatform = trpcReact.externalArtistDataRouter.fetchFromUrl.useQuery({ url: initialArtistUrl ?? '' });
 
   return {
     suggestedMatches: crossPlatformSearch.data?.[0]?.platformMatches ?? [],
     isSearching: crossPlatformSearch.isFetching,
-    connectPlatform: connectPlatform.mutate,
+    connectPlatform: connectPlatform,
     isConnecting: connectPlatform.isPending,
   };
 }

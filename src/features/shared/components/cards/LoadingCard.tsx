@@ -1,6 +1,6 @@
 'use client';
 
-import { LikeType } from '@/server/routers/userRouter';
+import { LikeType } from '@/server/fetching/routers/userRouter';
 import { CardWrapper } from '../transitions/CardWrapper';
 
 interface LoadingCardProps {

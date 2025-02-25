@@ -80,7 +80,7 @@ function generateGem() {
 
     properties: {
       media: {
-        coverImage: mediaInfo.coverImage || `https://picsum.photos/seed/${faker.string.uuid()}/800/800`,
+        coverImage: mediaInfo || `https://picsum.photos/seed/${faker.string.uuid()}/800/800`,
       },
       releaseType: faker.helpers.arrayElement(['single', 'albumTrack']),
       platforms,
@@ -121,7 +121,7 @@ export function generateDummyGems(count = 1000) {
       gem.artist = createArtistSnapshot(artist);
       return gem;
     });
-    gems.push(...artistGems);
+    gems.push(...(artistGems as unknown as MusicGem[]));
   }
 
   return gems.slice(0, count);
