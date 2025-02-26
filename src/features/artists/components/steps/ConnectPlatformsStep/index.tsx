@@ -43,7 +43,11 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
       artistName: artistData.name,
       skipPlatform: validSkipPlatform,
     },
-    { enabled: false, refetchOnWindowFocus: false },
+    {
+      enabled: true, // Enable automatic search on mount
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
   );
 
   // Update matches when query data changes
@@ -172,15 +176,23 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
             Find on other platforms
           </Typography>
 
-          <Button variant="secondary" size="sm" onClick={handleSearch} disabled={isSearching} className="flex items-center gap-2">
-            {isSearching ? <Icons.Loader className="w-3.5 h-3.5 animate-spin" /> : <Icons.Search className="w-3.5 h-3.5" />}
-            <span>{isSearching ? 'Searching...' : 'Search'}</span>
-          </Button>
+          {(findAcrossPlatformsQuery.error || (!isSearching && findAcrossPlatformsQuery.isFetched)) && (
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleSearch}
+              disabled={isSearching}
+              className="flex items-center gap-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800"
+            >
+              {isSearching ? <Icons.Loader className="w-3.5 h-3.5 animate-spin" /> : <Icons.RefreshCw className="w-3.5 h-3.5" />}
+              <span>{isSearching ? 'Searching...' : 'Retry Search'}</span>
+            </Button>
+          )}
         </div>
 
-        {!isSearching && !matches.length && !findAcrossPlatformsQuery.error && (
+        {!isSearching && !matches.length && !findAcrossPlatformsQuery.error && !findAcrossPlatformsQuery.isFetched && (
           <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
-            <Typography variant="muted">Click &quot;Search&quot; to find this artist on other platforms automatically.</Typography>
+            <Typography variant="muted">Searching for matches automatically...</Typography>
             <Typography variant="small" className="text-gray-500 dark:text-gray-400 mt-1">
               We&apos;ll skip searching on {currentPlatform} since you&apos;re already connected there.
             </Typography>
@@ -204,39 +216,83 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
         )}
 
         {isSearching && (
-          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
-            <div className="flex flex-col items-center gap-2">
-              <Icons.Loader className="w-6 h-6 animate-spin text-amber-500" />
-              <Typography variant="muted">
-                Searching for {artistData.name} across {supportedPlatforms.length} platform{supportedPlatforms.length !== 1 ? 's' : ''}...
+          <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="relative w-12 h-12">
+                <div className="absolute inset-0 rounded-full border-4 border-t-amber-500 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+                <div className="absolute inset-2 rounded-full border-4 border-t-transparent border-r-amber-400 border-b-transparent border-l-transparent animate-spin animation-delay-150"></div>
+                <div className="absolute inset-4 rounded-full border-2 border-t-transparent border-r-transparent border-b-amber-300 border-l-transparent animate-spin animation-delay-300"></div>
+              </div>
+
+              <Typography variant="h4" className="font-semibold text-gray-800 dark:text-gray-200">
+                Finding {artistData.name}
               </Typography>
-              <div className="flex flex-wrap gap-2 justify-center mt-1">
+
+              <Typography variant="muted">
+                Searching across {supportedPlatforms.length} platform{supportedPlatforms.length !== 1 ? 's' : ''}...
+              </Typography>
+
+              <div className="flex flex-wrap gap-2 justify-center mt-1 max-w-md">
                 {supportedPlatforms.map((platform) => (
-                  <span key={platform} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium capitalize">
+                  <span
+                    key={platform}
+                    className="px-3 py-1.5 bg-white dark:bg-gray-700 rounded-full text-xs font-medium capitalize shadow-sm border border-gray-100 dark:border-gray-600 flex items-center gap-1.5"
+                  >
+                    {platform === 'spotify' && <Icons.Music className="w-3.5 h-3.5 text-green-500" />}
+                    {platform === 'soundcloud' && <Icons.Cloud className="w-3.5 h-3.5 text-orange-500" />}
+                    {platform === 'youtube' && <Icons.Video className="w-3.5 h-3.5 text-red-500" />}
+                    {platform === 'tidal' && <Icons.Waves className="w-3.5 h-3.5 text-blue-500" />}
                     {platform}
                   </span>
                 ))}
               </div>
+
+              <Typography variant="small" className="text-gray-500 dark:text-gray-400 mt-1 max-w-md">
+                This may take a moment as we search for the best matches across multiple music platforms.
+              </Typography>
             </div>
           </div>
         )}
 
         {!isSearching && matches.length > 0 && (
-          <div className="space-y-4">
-            {matches.map((match, index) => (
-              <div key={index} className="space-y-2">
-                <Typography variant="small" className="font-medium">
-                  Match Group {index + 1}
-                </Typography>
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-950/30 dark:to-amber-900/20 p-3 rounded-lg border border-amber-200 dark:border-amber-800/50">
+              <Typography variant="small" className="text-amber-700 dark:text-amber-400 flex items-center gap-2">
+                <Icons.Info className="w-4 h-4" />
+                <span>Select the best match for each platform to connect with {artistData.name}</span>
+              </Typography>
+            </div>
 
-                <div className="grid gap-2 sm:grid-cols-2">
+            {matches.map((match, index) => (
+              <div
+                key={index}
+                className="space-y-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
+              >
+                <div className="flex items-center justify-between">
+                  <Typography variant="small" className="font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
+                    <Icons.Users className="w-3.5 h-3.5 text-amber-500" />
+                    Match Group {index + 1}
+                  </Typography>
+
+                  <div className="text-xs px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full border border-amber-200 dark:border-amber-800/50">
+                    {match.platformMatches.reduce((count, platform) => count + (platform.possibleArtists?.length || 0), 0)} matches
+                  </div>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
                   {match.platformMatches.map((platformMatch) => (
-                    <div key={platformMatch.platform}>
+                    <div key={platformMatch.platform} className={platformMatch.possibleArtists?.length ? '' : 'hidden'}>
                       {platformMatch.possibleArtists && platformMatch.possibleArtists.length > 0 && (
                         <div className="space-y-2">
-                          <Typography variant="small" className="font-medium capitalize">
-                            {platformMatch.platform}
-                          </Typography>
+                          <div className="flex items-center gap-1.5">
+                            {platformMatch.platform === 'spotify' && <Icons.Music className="w-3.5 h-3.5 text-green-500" />}
+                            {platformMatch.platform === 'soundcloud' && <Icons.Cloud className="w-3.5 h-3.5 text-orange-500" />}
+                            {platformMatch.platform === 'youtube' && <Icons.Video className="w-3.5 h-3.5 text-red-500" />}
+                            {platformMatch.platform === 'tidal' && <Icons.Waves className="w-3.5 h-3.5 text-blue-500" />}
+                            <Typography variant="small" className="font-medium capitalize">
+                              {platformMatch.platform}
+                            </Typography>
+                          </div>
 
                           <div className="space-y-2">
                             {platformMatch.possibleArtists.slice(0, 3).map((artist) => (

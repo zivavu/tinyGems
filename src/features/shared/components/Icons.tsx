@@ -102,15 +102,21 @@ import {
   User,
   Users,
   Edit,
+  Cloud,
+  Waves,
   Video,
+  RefreshCw,
   X,
   type LucideIcon,
 } from 'lucide-react';
 
 export const Icons = {
   Mail,
+  RefreshCw,
   Edit,
   AlertTriangle,
+  Cloud,
+  Waves,
   ArrowLeft,
   EyeOff,
   Info,
