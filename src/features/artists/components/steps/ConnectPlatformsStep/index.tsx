@@ -4,7 +4,7 @@ import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { trpcReact } from '@/lib/trpcReact';
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArtistMatchCard } from './ArtistMatchCard';
 import { ManualLinkInput } from './ManualLinkInput';
 
@@ -15,7 +15,7 @@ interface ConnectPlatformsStepProps {
 }
 
 export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: ConnectPlatformsStepProps) {
-  const [matches] = useState<Match[]>([]);
+  const [matches, setMatches] = useState<Match[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [selectedMatches, setSelectedMatches] = useState<Record<string, string>>({});
   const [manualLinks, setManualLinks] = useState<Record<string, string>>({});
@@ -33,9 +33,29 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
   const otherPlatforms = ['bandcamp', 'appleMusic', 'instagram', 'twitter'].filter((platform) => !manualLinks[platform]);
 
   // Find artist across platforms
-  const findAcrossPlatformsQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery({
-    artistName: artistData.name,
-  });
+  const findAcrossPlatformsQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
+    {
+      artistName: artistData.name,
+    },
+    { enabled: false, refetchOnWindowFocus: false },
+  );
+
+  // Update matches when query data changes
+  useEffect(() => {
+    if (findAcrossPlatformsQuery.data && findAcrossPlatformsQuery.data) {
+      setMatches(findAcrossPlatformsQuery.data);
+      setIsSearching(false);
+    }
+  }, [findAcrossPlatformsQuery.data]);
+
+  // Update isSearching state when query is loading or error occurs
+  useEffect(() => {
+    if (findAcrossPlatformsQuery.isLoading) {
+      setIsSearching(true);
+    } else if (findAcrossPlatformsQuery.error) {
+      setIsSearching(false);
+    }
+  }, [findAcrossPlatformsQuery.isLoading, findAcrossPlatformsQuery.error]);
 
   // Start the search process
   function handleSearch() {
@@ -166,7 +186,16 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
           </div>
         )}
 
-        {matches.length > 0 && (
+        {isSearching && (
+          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+            <div className="flex flex-col items-center gap-2">
+              <Icons.Loader className="w-6 h-6 animate-spin text-amber-500" />
+              <Typography variant="muted">Searching for {artistData.name} across platforms...</Typography>
+            </div>
+          </div>
+        )}
+
+        {!isSearching && matches.length > 0 && (
           <div className="space-y-4">
             {matches.map((match, index) => (
               <div key={index} className="space-y-2">

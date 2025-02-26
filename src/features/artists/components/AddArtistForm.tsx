@@ -5,15 +5,15 @@ import { ExternalPlatformArtistData } from '@/server/features/platforms/external
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { ConnectPlatformsStep } from './steps/ConnectPlatformsStep';
-import { InitialUrlStep } from './steps/InitialUrlStep';
+import { FindArtistStep } from './steps/FindArtistStep';
 
 enum FormStep {
-  INITIAL_URL = 'initial_url',
+  FIND_ARTIST = 'find_artist',
   CONNECT_PLATFORMS = 'connect_platforms',
 }
 
 export function AddArtistForm() {
-  const [formStep, setFormStep] = useState<FormStep>(FormStep.INITIAL_URL);
+  const [formStep, setFormStep] = useState<FormStep>(FormStep.FIND_ARTIST);
   const [artistData, setArtistData] = useState<ExternalPlatformArtistData | null>(null);
 
   function handleInitialStepComplete(data: { platform: string; artistData: unknown }) {
@@ -22,7 +22,7 @@ export function AddArtistForm() {
   }
 
   function handleGoBack() {
-    setFormStep(FormStep.INITIAL_URL);
+    setFormStep(FormStep.FIND_ARTIST);
   }
 
   function handleComplete(mergedArtistData: ExternalPlatformArtistData) {
@@ -30,7 +30,7 @@ export function AddArtistForm() {
       description: `${mergedArtistData.name} has been added to the platform.`,
     });
 
-    setFormStep(FormStep.INITIAL_URL);
+    setFormStep(FormStep.FIND_ARTIST);
     setArtistData(null);
   }
 
@@ -41,12 +41,12 @@ export function AddArtistForm() {
           <div className="flex items-center gap-2">
             <div
               className={`w-7 h-7 rounded-full flex items-center justify-center ${
-                formStep === FormStep.INITIAL_URL
+                formStep === FormStep.FIND_ARTIST
                   ? 'bg-blue-600 text-white'
                   : 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-400'
               }`}
             >
-              {formStep === FormStep.INITIAL_URL ? <span className="text-sm font-semibold">1</span> : <Icons.Check className="w-4 h-4" />}
+              {formStep === FormStep.FIND_ARTIST ? <span className="text-sm font-semibold">1</span> : <Icons.Check className="w-4 h-4" />}
             </div>
             <Typography className="font-medium">Find Artist</Typography>
 
@@ -74,10 +74,10 @@ export function AddArtistForm() {
         <div className="relative">
           <div
             className={`transition-opacity duration-300 ${
-              formStep === FormStep.INITIAL_URL ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'
+              formStep === FormStep.FIND_ARTIST ? 'opacity-100' : 'opacity-0 absolute inset-0 pointer-events-none'
             }`}
           >
-            <InitialUrlStep onContinue={handleInitialStepComplete} />
+            <FindArtistStep onContinue={handleInitialStepComplete} />
           </div>
 
           <div

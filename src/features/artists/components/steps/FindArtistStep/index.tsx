@@ -12,11 +12,11 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { UserProvidedURLArtistProfile } from './UserProvidedURLArtistProfile';
 
-interface InitialUrlStepProps {
+interface FindArtistStepProps {
   onContinue: (artistData: { platform: string; artistData: unknown }) => void;
 }
 
-export function InitialUrlStep({ onContinue }: InitialUrlStepProps) {
+export function FindArtistStep({ onContinue }: FindArtistStepProps) {
   const [isValidationFailed, setIsValidationFailed] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
