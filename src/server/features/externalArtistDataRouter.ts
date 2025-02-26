@@ -117,12 +117,17 @@ export const externalArtistDataRouter = createTRPCRouter({
     }),
 
   findAcrossPlatforms: protectedProcedure
-    .input(z.object({ artistName: z.string().min(2, 'Artist name must be at least 2 characters long') }))
+    .input(
+      z.object({
+        artistName: z.string().min(2, 'Artist name must be at least 2 characters long'),
+        skipPlatform: z.enum(['spotify', 'soundcloud', 'youtube', 'tidal']).optional(),
+      }),
+    )
     .query(async ({ input }) => {
-      const matches = await findArtistAcrossPlatforms(input.artistName);
+      const matches = await findArtistAcrossPlatforms(input.artistName, input.skipPlatform);
       if (!matches?.length) {
         throw new TRPCError({ code: 'NOT_FOUND', message: 'No matches found across platforms' });
       }
-      return matches;
+      return { matches };
     }),
 });

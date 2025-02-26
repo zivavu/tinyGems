@@ -32,18 +32,24 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
   // Create a list of other common platforms for manual entry
   const otherPlatforms = ['bandcamp', 'appleMusic', 'instagram', 'twitter'].filter((platform) => !manualLinks[platform]);
 
+  // Validate if current platform is one of the supported platforms for skipping
+  const validSkipPlatform = ['spotify', 'soundcloud', 'youtube', 'tidal'].includes(currentPlatform)
+    ? (currentPlatform as 'spotify' | 'soundcloud' | 'youtube' | 'tidal')
+    : undefined;
+
   // Find artist across platforms
   const findAcrossPlatformsQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
     {
       artistName: artistData.name,
+      skipPlatform: validSkipPlatform,
     },
     { enabled: false, refetchOnWindowFocus: false },
   );
 
   // Update matches when query data changes
   useEffect(() => {
-    if (findAcrossPlatformsQuery.data && findAcrossPlatformsQuery.data) {
-      setMatches(findAcrossPlatformsQuery.data);
+    if (findAcrossPlatformsQuery.data && findAcrossPlatformsQuery.data.matches) {
+      setMatches(findAcrossPlatformsQuery.data.matches);
       setIsSearching(false);
     }
   }, [findAcrossPlatformsQuery.data]);
@@ -175,6 +181,9 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
         {!isSearching && !matches.length && !findAcrossPlatformsQuery.error && (
           <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
             <Typography variant="muted">Click &quot;Search&quot; to find this artist on other platforms automatically.</Typography>
+            <Typography variant="small" className="text-gray-500 dark:text-gray-400 mt-1">
+              We&apos;ll skip searching on {currentPlatform} since you&apos;re already connected there.
+            </Typography>
           </div>
         )}
 
@@ -186,11 +195,28 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
           </div>
         )}
 
+        {!isSearching && findAcrossPlatformsQuery.isFetched && !findAcrossPlatformsQuery.error && matches.length === 0 && (
+          <div className="p-4 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-200 dark:border-amber-800 text-center">
+            <Typography variant="small" className="text-amber-700 dark:text-amber-400">
+              No matches found for this artist on other platforms. Try adding links manually.
+            </Typography>
+          </div>
+        )}
+
         {isSearching && (
           <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
             <div className="flex flex-col items-center gap-2">
               <Icons.Loader className="w-6 h-6 animate-spin text-amber-500" />
-              <Typography variant="muted">Searching for {artistData.name} across platforms...</Typography>
+              <Typography variant="muted">
+                Searching for {artistData.name} across {supportedPlatforms.length} platform{supportedPlatforms.length !== 1 ? 's' : ''}...
+              </Typography>
+              <div className="flex flex-wrap gap-2 justify-center mt-1">
+                {supportedPlatforms.map((platform) => (
+                  <span key={platform} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium capitalize">
+                    {platform}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         )}
