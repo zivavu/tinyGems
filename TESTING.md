@@ -5,7 +5,7 @@ This document outlines the test-driven development (TDD) approach for the tinyGe
 ## Testing Stack
 
 - **Unit/Integration Tests**: Vitest + React Testing Library
-- **E2E Tests**: Cypress
+- **E2E Tests**: Playwright
 - **API Mocking**: MSW (Mock Service Worker)
 - **Coverage**: C8
 
@@ -14,7 +14,7 @@ This document outlines the test-driven development (TDD) approach for the tinyGe
 ### Running Tests
 
 ```bash
-# Run all tests
+# Run all unit/integration tests
 bun run test
 
 # Watch mode (for development)
@@ -26,8 +26,11 @@ bun run test:coverage
 # Run E2E tests
 bun run test:e2e
 
-# Open Cypress GUI
-bun run cy:open
+# Run E2E tests with UI
+bun run test:e2e:ui
+
+# Show E2E test report
+bun run test:e2e:report
 ```
 
 ## Testing Workflow
@@ -104,12 +107,27 @@ describe('Gems Router', () => {
 End-to-end tests verify the application works correctly from a user's perspective:
 
 ```typescript
-// Example Cypress test
-describe('Basic E2E Tests', () => {
-  it('should visit the home page', () => {
-    cy.visit('/');
-    cy.get('h1').should('exist');
-  });
+// Example Playwright test
+import { test, expect } from '@playwright/test';
+
+test('should visit the home page', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('h1')).toBeVisible();
+});
+
+// Testing iframe embeds (platform specific)
+test('should handle Spotify embed', async ({ page }) => {
+  await page.goto('/artists/example');
+
+  // Access iframe content - Playwright's key advantage!
+  const spotifyIframe = page.locator('iframe[src*="spotify.com"]');
+  await expect(spotifyIframe).toBeVisible();
+
+  const spotifyFrame = page.frameLocator('iframe[src*="spotify.com"]');
+  const playButton = spotifyFrame.locator('[data-testid="play-button"]');
+  if ((await playButton.count()) > 0) {
+    await expect(playButton).toBeVisible();
+  }
 });
 ```
 
@@ -136,8 +154,10 @@ export const handlers = [
 
 1. **File Organization**
 
-   - Place test files next to the code they test
-   - Use `.test.ts` or `.test.tsx` suffix for test files
+   - Place unit/integration test files next to the code they test
+   - Use `.test.ts` or `.test.tsx` suffix for unit/integration tests
+   - Place E2E tests in the `tests/e2e` directory
+   - Use `.spec.ts` suffix for E2E tests
 
 2. **Testing React Components**
 
@@ -156,7 +176,13 @@ export const handlers = [
    - Test with and without authorization
    - Verify input validation works correctly
 
-5. **General Guidelines**
+5. **Testing Embeds (tinyGems Specific)**
+
+   - Use Playwright's frameLocator to test inside iframes
+   - Test cross-platform embed switching
+   - Use multiple browser contexts to test different user states
+
+6. **General Guidelines**
    - Keep tests fast and independent
    - Use descriptive test names
    - Favor testing outputs over implementation details
@@ -168,6 +194,7 @@ export const handlers = [
 - **Hooks**: 95%+ coverage
 - **tRPC Routers**: 85%+ coverage
 - **Utility Functions**: 100% coverage
+- **E2E Critical Paths**: Full coverage of main user journeys
 
 ## Working with the CI/CD Pipeline
 
