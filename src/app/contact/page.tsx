@@ -2,13 +2,16 @@ import { Typography } from '@/features/shared/components/Typography';
 import { faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import NextLink from 'next/link';
 
 export default function ContactPage() {
   return (
     <main>
-      <section className="py-24 px-4 lg:px-72 text-white text-center bg-gray-950 space-y-4">
-        <Typography variant="h2">Get in Touch</Typography>
-        <Typography variant="large">
+      <section className="py-24 px-4 lg:px-72 text-center bg-neutral-800 dark:bg-neutral-900 space-y-4">
+        <Typography variant="h2" className="text-white">
+          Get in Touch
+        </Typography>
+        <Typography variant="large" className="text-neutral-200">
           Have questions, suggestions, or want to contribute? I&apos;d love to hear from you! As a solo developer, I&apos;m always open to
           feedback and collaboration.
         </Typography>
@@ -23,7 +26,10 @@ export default function ContactPage() {
               title: 'Email',
               description: (
                 <>
-                  Send me an email at <span className="text-rose-500 group-hover:text-rose-600 transition">zivavu@gmail.com</span>
+                  Send me an email at{' '}
+                  <span className="text-primary-600 group-hover:text-primary-700 dark:text-primary-400 dark:group-hover:text-primary-300 transition">
+                    zivavu@gmail.com
+                  </span>
                 </>
               ),
               isExternal: false,
@@ -34,23 +40,23 @@ export default function ContactPage() {
               description: (
                 <>
                   Take a look at the{' '}
-                  <a
+                  <NextLink
                     href="https://github.com/zivavu/tinyGems"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-rose-500 hover:text-rose-600 transition"
+                    className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition"
                   >
                     project repository
-                  </a>{' '}
+                  </NextLink>{' '}
                   or{' '}
-                  <a
+                  <NextLink
                     href="https://github.com/zivavu/tinyGems/issues"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-rose-500 hover:text-rose-600 transition"
+                    className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition"
                   >
                     create an issue
-                  </a>
+                  </NextLink>
                 </>
               ),
             },
@@ -61,25 +67,25 @@ export default function ContactPage() {
             },
           ].map((item, index) =>
             item.href ? (
-              <a
+              <NextLink
                 key={index}
                 href={item.href}
-                className="p-6 w-full md:min-w-80 bg-white rounded-xl shadow-sm hover:shadow-md transition-all group dark:bg-gray-800/50"
+                className="p-6 w-full md:min-w-80 bg-white rounded-xl shadow-sm hover:shadow-md transition-all group dark:bg-neutral-800"
                 {...(item.isExternal && {
                   target: '_blank',
                   rel: 'noopener noreferrer',
                 })}
               >
                 <div className="flex flex-col items-center text-center space-y-4">
-                  <FontAwesomeIcon size="2x" icon={item.icon} className="text-rose-500" />
+                  <FontAwesomeIcon size="2x" icon={item.icon} className="text-primary-500 dark:text-white" />
                   <Typography variant="h3">{item.title}</Typography>
                   <Typography variant="muted">{item.description}</Typography>
                 </div>
-              </a>
+              </NextLink>
             ) : (
-              <div key={index} className="p-6 w-full md:min-w-80 bg-white rounded-xl shadow-sm dark:bg-gray-800/50">
+              <div key={index} className="p-6 w-full md:min-w-80 bg-white rounded-xl shadow-sm dark:bg-neutral-800">
                 <div className="flex flex-col items-center text-center space-y-4">
-                  <FontAwesomeIcon size="2x" icon={item.icon} className="text-rose-500" />
+                  <FontAwesomeIcon size="2x" icon={item.icon} className="text-primary-500 dark:text-white" />
                   <Typography variant="h3">{item.title}</Typography>
                   <Typography variant="muted">{item.description}</Typography>
                 </div>

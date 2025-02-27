@@ -33,7 +33,7 @@ export function AlbumCard({ album, className, index }: AlbumCardProps) {
   }
 
   return (
-    <CardWrapper index={index} className={className}>
+    <CardWrapper index={index} className={cn('bg-white dark:bg-slate-900', className)}>
       <div
         className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}
         role="img"
@@ -73,19 +73,19 @@ export function AlbumCard({ album, className, index }: AlbumCardProps) {
         </div>
       </div>
 
-      <div className="flex items-center justify-between px-4 py-2 border-b dark:border-gray-700">
+      <div className="flex items-center justify-between px-4 py-2 border-b dark:border-slate-800">
         <div className="flex items-center gap-2">
           <LikeButton itemId={album.id} type="album" />
           <motion.button
             whileHover={{ scale: 1.05 }}
-            className="p-2 rounded-full text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+            className="p-2 rounded-full text-slate-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
             aria-label="Add to playlist"
           >
             <Icons.ListPlus className="w-5 h-5" />
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
-            className="p-2 rounded-full text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+            className="p-2 rounded-full text-slate-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
             aria-label="Share album"
           >
             <Icons.Share2 className="w-5 h-5" />
@@ -95,7 +95,7 @@ export function AlbumCard({ album, className, index }: AlbumCardProps) {
         <div className="flex items-center gap-2">
           <motion.button
             whileHover={{ scale: 1.05 }}
-            className="p-2 rounded-full text-gray-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+            className="p-2 rounded-full text-slate-500 hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
             aria-label="Hide from feed"
           >
             <Icons.EyeOff className="w-5 h-5" />
@@ -103,17 +103,17 @@ export function AlbumCard({ album, className, index }: AlbumCardProps) {
         </div>
       </div>
 
-      <Link href={`/gem/album/${album.id}`} className="block p-4 flex-1 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+      <Link href={`/gem/album/${album.id}`} className="block p-4 flex-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
         <div className="mb-2 space-y-1">
           <div className="flex items-start justify-between gap-2">
-            <Typography variant="h4" className="line-clamp-1">
+            <Typography variant="h4" className="line-clamp-1 dark:text-white">
               {album.title}
             </Typography>
-            <Typography variant="small" className="text-gray-500 uppercase">
+            <Typography variant="small" className="text-slate-500 uppercase dark:text-slate-400">
               {album.type}
             </Typography>
           </div>
-          <Typography variant="small" className="text-gray-500 line-clamp-1">
+          <Typography variant="small" className="text-slate-500 line-clamp-1 dark:text-slate-400">
             By {album.artist.name}
           </Typography>
         </div>
@@ -124,7 +124,7 @@ export function AlbumCard({ album, className, index }: AlbumCardProps) {
           {album?.tags?.map((tag) => (
             <span
               key={tag}
-              className="px-2 py-0.5 text-xs text-gray-600 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-gray-400"
+              className="px-2 py-0.5 text-xs text-slate-600 bg-slate-100 rounded-full dark:bg-slate-800 dark:text-slate-300"
               role="listitem"
             >
               {tag}

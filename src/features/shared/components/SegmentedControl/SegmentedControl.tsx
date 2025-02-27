@@ -17,7 +17,7 @@ interface SegmentedControlProps<T extends string> {
 
 export function SegmentedControl<T extends string>({ options, value, onChange }: SegmentedControlProps<T>) {
   return (
-    <RadioGroup value={value} onChange={onChange} className="flex p-1 bg-background-muted dark:bg-background-muted rounded-2xl">
+    <RadioGroup value={value} onChange={onChange} className="flex p-1 bg-background-subtle dark:bg-background-muted rounded-2xl">
       {options.map((option) => {
         const Icon = option.icon ? Icons[option.icon] : null;
         const isSelected = value === option.value;
@@ -28,11 +28,13 @@ export function SegmentedControl<T extends string>({ options, value, onChange }:
             value={option.value}
             className={`
               relative flex items-center justify-center gap-2 flex-1 p-2 cursor-pointer rounded-xl transition-all duration-150
-              ${isSelected ? 'bg-background dark:bg-background-subtle shadow-sm' : 'hover:bg-background/50 dark:hover:bg-background-subtle/50'}
+              ${isSelected ? 'bg-card-background dark:bg-card-background shadow-sm' : 'hover:bg-card-hover dark:hover:bg-card-hover'}
             `}
           >
-            {Icon && <Icon className={`w-5 h-5 ${isSelected ? 'text-primary-500' : 'text-text-muted'}`} />}
-            <span className={`font-medium ${isSelected ? 'text-text dark:text-text-inverted' : 'text-text-muted'}`}>{option.label}</span>
+            {Icon && <Icon className={`w-5 h-5 ${isSelected ? 'text-primary-500' : 'text-text-subtle dark:text-text-subtle'}`} />}
+            <span className={`font-medium ${isSelected ? 'text-text dark:text-text' : 'text-text-subtle dark:text-text-subtle'}`}>
+              {option.label}
+            </span>
           </RadioGroup.Option>
         );
       })}

@@ -1,76 +1,44 @@
 'use client';
 
-import { MusicGem } from '@/features/gems/types';
+import { Album } from '@/features/albums/types';
 import { LikeButton } from '@/features/shared/components/buttons/LikeButton';
 import { CardError } from '@/features/shared/components/cards/CardError';
 import { Icons } from '@/features/shared/components/Icons';
-import { MediaPreviewPlayer } from '@/features/shared/components/MediaPreviewPlayer/MediaPreviewPlayer';
 import { CardWrapper } from '@/features/shared/components/transitions/CardWrapper';
 import { Typography } from '@/features/shared/components/Typography';
 import { cn } from '@/features/shared/utils/cn';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-import { GemPlaceholder } from './GemPlaceholder';
-import { MusicProperties } from './MusicProperties';
-import { StatsSection } from './StatsSection';
 
-interface GemCardProps {
-  gem?: MusicGem;
+interface AlbumCardProps {
+  album?: Album;
   className?: string;
   index: number;
-  isLoading?: boolean;
 }
 
-export function GemCard({ gem, className, index }: GemCardProps) {
-  const mainImage = gem?.properties.media?.coverImage || gem?.properties.media?.coverImage?.[0];
-  const [showPreview, setShowPreview] = useState(false);
-
-  if (!gem) {
-    return <CardError type="gem" className={className} />;
+export function AlbumCard({ album, className, index }: AlbumCardProps) {
+  if (!album) {
+    return <CardError type="album" className={className} />;
   }
 
   return (
     <CardWrapper index={index} className={cn('bg-card-background border border-card-border rounded-lg', className)}>
-      <div className={cn(`${showPreview ? '' : 'aspect-square'} overflow-hidden relative`)}>
-        {showPreview ? (
-          <MediaPreviewPlayer media={gem} type="gem" />
-        ) : (
-          <>
-            {mainImage ? (
-              <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
-                <Image
-                  src={mainImage}
-                  alt={`${gem.title} by ${gem.artist.name}`}
-                  width={600}
-                  height={400}
-                  className="object-cover w-full h-full"
-                />
-              </motion.div>
-            ) : (
-              <GemPlaceholder />
-            )}
-            {gem?.properties?.platforms?.length > 0 && (
-              <motion.button
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                onClick={() => setShowPreview(true)}
-                className="absolute inset-0 flex items-center justify-center bg-black/50"
-                aria-label="Play preview"
-              >
-                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                  <Icons.Play className="w-12 h-12 text-white" />
-                </motion.div>
-              </motion.button>
-            )}
-          </>
-        )}
+      <div className="aspect-square overflow-hidden relative">
+        <motion.div whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }}>
+          <Image
+            src={album.properties.media.coverImage || '/images/album-placeholder.jpg'}
+            alt={`${album.title} by ${album.artist.name}`}
+            width={600}
+            height={400}
+            className="object-cover w-full h-full"
+          />
+        </motion.div>
       </div>
 
       <div className="flex items-center justify-between px-4 py-2 border-b border-card-border">
         <div className="flex items-center gap-2">
-          <LikeButton itemId={gem.id} type="song" />
+          <LikeButton itemId={album.id} type="album" />
           <motion.button
             whileHover={{ scale: 1.05 }}
             className="p-2 rounded-full text-text-subtle hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
@@ -81,7 +49,7 @@ export function GemCard({ gem, className, index }: GemCardProps) {
           <motion.button
             whileHover={{ scale: 1.05 }}
             className="p-2 rounded-full text-text-subtle hover:text-violet-500 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-            aria-label="Share gem"
+            aria-label="Share album"
           >
             <Icons.Share2 className="w-5 h-5" />
           </motion.button>
@@ -102,20 +70,24 @@ export function GemCard({ gem, className, index }: GemCardProps) {
         whileHover={{ backgroundColor: 'rgba(0, 0, 0, 0.03)' }}
         className="block p-4 flex-1 hover:bg-card-hover transition-colors"
       >
-        <Link href={`/gem/song/${gem.id}`} className="block">
+        <Link href={`/album/${album.id}`} className="block">
           <div className="mb-2 space-y-1">
             <Typography variant="h4" className="line-clamp-1">
-              {gem.title}
+              {album.title}
             </Typography>
             <Typography variant="small" className="text-text-muted line-clamp-1">
-              By {gem.artist.name}
+              By {album.artist.name}
             </Typography>
           </div>
 
-          <MusicProperties gem={gem} />
+          <div className="mb-2">
+            <Typography variant="small" className="text-text-muted">
+              {new Date(album.metadata.releaseDate).toLocaleDateString()}
+            </Typography>
+          </div>
 
           <div className="flex flex-wrap gap-1 mb-4" role="list" aria-label="Tags">
-            {gem?.tags?.map((tag) => (
+            {album?.tags?.map((tag) => (
               <motion.span
                 key={tag}
                 whileHover={{ scale: 1.05 }}
@@ -125,10 +97,25 @@ export function GemCard({ gem, className, index }: GemCardProps) {
                 {tag}
               </motion.span>
             ))}
+            {album.properties.genres.map((genre) => (
+              <motion.span
+                key={genre}
+                whileHover={{ scale: 1.05 }}
+                className="px-2 py-0.5 text-xs text-card-tag-text bg-card-tag-bg rounded-full"
+                role="listitem"
+              >
+                {genre}
+              </motion.span>
+            ))}
           </div>
 
           <div className="flex items-center justify-between">
-            <StatsSection totalLikes={gem?.likes?.total} />
+            <div className="flex items-center gap-1">
+              <Icons.Heart className="w-4 h-4 text-text-muted" />
+              <Typography variant="small" className="text-text-muted">
+                {album.likes.total}
+              </Typography>
+            </div>
           </div>
         </Link>
       </motion.div>

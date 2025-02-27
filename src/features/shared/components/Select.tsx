@@ -25,33 +25,29 @@ export function Select({ title, selected, count, icon: IconName, popoverClassNam
     <Popover className={cn('relative', className)}>
       {({ open: isOpen }) => (
         <>
-          <div className="flex h-full">
-            <PopoverButton
-              as={FilterButton}
-              className={cn(
-                'flex-1 transition-all duration-200',
-                count && count > 0 && !isOpen && 'shadow-[0_0_0_1px] shadow-primary-200 dark:shadow-primary-500/30',
-                isOpen && 'bg-primary-50 dark:bg-primary-500/10',
-              )}
+          <PopoverButton
+            as={FilterButton}
+            selected={selected}
+            count={count}
+            className={cn(
+              'transition-all duration-200',
+              count && count > 0 && !isOpen && 'shadow-[0_0_0_1px] shadow-primary-200 dark:shadow-primary-500/30',
+              isOpen && 'bg-primary-50 dark:bg-primary-500/10',
+            )}
+          >
+            {Icon && <Icon className={cn('w-4 h-4 transition-colors', (isOpen || selected) && 'text-primary-600 dark:text-primary-400')} />}
+            <Typography
+              variant="small"
+              className={cn('font-medium transition-colors', (isOpen || selected) && 'text-primary-600 dark:text-primary-400')}
             >
-              <div className="flex gap-2 items-center">
-                {Icon && (
-                  <Icon className={cn('w-4 h-4 transition-colors', (isOpen || selected) && 'text-primary-600 dark:text-primary-400')} />
-                )}
-                <Typography
-                  variant="small"
-                  className={cn('font-medium transition-colors', (isOpen || selected) && 'text-primary-600 dark:text-primary-400')}
-                >
-                  {title}
-                </Typography>
-              </div>
-            </PopoverButton>
-          </div>
+              {title}
+            </Typography>
+          </PopoverButton>
 
           <PopoverTransition show={isOpen}>
             <PopoverPanel
               className={cn(
-                'absolute z-10 mt-2 bg-background rounded-lg border-primary-200 shadow-lg border-1 min-w-80 dark:bg-background dark:border-border-strong',
+                'absolute z-10 mt-2 bg-background rounded-lg border border-primary-200 shadow-lg min-w-80 dark:bg-background dark:border-border-strong',
                 popoverClassName,
               )}
             >

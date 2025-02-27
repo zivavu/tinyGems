@@ -1,0 +1,24 @@
+/* Dark Mode Implementation */
+.dark {
+  /* Background colors for dark mode */
+  --color-background: var(--color-base-900);
+  --color-background-subtle: var(--color-base-800);
+  --color-background-muted: var(--color-base-700);
+
+  /* Card colors for dark mode */
+  --color-card-background: var(--color-card-background-dark);
+  --color-card-border: var(--color-card-border-dark);
+  --color-card-hover: var(--color-card-hover-dark);
+  --color-card-tag-bg: var(--color-card-tag-bg-dark);
+  --color-card-tag-text: var(--color-card-tag-text-dark);
+
+  /* Text colors for dark mode */
+  --color-text: var(--color-base-50);
+  --color-text-muted: var(--color-base-300);
+  --color-text-subtle: var(--color-base-400);
+  --color-text-inverted: var(--color-base-900);
+
+  /* Border colors for dark mode */
+  --color-border: var(--color-base-700);
+  --color-border-strong: var(--color-base-600);
+}

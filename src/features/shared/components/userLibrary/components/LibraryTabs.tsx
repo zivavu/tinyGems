@@ -40,8 +40,8 @@ export function LibraryTabs() {
                 <span
                   className={cn(
                     'px-2 py-0.5 text-xs rounded-full',
-                    'bg-background-muted dark:bg-background-muted',
-                    'text-text-muted dark:text-text-muted',
+                    'bg-background-muted dark:bg-background-subtle',
+                    'text-text-muted dark:text-text-inverted',
                   )}
                 >
                   {tab.count}

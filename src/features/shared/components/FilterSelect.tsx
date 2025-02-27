@@ -172,9 +172,7 @@ export function FilterSelect({
     >
       <div className="p-3 space-y-3">
         <div className="flex justify-between items-center">
-          <Typography variant="h4" className="text-base">
-            {title}
-          </Typography>
+          <Typography variant="h4">{title}</Typography>
           <Button disabled={selectedValues?.length === 0} variant="ghost" onClick={() => onSelectionChange([])}>
             Clear all
           </Button>

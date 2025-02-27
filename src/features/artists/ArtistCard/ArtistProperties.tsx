@@ -11,13 +11,13 @@ export function ArtistProperties({ artist }: ArtistPropertiesProps) {
     <div className="mb-4 space-y-2">
       <div className="flex flex-wrap gap-3">
         {artist.gender && (
-          <Typography variant="small" className="text-gray-500 flex items-center gap-1">
+          <Typography variant="small" className="text-text-muted flex items-center gap-1">
             <Icons.User className="w-4 h-4" />
             {artist.gender.charAt(0).toUpperCase() + artist.gender.slice(1)}
           </Typography>
         )}
         {artist.stats.lastSongDate && (
-          <Typography variant="small" className="text-gray-500 flex items-center gap-1">
+          <Typography variant="small" className="text-text-muted flex items-center gap-1">
             <Icons.Calendar className="w-4 h-4" />
             Last active {new Date(artist.stats.lastSongDate).toDateString()}
           </Typography>

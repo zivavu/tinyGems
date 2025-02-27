@@ -1,7 +1,8 @@
 @import '../features/shared/theme/index.css';
+@import '../features/shared/theme/dark-mode.css';
 @import 'tailwindcss';
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 body {
   min-height: 100vh;

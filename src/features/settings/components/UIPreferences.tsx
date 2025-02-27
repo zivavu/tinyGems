@@ -15,7 +15,7 @@ export function UIPreferences() {
           checked={landingAnimation}
           onChange={setLandingAnimation}
           className={`${
-            landingAnimation ? 'bg-amber-500' : 'bg-gray-200 dark:bg-gray-700'
+            landingAnimation ? 'bg-amber-500' : 'bg-background-muted dark:bg-background-muted'
           } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
         >
           <span
@@ -26,7 +26,7 @@ export function UIPreferences() {
         </Switch>
         <div>
           <Typography className="font-medium">Landing Page Particles</Typography>
-          <Typography variant="small" className="text-gray-500">
+          <Typography variant="small" className="text-text-muted">
             Show the background particles on the landing page
           </Typography>
         </div>
@@ -37,7 +37,7 @@ export function UIPreferences() {
           checked={reduceMotion}
           onChange={setReduceMotion}
           className={`${
-            reduceMotion ? 'bg-amber-500' : 'bg-gray-200 dark:bg-gray-700'
+            reduceMotion ? 'bg-amber-500' : 'bg-background-muted dark:bg-background-muted'
           } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
         >
           <span
@@ -48,7 +48,7 @@ export function UIPreferences() {
         </Switch>
         <div>
           <Typography className="font-medium">Reduce Motion</Typography>
-          <Typography variant="small" className="text-gray-500">
+          <Typography variant="small" className="text-text-muted">
             Minimize animations throughout the app
           </Typography>
         </div>

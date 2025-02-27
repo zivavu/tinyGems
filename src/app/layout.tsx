@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
-        <ThemeProvider defaultTheme="system" enableSystem enableColorScheme disableTransitionOnChange>
+        <ThemeProvider defaultTheme="system" enableSystem enableColorScheme disableTransitionOnChange attribute="class">
           <FetchingLayerProvider>
             <Toaster />
             <Header />

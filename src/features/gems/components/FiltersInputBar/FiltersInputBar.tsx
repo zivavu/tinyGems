@@ -9,10 +9,10 @@ import { FilterSelect } from '../../../shared/components/FilterSelect';
 import { albumFilters, AllFilterId, artistFilters, isRangeFilter, singlesFilter } from './filterOptions';
 import { ContentType, useParamFilters } from './hooks';
 
-const contentTypeOptions: SegmentOption[] = [
-  { id: 'singles', label: 'Singles', icon: 'Music' },
-  { id: 'albums', label: 'Albums', icon: 'Disc' },
-  { id: 'artists', label: 'Artists', icon: 'Users' },
+const contentTypeOptions: SegmentOption<ContentType>[] = [
+  { value: 'singles', label: 'Singles', icon: 'Music' },
+  { value: 'albums', label: 'Albums', icon: 'Disc' },
+  { value: 'artists', label: 'Artists', icon: 'Users' },
 ] as const;
 
 const filterGroups: Record<ContentType, { title: string; filters: AllFilterId[] }[]> = {
