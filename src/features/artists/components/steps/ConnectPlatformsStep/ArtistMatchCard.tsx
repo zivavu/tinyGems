@@ -38,10 +38,10 @@ export function ArtistMatchCard({ artist, isSelected, onToggleSelect }: ArtistMa
 
   return (
     <div
-      className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
+      className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 hover:shadow-md ${
         isSelected
-          ? 'border-blue-500 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/10 shadow-sm'
-          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'
+          ? 'border-blue-500 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/10 shadow-sm hover:border-blue-600 dark:hover:border-blue-500'
+          : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
       }`}
     >
       {/* Artist image */}
@@ -63,8 +63,8 @@ export function ArtistMatchCard({ artist, isSelected, onToggleSelect }: ArtistMa
 
       {/* Artist info */}
       <div className="flex-1 min-w-0">
-        <Typography className="font-medium truncate text-sm">
-          <span className="truncate">{artist.artistName}</span>
+        <Typography className="font-medium text-sm" title={artist.artistName}>
+          <span className="line-clamp-1">{artist.artistName}</span>
         </Typography>
 
         <div className="flex items-center gap-1.5 mt-0.5">
@@ -77,21 +77,30 @@ export function ArtistMatchCard({ artist, isSelected, onToggleSelect }: ArtistMa
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 flex-shrink-0">
         <Button
           variant={isSelected ? 'default' : 'outline'}
           size="sm"
           onClick={onToggleSelect}
-          className={`whitespace-nowrap h-8 px-2.5 ${isSelected ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
+          className={`whitespace-nowrap h-8 px-2.5 transition-colors duration-200 ${isSelected ? 'bg-blue-500 hover:bg-blue-600 text-white' : ''}`}
         >
           {isSelected ? <Icons.Check className="w-3.5 h-3.5" /> : 'Select'}
         </Button>
 
-        <Button variant="ghost" size="sm" className="p-0 h-8 w-8 flex items-center justify-center">
-          <a href={artist.artistUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-full">
-            <Icons.ExternalLink className="w-3.5 h-3.5" />
-          </a>
-        </Button>
+        <div className="group relative">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-0 h-8 w-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            <a href={artist.artistUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-full h-full">
+              <Icons.ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+            </a>
+          </Button>
+          <div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 w-48 bg-black/90 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
+            {artist.artistUrl}
+          </div>
+        </div>
       </div>
     </div>
   );

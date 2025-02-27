@@ -31,9 +31,7 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
     (platform) => !connectedPlatforms.has(platform as PlatformType),
   ) as PlatformType[];
 
-  const otherPlatforms: PlatformType[] = ['bandcamp', 'appleMusic', 'instagram', 'xTwitter'].filter(
-    (platform) => !manualLinks[platform],
-  ) as PlatformType[];
+  const otherPlatforms: PlatformType[] = ['bandcamp', 'appleMusic', 'instagram', 'xTwitter'] as PlatformType[];
 
   const validSkipPlatform = ['spotify', 'soundcloud', 'youtube', 'tidal'].includes(currentPlatform)
     ? (currentPlatform as 'spotify' | 'soundcloud' | 'youtube' | 'tidal')
@@ -55,6 +53,7 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
 
   useEffect(() => {
     if (findAcrossPlatformsQuery.data && findAcrossPlatformsQuery.data.matches) {
+      // Set matches directly since deduplication is now handled in the backend
       setMatches(findAcrossPlatformsQuery.data.matches);
       setIsSearching(false);
     }
@@ -171,6 +170,16 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
     onComplete(mergedData);
   }
 
+  function formatDisplayUrl(fullUrl: string): string {
+    try {
+      const urlObj = new URL(fullUrl);
+      const hostname = urlObj.hostname.replace(/^www\./, '');
+      return hostname;
+    } catch {
+      return 'link';
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="space-y-2">
@@ -211,13 +220,12 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
           {(findAcrossPlatformsQuery.error || (!isSearching && findAcrossPlatformsQuery.isFetched)) && (
             <Button
               variant="secondary"
-              size="sm"
               onClick={handleSearch}
               disabled={isSearching}
               className="flex items-center gap-2 bg-amber-50 hover:bg-amber-100 dark:bg-amber-900/30 dark:hover:bg-amber-900/50 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800"
             >
               {isSearching ? <Icons.Loader className="w-3.5 h-3.5 animate-spin" /> : <Icons.RefreshCw className="w-3.5 h-3.5" />}
-              <span>{isSearching ? 'Searching...' : 'Retry Search'}</span>
+              {isSearching ? 'Searching...' : 'Retry Search'}
             </Button>
           )}
         </div>
@@ -448,37 +456,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
                 </div>
               )}
             </div>
-
-            {Object.keys(selectedMatches).length > 0 && (
-              <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
-                <Typography variant="small" className="font-medium text-blue-700 dark:text-blue-400 mb-2 flex items-center gap-2">
-                  <Icons.Check className="w-4 h-4" />
-                  Selected Connections ({Object.keys(selectedMatches).length})
-                </Typography>
-
-                <div className="flex flex-wrap gap-2">
-                  {Object.entries(selectedMatches).map(([platform, artistId]) => {
-                    const artist = matches
-                      .flatMap((m) => m.platformMatches.filter((pm) => pm.platform === platform).flatMap((pm) => pm.possibleArtists || []))
-                      .find((a) => a.artistId === artistId);
-
-                    return artist ? (
-                      <div
-                        key={platform}
-                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white dark:bg-gray-800 rounded-full border border-blue-200 dark:border-blue-700 text-xs"
-                      >
-                        {platform === 'spotify' && <Icons.Music className="w-3 h-3 text-green-500" />}
-                        {platform === 'soundcloud' && <Icons.Cloud className="w-3 h-3 text-orange-500" />}
-                        {platform === 'youtube' && <Icons.Video className="w-3 h-3 text-red-500" />}
-                        {platform === 'tidal' && <Icons.Waves className="w-3 h-3 text-blue-500" />}
-                        <span className="capitalize">{platform}:</span>
-                        <span className="font-medium truncate max-w-[120px]">{artist.artistName}</span>
-                      </div>
-                    ) : null;
-                  })}
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>
@@ -502,6 +479,8 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
                       platform={platform}
                       value={manualLinks[platform] || ''}
                       onChange={(url) => handleManualLinkUpdate(platform, url)}
+                      disabled={!!selectedMatches[platform]}
+                      disabledMessage={selectedMatches[platform] ? 'Already selected from suggestions' : undefined}
                     />
                   ))}
                 </div>
@@ -520,53 +499,118 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
                       platform={platform}
                       value={manualLinks[platform] || ''}
                       onChange={(url) => handleManualLinkUpdate(platform, url)}
+                      disabled={!!selectedMatches[platform]}
+                      disabledMessage={selectedMatches[platform] ? 'Already selected from suggestions' : undefined}
                     />
                   ))}
                 </div>
               </div>
             )}
           </div>
+        </div>
+      </div>
 
-          {Object.entries(manualLinks).filter(([, url]) => url).length > 0 && (
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <Typography variant="small" className="font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Added Links
+      {/* Consolidated Connected Platforms Section */}
+      {(Object.keys(selectedMatches).length > 0 ||
+        Object.entries(manualLinks).filter(([p, url]) => url && !validationErrors[p]).length > 0) && (
+        <div className="space-y-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <Typography variant="small" className="font-medium text-gray-700 dark:text-gray-300">
+            Connected Platforms Summary
+          </Typography>
+
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
+            <div className="flex items-center gap-2 mb-3">
+              <Icons.Check className="w-4 h-4 text-blue-700 dark:text-blue-400" />
+              <Typography variant="small" className="font-medium text-blue-700 dark:text-blue-400">
+                {Object.keys(selectedMatches).length +
+                  Object.entries(manualLinks).filter(([p]) => !validationErrors[p] && manualLinks[p]).length}{' '}
+                Platform
+                {Object.keys(selectedMatches).length +
+                  Object.entries(manualLinks).filter(([p]) => !validationErrors[p] && manualLinks[p]).length !==
+                  1 && 's'}{' '}
+                Connected
               </Typography>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(manualLinks)
-                  .filter(([, url]) => url)
-                  .map(([platform, url]) => (
-                    <div
-                      key={platform}
-                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs ${
-                        validationErrors[platform]
-                          ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50'
-                          : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600'
-                      }`}
-                    >
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {/* Render matched connections */}
+              {Object.entries(selectedMatches).map(([platform, artistId]) => {
+                const artist = matches
+                  .flatMap((m) => m.platformMatches.filter((pm) => pm.platform === platform).flatMap((pm) => pm.possibleArtists || []))
+                  .find((a) => a.artistId === artistId);
+
+                return artist ? (
+                  <div
+                    key={`match-${platform}`}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white dark:bg-gray-800 rounded-full border border-blue-200 dark:border-blue-700 text-xs group relative"
+                  >
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-blue-50 dark:bg-blue-900/30">
                       {platform === 'spotify' && <Icons.Music className="w-3 h-3 text-green-500" />}
                       {platform === 'soundcloud' && <Icons.Cloud className="w-3 h-3 text-orange-500" />}
                       {platform === 'youtube' && <Icons.Video className="w-3 h-3 text-red-500" />}
                       {platform === 'tidal' && <Icons.Waves className="w-3 h-3 text-blue-500" />}
-                      {platform === 'bandcamp' && <Icons.Radio className="w-3 h-3 text-teal-500" />}
-                      {platform === 'appleMusic' && <Icons.Music className="w-3 h-3 text-pink-500" />}
-                      {platform === 'instagram' && <Icons.Camera className="w-3 h-3 text-purple-500" />}
-                      {platform === 'xTwitter' && <Icons.MessageCircle className="w-3 h-3 text-blue-400" />}
-                      <span className="capitalize">{platform === 'appleMusic' ? 'Apple Music' : platform}</span>
-                      {validationErrors[platform] ? (
-                        <Icons.AlertCircle className="w-3 h-3 text-red-500" />
-                      ) : (
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600">
-                          <Icons.ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
                     </div>
-                  ))}
-              </div>
+                    <span className="capitalize font-medium">{platform}</span>
+                    <span className="mx-1 text-gray-400">|</span>
+                    <span className="truncate max-w-[120px]">{artist.artistName}</span>
+                    <span className="ml-1 text-blue-500 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/40 px-1.5 rounded-full text-[10px] font-medium">
+                      matched
+                    </span>
+                    <a
+                      href={artist.artistUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-1 text-blue-500 hover:text-blue-600 flex-shrink-0 transition-colors hover:scale-110"
+                    >
+                      <Icons.ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                ) : null;
+              })}
+
+              {/* Render manual connections */}
+              {Object.entries(manualLinks)
+                .filter(([p, url]) => url && !validationErrors[p])
+                .map(([platform, url]) => {
+                  // Skip if this platform already has a match
+                  if (selectedMatches[platform]) return null;
+
+                  return (
+                    <div
+                      key={`manual-${platform}`}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white dark:bg-gray-800 rounded-full border border-green-200 dark:border-green-700/50 text-xs group relative"
+                    >
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center bg-green-100 dark:bg-green-900/30">
+                        {platform === 'spotify' && <Icons.Music className="w-3 h-3 text-green-500" />}
+                        {platform === 'soundcloud' && <Icons.Cloud className="w-3 h-3 text-orange-500" />}
+                        {platform === 'youtube' && <Icons.Video className="w-3 h-3 text-red-500" />}
+                        {platform === 'tidal' && <Icons.Waves className="w-3 h-3 text-blue-500" />}
+                        {platform === 'bandcamp' && <Icons.Radio className="w-3 h-3 text-teal-500" />}
+                        {platform === 'appleMusic' && <Icons.Music className="w-3 h-3 text-pink-500" />}
+                        {platform === 'instagram' && <Icons.Camera className="w-3 h-3 text-purple-500" />}
+                        {platform === 'xTwitter' && <Icons.MessageCircle className="w-3 h-3 text-blue-400" />}
+                      </div>
+                      <span className="capitalize font-medium">{platform === 'appleMusic' ? 'Apple Music' : platform}</span>
+                      <span className="mx-1 text-gray-400">|</span>
+                      <span className="truncate max-w-[60px]">{formatDisplayUrl(url)}</span>
+                      <span className="ml-1 text-green-500 dark:text-green-400 bg-green-100 dark:bg-green-900/40 px-1.5 rounded-full text-[10px] font-medium">
+                        manual
+                      </span>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-1 text-blue-500 hover:text-blue-600 flex-shrink-0 transition-colors hover:scale-110"
+                      >
+                        <Icons.ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  );
+                })}
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Action buttons */}
       <div className="flex gap-2 justify-between pt-4">

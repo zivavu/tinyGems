@@ -187,7 +187,8 @@ export async function findArtistAcrossPlatforms(artistName: string, skipPlatform
     - For each match:
       - Find 3-5 best matching profiles from EACH platform
       - For each platform match:
-        - Assign a confidence score (0-1) based on similarity. Don't be too generous.
+        - Assign a confidence score (0-1) based on similarity. Don't be too generous(don't give a 80+ confidence to multiple artists).
+    - Make sure that you don't include duplicates in the results.
     
     Consider:
     - Exact or similar artist names
@@ -204,5 +205,43 @@ export async function findArtistAcrossPlatforms(artistName: string, skipPlatform
   const response = result.response;
   const artistProfiles = JSON.parse(response.text()) as MatchingSchema;
 
-  return artistProfiles.matches;
+  // Deduplicate artists with the same ID within each platform
+  const dedupedMatches = deduplicateArtists(artistProfiles.matches);
+
+  return dedupedMatches;
+}
+
+// Helper function to deduplicate artists with the same ID from the same platform,
+// keeping only the highest confidence version of each
+function deduplicateArtists(matches: Match[]): Match[] {
+  return matches.map((match) => {
+    const dedupedPlatformMatches = match.platformMatches.map((platformMatch) => {
+      if (!platformMatch.possibleArtists?.length) return platformMatch;
+
+      // Deduplicate by artist ID
+      const artistIdMap = new Map<string, MathedArtist>();
+
+      platformMatch.possibleArtists.forEach((artist) => {
+        const existingArtist = artistIdMap.get(artist.artistId);
+
+        // Either add the artist to the map or replace existing one if this one has higher confidence
+        if (!existingArtist || artist.confidence > existingArtist.confidence) {
+          artistIdMap.set(artist.artistId, artist);
+        }
+      });
+
+      // Convert the map back to an array, sorted by confidence (highest first)
+      const dedupedArtists = Array.from(artistIdMap.values()).sort((a, b) => b.confidence - a.confidence);
+
+      return {
+        ...platformMatch,
+        possibleArtists: dedupedArtists,
+      };
+    });
+
+    return {
+      ...match,
+      platformMatches: dedupedPlatformMatches,
+    };
+  });
 }
