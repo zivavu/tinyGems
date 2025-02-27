@@ -1,15 +1,35 @@
 import { useEffect, useState } from 'react';
 
+/**
+ * A hook that debounces a value.
+ *
+ * @param value The value to debounce
+ * @param delay The delay in milliseconds
+ * @returns The debounced value
+ *
+ * @example
+ * ```tsx
+ * const [searchTerm, setSearchTerm] = useState('');
+ * const debouncedSearchTerm = useDebounce(searchTerm, 500);
+ *
+ * // Use debouncedSearchTerm for expensive operations like API calls
+ * useEffect(() => {
+ *   if (debouncedSearchTerm) {
+ *     searchApi(debouncedSearchTerm);
+ *   }
+ * }, [debouncedSearchTerm]);
+ * ```
+ */
 export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
+    const timer = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
 
     return () => {
-      clearTimeout(handler);
+      clearTimeout(timer);
     };
   }, [value, delay]);
 
