@@ -10,7 +10,7 @@ export function FormErrorTypography({ message, className }: FormErrorMessageProp
   if (!message) return null;
 
   return (
-    <Typography variant="small" className={cn('mt-1 text-red-500 dark:text-red-400', className)}>
+    <Typography variant="small" className={cn('mt-1 text-destructive-500 dark:text-destructive-400', className)}>
       {message}
     </Typography>
   );

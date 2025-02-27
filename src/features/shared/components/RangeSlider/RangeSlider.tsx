@@ -39,7 +39,7 @@ export function RangeSlider({ min, max, step, values, onChange, label, icon, for
           <Typography variant="h4" className="text-base">
             {label}
           </Typography>
-          <div className="px-2 py-1 text-sm text-amber-400 bg-amber-400/10 rounded">{displayRange}</div>
+          <div className="px-2 py-1 text-sm text-primary-500 bg-primary-500/10 rounded">{displayRange}</div>
         </div>
 
         <div className="px-2">
@@ -51,23 +51,23 @@ export function RangeSlider({ min, max, step, values, onChange, label, icon, for
             max={max}
             step={step}
           >
-            <Slider.Track className="relative h-1 grow rounded-full bg-gray-700">
-              <Slider.Range className="absolute h-full rounded-full bg-amber-500" />
+            <Slider.Track className="relative h-1 grow rounded-full bg-background-muted">
+              <Slider.Range className="absolute h-full rounded-full bg-primary-500" />
             </Slider.Track>
             {localValues.map((_, index) => (
               <Slider.Thumb
                 key={index}
-                className="cursor-pointer block h-4 w-4 rounded-full bg-amber-500 hover:bg-amber-400 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                className="cursor-pointer block h-4 w-4 rounded-full bg-primary-500 hover:bg-primary-400 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-neutral-800"
               />
             ))}
           </Slider.Root>
         </div>
 
         <div className="flex justify-between px-2">
-          <Typography variant="small" className="text-gray-500">
+          <Typography variant="small" className="text-text-muted">
             {displayValue(min)}
           </Typography>
-          <Typography variant="small" className="text-gray-500">
+          <Typography variant="small" className="text-text-muted">
             {displayValue(max)}
           </Typography>
         </div>

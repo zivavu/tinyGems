@@ -24,7 +24,7 @@ export function CardWrapper({ children, index = 0, className }: CardWrapperProps
         ease: 'easeOut',
       }}
       className={cn(
-        'relative overflow-hidden bg-white rounded-lg border flex flex-col border-gray-200 shadow-sm dark:border-gray-800 dark:bg-gray-900',
+        'relative overflow-hidden bg-background rounded-lg border flex flex-col border-border shadow-sm dark:border-border-strong dark:bg-background-subtle',
         className,
       )}
     >

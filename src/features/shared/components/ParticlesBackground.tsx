@@ -66,7 +66,7 @@ export default function ParticlesBackground({ className, particleCount = 300 }: 
         groupParticles.push(
           <div
             key={particleIndex}
-            className="fixed rounded-full bg-indigo-600 "
+            className="fixed rounded-full bg-accent-600 "
             style={{
               filter: 'blur(6px)',
               width: size,

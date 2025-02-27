@@ -6,18 +6,21 @@ import { ComponentPropsWithRef } from 'react';
 import { cn } from '../../utils/cn';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-amber-500 text-white shadow hover:bg-amber-600 dark:bg-amber-700 dark:hover:bg-amber-800',
-        destructive: 'bg-red-500 text-white shadow-sm hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-600',
+        default: 'bg-primary-500 text-white shadow hover:bg-primary-600 dark:bg-primary-700 dark:hover:bg-primary-800',
+        destructive:
+          'bg-destructive-500 text-white shadow-sm hover:bg-destructive-600 dark:bg-destructive-600 dark:hover:bg-destructive-600',
         outline:
-          'border-2 border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:border-gray-600',
-        selected: 'border-2 border-amber-500 bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20',
-        secondary: 'bg-gray-100 text-gray-900 shadow-sm hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600',
-        ghost: 'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-50',
-        link: 'text-gray-900 underline-offset-4 hover:underline dark:text-gray-100',
+          'border-2 border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-300 dark:border-neutral-700 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:hover:border-neutral-600',
+        selected:
+          'border-2 border-primary-500 bg-primary-50 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400 dark:border-primary-500/20',
+        secondary:
+          'bg-neutral-100 text-neutral-900 shadow-sm hover:bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600',
+        ghost: 'hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50',
+        link: 'text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-100',
       },
       size: {
         icon: 'p-1',
@@ -38,9 +41,9 @@ type ButtonProps = ComponentPropsWithRef<typeof HeadlessButton> &
     href?: string;
   };
 
-const Button = ({ className, variant, size, ...props }: ButtonProps) => {
+function Button({ className, variant, size, ...props }: ButtonProps) {
   return <HeadlessButton className={cn(buttonVariants({ variant, size, className }))} {...props} />;
-};
+}
 
 Button.displayName = 'Button';
 

@@ -43,7 +43,7 @@ export function MediaPreviewPlayer({ media, onLoad, type }: MediaPreviewPlayerPr
   return (
     <div className="relative w-full h-full">
       {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 animate-pulse">
+        <div className="absolute inset-0 flex items-center justify-center bg-background-muted dark:bg-background-muted animate-pulse">
           <Typography variant="small">Loading {preferredPlatform}...</Typography>
         </div>
       )}

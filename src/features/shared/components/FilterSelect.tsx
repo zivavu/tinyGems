@@ -44,13 +44,15 @@ function FilterOption({ option, selected, onClick }: { option: FilterOption; sel
       onClick={onClick}
       className={cn(
         'flex items-center w-full gap-2 px-2 py-1.5 text-sm rounded-lg transition-colors',
-        selected ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-200' : 'hover:bg-gray-50 dark:hover:bg-gray-700',
+        selected
+          ? 'bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-200'
+          : 'hover:bg-background-subtle dark:hover:bg-background-subtle',
       )}
     >
       {option.Icon && <option.Icon className="flex-shrink-0 w-5 h-4" />}
       <div className="flex flex-col flex-1 text-left">
         <span>{option.label}</span>
-        <span className={cn('text-xs', selected ? 'text-amber-600 dark:text-amber-400' : 'text-gray-500 dark:text-gray-400')}>
+        <span className={cn('text-xs', selected ? 'text-primary-600 dark:text-primary-400' : 'text-text-muted dark:text-text-muted')}>
           {option.description}
         </span>
       </div>
@@ -75,12 +77,12 @@ function SelectedChips({
   if (options.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-1 p-2 bg-gray-50 rounded-lg dark:bg-gray-700/50">
+    <div className="flex flex-wrap gap-1 p-2 bg-background-subtle rounded-lg dark:bg-background-subtle">
       {visibleOptions.map((option) => (
         <HeadlessUiButton
           key={option.id}
           onClick={() => onRemove(option)}
-          className="flex gap-1 items-center px-2 py-1 text-xs font-medium text-rose-600 bg-rose-50 rounded-full border-2 border-rose-200 hover:bg-rose-100 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20 dark:hover:bg-rose-500/20"
+          className="flex gap-1 items-center px-2 py-1 text-xs font-medium text-destructive-600 bg-destructive-50 rounded-full border-2 border-destructive-200 hover:bg-destructive-100 dark:bg-destructive-500/10 dark:text-destructive-400 dark:border-destructive-500/20 dark:hover:bg-destructive-500/20"
         >
           {option.Icon && <option.Icon className="w-4 h-3" />}
           <span>{option.label}</span>
@@ -91,7 +93,7 @@ function SelectedChips({
       {shouldCollapse && (
         <HeadlessUiButton
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex gap-1 items-center px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full hover:bg-gray-200 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500"
+          className="flex gap-1 items-center px-2 py-1 text-xs font-medium text-text-muted bg-background-muted rounded-full hover:bg-border dark:bg-background-muted dark:text-text-muted dark:hover:bg-border"
         >
           {isExpanded ? (
             <>
@@ -180,13 +182,13 @@ export function FilterSelect({
 
         {isSearchable && (
           <div className="relative">
-            <Icons.Search className="absolute left-2 top-1/2 w-4 h-4 text-gray-500 -translate-y-1/2" />
+            <Icons.Search className="absolute left-2 top-1/2 w-4 h-4 text-text-muted -translate-y-1/2" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search..."
-              className="py-2 pr-3 pl-8 w-full text-sm bg-gray-50 rounded-lg border-0 dark:bg-gray-700 focus:ring-2 focus:ring-rose-500"
+              className="py-2 pr-3 pl-8 w-full text-sm bg-background-subtle rounded-lg border-0 dark:bg-background-subtle focus:ring-2 focus:ring-primary-500"
             />
           </div>
         )}
@@ -197,7 +199,7 @@ export function FilterSelect({
           {isGrouped ? (
             (filteredOptions as FilterOptionsGroup[]).map((group) => (
               <div key={group.id} className="space-y-1">
-                <div className="sticky top-0 px-2 py-1 text-xs font-semibold text-gray-500 backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 dark:text-gray-400">
+                <div className="sticky top-0 px-2 py-1 text-xs font-semibold text-text-muted backdrop-blur-sm bg-background/80 dark:bg-background/80 dark:text-text-muted">
                   {group.name}
                 </div>
                 <div className="space-y-0.5">

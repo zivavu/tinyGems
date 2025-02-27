@@ -1,40 +1,39 @@
 'use client';
 
-import { ContentType } from '@/features/gems/components/FiltersInputBar/hooks';
-import { Radio, RadioGroup } from '@headlessui/react';
+import { RadioGroup } from '@headlessui/react';
 import { IconName, Icons } from '../Icons';
 
-export type SegmentOption = {
-  id: string;
+export type SegmentOption<T extends string> = {
+  value: T;
   label: string;
-  icon: IconName;
+  icon?: IconName;
 };
 
-interface SegmentedControlProps {
-  options: SegmentOption[];
-  value: string;
-  onChange: (value: ContentType) => void;
+interface SegmentedControlProps<T extends string> {
+  options: SegmentOption<T>[];
+  value: T;
+  onChange: (value: T) => void;
 }
 
-export function SegmentedControl({ options, value, onChange }: SegmentedControlProps) {
+export function SegmentedControl<T extends string>({ options, value, onChange }: SegmentedControlProps<T>) {
   return (
-    <RadioGroup value={value} onChange={onChange} className="flex p-1 bg-gray-100 dark:bg-gray-800 rounded-2xl">
+    <RadioGroup value={value} onChange={onChange} className="flex p-1 bg-background-muted dark:bg-background-muted rounded-2xl">
       {options.map((option) => {
-        const Icon = Icons[option.icon];
-        const isSelected = value === option.id;
+        const Icon = option.icon ? Icons[option.icon] : null;
+        const isSelected = value === option.value;
 
         return (
-          <Radio
-            key={option.id}
-            value={option.id}
+          <RadioGroup.Option
+            key={option.value}
+            value={option.value}
             className={`
-              ${isSelected ? 'bg-white dark:bg-gray-900 shadow-sm' : 'hover:bg-white/50 dark:hover:bg-gray-900/50'} 
-              relative flex items-center gap-2 px-4 py-2 cursor-pointer rounded-xl transition-all
+              relative flex items-center justify-center gap-2 flex-1 p-2 cursor-pointer rounded-xl transition-all duration-150
+              ${isSelected ? 'bg-background dark:bg-background-subtle shadow-sm' : 'hover:bg-background/50 dark:hover:bg-background-subtle/50'}
             `}
           >
-            <Icon className={`w-5 h-5 ${isSelected ? 'text-amber-500' : 'text-gray-500'}`} />
-            <span className={`font-medium ${isSelected ? 'text-gray-900 dark:text-white' : 'text-gray-500'}`}>{option.label}</span>
-          </Radio>
+            {Icon && <Icon className={`w-5 h-5 ${isSelected ? 'text-primary-500' : 'text-text-muted'}`} />}
+            <span className={`font-medium ${isSelected ? 'text-text dark:text-text-inverted' : 'text-text-muted'}`}>{option.label}</span>
+          </RadioGroup.Option>
         );
       })}
     </RadioGroup>

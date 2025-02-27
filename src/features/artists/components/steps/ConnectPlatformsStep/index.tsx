@@ -9,6 +9,7 @@ import { ExternalPlatformArtistData } from '@/server/features/platforms/external
 import { useEffect, useState } from 'react';
 import { ArtistMatchCard } from './ArtistMatchCard';
 import { ManualLinkInput } from './ManualLinkInput';
+import Link from 'next/link';
 
 interface ConnectPlatformsStepProps {
   artistData: ExternalPlatformArtistData;
@@ -304,118 +305,131 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800/50">
-                  <Icons.Cloud className="w-4 h-4 text-orange-500" />
-                  <Typography variant="small" className="font-medium text-orange-700 dark:text-orange-400">
-                    SoundCloud
-                  </Typography>
-                </div>
-
-                {matches.flatMap((match) =>
-                  match.platformMatches
-                    .filter((pm) => pm.platform === 'soundcloud' && pm.possibleArtists?.length)
-                    .flatMap(
-                      (pm) =>
-                        pm.possibleArtists
-                          ?.slice(0, 3)
-                          .map((artist) => (
-                            <ArtistMatchCard
-                              key={artist.artistId}
-                              artist={artist}
-                              platform="soundcloud"
-                              isSelected={selectedMatches['soundcloud'] === artist.artistId}
-                              onToggleSelect={() => toggleSelectMatch('soundcloud', artist.artistId)}
-                            />
-                          )) || [],
-                    ),
-                )}
-
-                {!matches.some((match) =>
-                  match.platformMatches.some((pm) => pm.platform === 'soundcloud' && pm.possibleArtists?.length),
-                ) && (
-                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
-                    <Typography variant="small" className="text-gray-500 dark:text-gray-400">
-                      No SoundCloud matches found
+              {/* Only show SoundCloud if not already connected */}
+              {!connectedPlatforms.has('soundcloud') && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800/50">
+                    <Icons.Cloud className="w-4 h-4 text-orange-500" />
+                    <Typography variant="small" className="font-medium text-orange-700 dark:text-orange-400">
+                      SoundCloud
                     </Typography>
                   </div>
-                )}
-              </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800/50">
-                  <Icons.Video className="w-4 h-4 text-red-500" />
-                  <Typography variant="small" className="font-medium text-red-700 dark:text-red-400">
-                    YouTube
-                  </Typography>
+                  {matches.flatMap((match) =>
+                    match.platformMatches
+                      .filter((pm) => pm.platform === 'soundcloud' && pm.possibleArtists?.length)
+                      .flatMap(
+                        (pm) =>
+                          pm.possibleArtists
+                            ?.sort((a, b) => b.confidence - a.confidence)
+                            .slice(0, 3)
+                            .map((artist) => (
+                              <ArtistMatchCard
+                                key={artist.artistId}
+                                artist={artist}
+                                platform="soundcloud"
+                                isSelected={selectedMatches['soundcloud'] === artist.artistId}
+                                onToggleSelect={() => toggleSelectMatch('soundcloud', artist.artistId)}
+                              />
+                            )) || [],
+                      ),
+                  )}
+
+                  {!matches.some((match) =>
+                    match.platformMatches.some((pm) => pm.platform === 'soundcloud' && pm.possibleArtists?.length),
+                  ) && (
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
+                      <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                        No SoundCloud matches found
+                      </Typography>
+                    </div>
+                  )}
                 </div>
+              )}
 
-                {matches.flatMap((match) =>
-                  match.platformMatches
-                    .filter((pm) => pm.platform === 'youtube' && pm.possibleArtists?.length)
-                    .flatMap(
-                      (pm) =>
-                        pm.possibleArtists
-                          ?.slice(0, 3)
-                          .map((artist) => (
-                            <ArtistMatchCard
-                              key={artist.artistId}
-                              artist={artist}
-                              platform="youtube"
-                              isSelected={selectedMatches['youtube'] === artist.artistId}
-                              onToggleSelect={() => toggleSelectMatch('youtube', artist.artistId)}
-                            />
-                          )) || [],
-                    ),
-                )}
-
-                {!matches.some((match) => match.platformMatches.some((pm) => pm.platform === 'youtube' && pm.possibleArtists?.length)) && (
-                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
-                    <Typography variant="small" className="text-gray-500 dark:text-gray-400">
-                      No YouTube matches found
+              {/* Only show YouTube if not already connected */}
+              {!connectedPlatforms.has('youtube') && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800/50">
+                    <Icons.Video className="w-4 h-4 text-red-500" />
+                    <Typography variant="small" className="font-medium text-red-700 dark:text-red-400">
+                      YouTube
                     </Typography>
                   </div>
-                )}
-              </div>
 
-              {/* Tidal Column */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
-                  <Icons.Waves className="w-4 h-4 text-blue-500" />
-                  <Typography variant="small" className="font-medium text-blue-700 dark:text-blue-400">
-                    Tidal
-                  </Typography>
+                  {matches.flatMap((match) =>
+                    match.platformMatches
+                      .filter((pm) => pm.platform === 'youtube' && pm.possibleArtists?.length)
+                      .flatMap(
+                        (pm) =>
+                          pm.possibleArtists
+                            ?.sort((a, b) => b.confidence - a.confidence)
+                            .slice(0, 3)
+                            .map((artist) => (
+                              <ArtistMatchCard
+                                key={artist.artistId}
+                                artist={artist}
+                                platform="youtube"
+                                isSelected={selectedMatches['youtube'] === artist.artistId}
+                                onToggleSelect={() => toggleSelectMatch('youtube', artist.artistId)}
+                              />
+                            )) || [],
+                      ),
+                  )}
+
+                  {!matches.some((match) =>
+                    match.platformMatches.some((pm) => pm.platform === 'youtube' && pm.possibleArtists?.length),
+                  ) && (
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
+                      <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                        No YouTube matches found
+                      </Typography>
+                    </div>
+                  )}
                 </div>
+              )}
 
-                {matches.flatMap((match) =>
-                  match.platformMatches
-                    .filter((pm) => pm.platform === 'tidal' && pm.possibleArtists?.length)
-                    .flatMap(
-                      (pm) =>
-                        pm.possibleArtists
-                          ?.slice(0, 3)
-                          .map((artist) => (
-                            <ArtistMatchCard
-                              key={artist.artistId}
-                              artist={artist}
-                              platform="tidal"
-                              isSelected={selectedMatches['tidal'] === artist.artistId}
-                              onToggleSelect={() => toggleSelectMatch('tidal', artist.artistId)}
-                            />
-                          )) || [],
-                    ),
-                )}
-
-                {!matches.some((match) => match.platformMatches.some((pm) => pm.platform === 'tidal' && pm.possibleArtists?.length)) && (
-                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
-                    <Typography variant="small" className="text-gray-500 dark:text-gray-400">
-                      No Tidal matches found
+              {/* Only show Tidal if not already connected */}
+              {!connectedPlatforms.has('tidal') && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
+                    <Icons.Waves className="w-4 h-4 text-blue-500" />
+                    <Typography variant="small" className="font-medium text-blue-700 dark:text-blue-400">
+                      Tidal
                     </Typography>
                   </div>
-                )}
-              </div>
 
-              {/* Spotify Column - Only show if not already connected */}
+                  {matches.flatMap((match) =>
+                    match.platformMatches
+                      .filter((pm) => pm.platform === 'tidal' && pm.possibleArtists?.length)
+                      .flatMap(
+                        (pm) =>
+                          pm.possibleArtists
+                            ?.sort((a, b) => b.confidence - a.confidence)
+                            .slice(0, 3)
+                            .map((artist) => (
+                              <ArtistMatchCard
+                                key={artist.artistId}
+                                artist={artist}
+                                platform="tidal"
+                                isSelected={selectedMatches['tidal'] === artist.artistId}
+                                onToggleSelect={() => toggleSelectMatch('tidal', artist.artistId)}
+                              />
+                            )) || [],
+                      ),
+                  )}
+
+                  {!matches.some((match) => match.platformMatches.some((pm) => pm.platform === 'tidal' && pm.possibleArtists?.length)) && (
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
+                      <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                        No Tidal matches found
+                      </Typography>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Only show Spotify if not already connected */}
               {!connectedPlatforms.has('spotify') && (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 px-3 py-2 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800/50">
@@ -431,7 +445,8 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
                       .flatMap(
                         (pm) =>
                           pm.possibleArtists
-                            ?.slice(0, 3)
+                            ?.sort((a, b) => b.confidence - a.confidence)
+                            .slice(0, 3)
                             .map((artist) => (
                               <ArtistMatchCard
                                 key={artist.artistId}
@@ -596,14 +611,14 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
                       <span className="ml-1 text-green-500 dark:text-green-400 bg-green-100 dark:bg-green-900/40 px-1.5 rounded-full text-[10px] font-medium">
                         manual
                       </span>
-                      <a
+                      <Link
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="ml-1 text-blue-500 hover:text-blue-600 flex-shrink-0 transition-colors hover:scale-110"
                       >
                         <Icons.ExternalLink className="w-3.5 h-3.5" />
-                      </a>
+                      </Link>
                     </div>
                   );
                 })}

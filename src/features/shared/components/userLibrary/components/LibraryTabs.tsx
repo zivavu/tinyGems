@@ -14,7 +14,7 @@ const tabs = [
 export function LibraryTabs() {
   return (
     <TabGroup>
-      <div className="border-b border-stone-200 dark:border-stone-800">
+      <div className="border-b border-border dark:border-border-strong">
         <TabList className="flex -mb-px">
           {tabs.map((tab) => (
             <Tab
@@ -24,12 +24,12 @@ export function LibraryTabs() {
                   'group relative min-w-[180px] py-4 px-6 flex items-center justify-center gap-2.5',
                   'focus:outline-none',
                   selected
-                    ? 'text-indigo-600 dark:text-indigo-400'
-                    : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200',
+                    ? 'text-accent-600 dark:text-accent-400'
+                    : 'text-text-muted dark:text-text-muted hover:text-text dark:hover:text-text-inverted',
                   'before:absolute before:bottom-0 before:left-0 before:right-0 before:h-0.5',
                   selected
-                    ? 'before:bg-indigo-600 dark:before:bg-indigo-400'
-                    : 'before:bg-transparent hover:before:bg-stone-200 dark:hover:before:bg-stone-700',
+                    ? 'before:bg-accent-600 dark:before:bg-accent-400'
+                    : 'before:bg-transparent hover:before:bg-border-strong dark:hover:before:bg-border-strong',
                   'before:transition-all before:duration-300',
                 )
               }
@@ -38,7 +38,11 @@ export function LibraryTabs() {
               <span className="font-medium">{tab.name}</span>
               {tab.count > 0 && (
                 <span
-                  className={cn('px-2 py-0.5 text-xs rounded-full', 'bg-stone-100 dark:bg-stone-800', 'text-stone-600 dark:text-stone-400')}
+                  className={cn(
+                    'px-2 py-0.5 text-xs rounded-full',
+                    'bg-background-muted dark:bg-background-muted',
+                    'text-text-muted dark:text-text-muted',
+                  )}
                 >
                   {tab.count}
                 </span>

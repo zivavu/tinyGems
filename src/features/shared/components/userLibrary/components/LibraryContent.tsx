@@ -34,7 +34,7 @@ export function LibraryContent({ type }: LibraryContentProps) {
         <Typography variant="h3" className="mb-2">
           No {type}s found
         </Typography>
-        <Typography variant="p" className="text-stone-600 dark:text-stone-400">
+        <Typography variant="p" className="text-text-muted dark:text-text-muted">
           Start exploring and like some {type}s to see them here
         </Typography>
       </div>

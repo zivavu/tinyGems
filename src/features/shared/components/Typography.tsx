@@ -4,45 +4,45 @@ import { cn } from '../utils/cn';
 const variants = {
   h1: {
     tag: 'h1',
-    className: 'text-6xl font-bold text-gray-900 dark:text-gray-100',
+    className: 'text-6xl font-bold text-text dark:text-text-inverted',
   },
   h2: {
     tag: 'h2',
-    className: 'text-5xl font-semibold text-gray-900 dark:text-gray-100',
+    className: 'text-5xl font-semibold text-text dark:text-text-inverted',
   },
   h3: {
     tag: 'h3',
-    className: 'text-4xl font-medium text-gray-900 dark:text-gray-100',
+    className: 'text-4xl font-medium text-text dark:text-text-inverted',
   },
   h4: {
     tag: 'h4',
-    className: 'text-3xl font-medium text-gray-900 dark:text-gray-100',
+    className: 'text-3xl font-medium text-text dark:text-text-inverted',
   },
   h5: {
     tag: 'h5',
-    className: 'text-2xl font-medium text-gray-900 dark:text-gray-100',
+    className: 'text-2xl font-medium text-text dark:text-text-inverted',
   },
   h6: {
     tag: 'h6',
-    className: 'text-xl font-medium text-gray-900 dark:text-gray-100',
+    className: 'text-xl font-medium text-text dark:text-text-inverted',
   },
 
   large: {
     tag: 'p',
-    className: 'text-lg text-gray-800 dark:text-gray-300',
+    className: 'text-lg text-text-muted dark:text-text-inverted',
   },
 
   p: {
     tag: 'p',
-    className: 'text-base text-gray-800 dark:text-gray-300',
+    className: 'text-base text-text-muted dark:text-text-inverted',
   },
   small: {
     tag: 'p',
-    className: 'text-sm text-gray-800 dark:text-gray-300',
+    className: 'text-sm text-text-muted dark:text-text-inverted',
   },
   muted: {
     tag: 'p',
-    className: 'text-sm text-gray-600 dark:text-gray-400',
+    className: 'text-sm text-text-subtle dark:text-text-subtle',
   },
 } as const;
 
