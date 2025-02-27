@@ -3,7 +3,7 @@ import { Typography } from '@/features/shared/components/Typography';
 
 export default function AddArtistPage() {
   return (
-    <main className="container mx-auto px-4 py-12 max-w-3xl">
+    <main className="container mx-auto px-4 py-12 max-w-5xl">
       <div className="space-y-6">
         <div className="text-center space-y-2">
           <Typography variant="h2">Add Artist</Typography>

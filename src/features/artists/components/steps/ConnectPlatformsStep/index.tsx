@@ -20,37 +20,32 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
   const [selectedMatches, setSelectedMatches] = useState<Record<string, string>>({});
   const [manualLinks, setManualLinks] = useState<Record<string, string>>({});
 
-  // Get the starting platform
   const currentPlatform = Object.keys(artistData.links || {})[0];
 
-  // Get platforms that are already connected (just the starting one initially)
   const connectedPlatforms = new Set([currentPlatform]);
 
-  // Create a list of supported platforms that aren't connected yet
   const supportedPlatforms = ['spotify', 'soundcloud', 'youtube', 'tidal'].filter((platform) => !connectedPlatforms.has(platform));
 
-  // Create a list of other common platforms for manual entry
   const otherPlatforms = ['bandcamp', 'appleMusic', 'instagram', 'twitter'].filter((platform) => !manualLinks[platform]);
 
-  // Validate if current platform is one of the supported platforms for skipping
   const validSkipPlatform = ['spotify', 'soundcloud', 'youtube', 'tidal'].includes(currentPlatform)
     ? (currentPlatform as 'spotify' | 'soundcloud' | 'youtube' | 'tidal')
     : undefined;
 
-  // Find artist across platforms
   const findAcrossPlatformsQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
     {
       artistName: artistData.name,
       skipPlatform: validSkipPlatform,
     },
     {
-      enabled: true, // Enable automatic search on mount
+      enabled: true,
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
       retry: 1,
+      staleTime: 1000 * 60 * 5,
     },
   );
 
-  // Update matches when query data changes
   useEffect(() => {
     if (findAcrossPlatformsQuery.data && findAcrossPlatformsQuery.data.matches) {
       setMatches(findAcrossPlatformsQuery.data.matches);
@@ -58,7 +53,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
     }
   }, [findAcrossPlatformsQuery.data]);
 
-  // Update isSearching state when query is loading or error occurs
   useEffect(() => {
     if (findAcrossPlatformsQuery.isLoading) {
       setIsSearching(true);
@@ -67,22 +61,18 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
     }
   }, [findAcrossPlatformsQuery.isLoading, findAcrossPlatformsQuery.error]);
 
-  // Start the search process
   function handleSearch() {
     setIsSearching(true);
     findAcrossPlatformsQuery.refetch();
   }
 
-  // Toggle selection of a match
   function toggleSelectMatch(platformId: string, artistId: string) {
     setSelectedMatches((prev) => {
       const newSelection = { ...prev };
 
       if (newSelection[platformId] === artistId) {
-        // If already selected, deselect it
         delete newSelection[platformId];
       } else {
-        // Otherwise select it
         newSelection[platformId] = artistId;
       }
 
@@ -90,7 +80,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
     });
   }
 
-  // Add or update a manual link
   function handleManualLinkUpdate(platform: string, url: string) {
     setManualLinks((prev) => ({
       ...prev,
@@ -98,9 +87,7 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
     }));
   }
 
-  // Complete this step by merging all the data
   function handleComplete() {
-    // Start with the current artist data
     const mergedData: ExternalPlatformArtistData = {
       ...artistData,
       links: { ...(artistData.links || {}) },
@@ -108,7 +95,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
       metadata: { ...(artistData.metadata || {}) },
     };
 
-    // Add selected matches data
     for (const match of matches) {
       for (const platformMatch of match.platformMatches) {
         const platform = platformMatch.platform;
@@ -118,7 +104,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
           const selectedArtist = platformMatch.possibleArtists?.find((artist: MatchedArtist) => artist.artistId === artistId);
 
           if (selectedArtist) {
-            // Add to links
             if (!mergedData.links) mergedData.links = {};
             mergedData.links[platform] = selectedArtist.artistUrl;
           }
@@ -126,7 +111,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
       }
     }
 
-    // Add manual links
     for (const [platform, url] of Object.entries(manualLinks)) {
       if (url) {
         if (!mergedData.links) mergedData.links = {};
@@ -147,7 +131,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
         </Typography>
       </div>
 
-      {/* Currently connected platforms */}
       <div className="space-y-2">
         <Typography variant="small" className="font-medium text-gray-700 dark:text-gray-300">
           Currently connected
@@ -169,7 +152,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
         </div>
       </div>
 
-      {/* Find on other platforms */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <Typography variant="small" className="font-medium text-gray-700 dark:text-gray-300">
@@ -263,55 +245,190 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
               </Typography>
             </div>
 
-            {matches.map((match, index) => (
-              <div
-                key={index}
-                className="space-y-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm"
-              >
-                <div className="flex items-center justify-between">
-                  <Typography variant="small" className="font-medium text-gray-700 dark:text-gray-300 flex items-center gap-1.5">
-                    <Icons.Users className="w-3.5 h-3.5 text-amber-500" />
-                    Match Group {index + 1}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 px-3 py-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800/50">
+                  <Icons.Cloud className="w-4 h-4 text-orange-500" />
+                  <Typography variant="small" className="font-medium text-orange-700 dark:text-orange-400">
+                    SoundCloud
                   </Typography>
-
-                  <div className="text-xs px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full border border-amber-200 dark:border-amber-800/50">
-                    {match.platformMatches.reduce((count, platform) => count + (platform.possibleArtists?.length || 0), 0)} matches
-                  </div>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {match.platformMatches.map((platformMatch) => (
-                    <div key={platformMatch.platform} className={platformMatch.possibleArtists?.length ? '' : 'hidden'}>
-                      {platformMatch.possibleArtists && platformMatch.possibleArtists.length > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-1.5">
-                            {platformMatch.platform === 'spotify' && <Icons.Music className="w-3.5 h-3.5 text-green-500" />}
-                            {platformMatch.platform === 'soundcloud' && <Icons.Cloud className="w-3.5 h-3.5 text-orange-500" />}
-                            {platformMatch.platform === 'youtube' && <Icons.Video className="w-3.5 h-3.5 text-red-500" />}
-                            {platformMatch.platform === 'tidal' && <Icons.Waves className="w-3.5 h-3.5 text-blue-500" />}
-                            <Typography variant="small" className="font-medium capitalize">
-                              {platformMatch.platform}
-                            </Typography>
-                          </div>
+                {matches.flatMap((match) =>
+                  match.platformMatches
+                    .filter((pm) => pm.platform === 'soundcloud' && pm.possibleArtists?.length)
+                    .flatMap(
+                      (pm) =>
+                        pm.possibleArtists
+                          ?.slice(0, 3)
+                          .map((artist) => (
+                            <ArtistMatchCard
+                              key={artist.artistId}
+                              artist={artist}
+                              platform="soundcloud"
+                              isSelected={selectedMatches['soundcloud'] === artist.artistId}
+                              onToggleSelect={() => toggleSelectMatch('soundcloud', artist.artistId)}
+                            />
+                          )) || [],
+                    ),
+                )}
 
-                          <div className="space-y-2">
-                            {platformMatch.possibleArtists.slice(0, 3).map((artist) => (
+                {!matches.some((match) =>
+                  match.platformMatches.some((pm) => pm.platform === 'soundcloud' && pm.possibleArtists?.length),
+                ) && (
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
+                    <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                      No SoundCloud matches found
+                    </Typography>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800/50">
+                  <Icons.Video className="w-4 h-4 text-red-500" />
+                  <Typography variant="small" className="font-medium text-red-700 dark:text-red-400">
+                    YouTube
+                  </Typography>
+                </div>
+
+                {matches.flatMap((match) =>
+                  match.platformMatches
+                    .filter((pm) => pm.platform === 'youtube' && pm.possibleArtists?.length)
+                    .flatMap(
+                      (pm) =>
+                        pm.possibleArtists
+                          ?.slice(0, 3)
+                          .map((artist) => (
+                            <ArtistMatchCard
+                              key={artist.artistId}
+                              artist={artist}
+                              platform="youtube"
+                              isSelected={selectedMatches['youtube'] === artist.artistId}
+                              onToggleSelect={() => toggleSelectMatch('youtube', artist.artistId)}
+                            />
+                          )) || [],
+                    ),
+                )}
+
+                {!matches.some((match) => match.platformMatches.some((pm) => pm.platform === 'youtube' && pm.possibleArtists?.length)) && (
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
+                    <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                      No YouTube matches found
+                    </Typography>
+                  </div>
+                )}
+              </div>
+
+              {/* Tidal Column */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
+                  <Icons.Waves className="w-4 h-4 text-blue-500" />
+                  <Typography variant="small" className="font-medium text-blue-700 dark:text-blue-400">
+                    Tidal
+                  </Typography>
+                </div>
+
+                {matches.flatMap((match) =>
+                  match.platformMatches
+                    .filter((pm) => pm.platform === 'tidal' && pm.possibleArtists?.length)
+                    .flatMap(
+                      (pm) =>
+                        pm.possibleArtists
+                          ?.slice(0, 3)
+                          .map((artist) => (
+                            <ArtistMatchCard
+                              key={artist.artistId}
+                              artist={artist}
+                              platform="tidal"
+                              isSelected={selectedMatches['tidal'] === artist.artistId}
+                              onToggleSelect={() => toggleSelectMatch('tidal', artist.artistId)}
+                            />
+                          )) || [],
+                    ),
+                )}
+
+                {!matches.some((match) => match.platformMatches.some((pm) => pm.platform === 'tidal' && pm.possibleArtists?.length)) && (
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
+                    <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                      No Tidal matches found
+                    </Typography>
+                  </div>
+                )}
+              </div>
+
+              {/* Spotify Column - Only show if not already connected */}
+              {!connectedPlatforms.has('spotify') && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800/50">
+                    <Icons.Music className="w-4 h-4 text-green-500" />
+                    <Typography variant="small" className="font-medium text-green-700 dark:text-green-400">
+                      Spotify
+                    </Typography>
+                  </div>
+
+                  {matches.flatMap((match) =>
+                    match.platformMatches
+                      .filter((pm) => pm.platform === 'spotify' && pm.possibleArtists?.length)
+                      .flatMap(
+                        (pm) =>
+                          pm.possibleArtists
+                            ?.slice(0, 3)
+                            .map((artist) => (
                               <ArtistMatchCard
                                 key={artist.artistId}
                                 artist={artist}
-                                platform={platformMatch.platform}
-                                isSelected={selectedMatches[platformMatch.platform] === artist.artistId}
-                                onToggleSelect={() => toggleSelectMatch(platformMatch.platform, artist.artistId)}
+                                platform="spotify"
+                                isSelected={selectedMatches['spotify'] === artist.artistId}
+                                onToggleSelect={() => toggleSelectMatch('spotify', artist.artistId)}
                               />
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                            )) || [],
+                      ),
+                  )}
+
+                  {!matches.some((match) =>
+                    match.platformMatches.some((pm) => pm.platform === 'spotify' && pm.possibleArtists?.length),
+                  ) && (
+                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 text-center">
+                      <Typography variant="small" className="text-gray-500 dark:text-gray-400">
+                        No Spotify matches found
+                      </Typography>
                     </div>
-                  ))}
+                  )}
+                </div>
+              )}
+            </div>
+
+            {Object.keys(selectedMatches).length > 0 && (
+              <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800/50">
+                <Typography variant="small" className="font-medium text-blue-700 dark:text-blue-400 mb-2 flex items-center gap-2">
+                  <Icons.Check className="w-4 h-4" />
+                  Selected Connections ({Object.keys(selectedMatches).length})
+                </Typography>
+
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(selectedMatches).map(([platform, artistId]) => {
+                    const artist = matches
+                      .flatMap((m) => m.platformMatches.filter((pm) => pm.platform === platform).flatMap((pm) => pm.possibleArtists || []))
+                      .find((a) => a.artistId === artistId);
+
+                    return artist ? (
+                      <div
+                        key={platform}
+                        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white dark:bg-gray-800 rounded-full border border-blue-200 dark:border-blue-700 text-xs"
+                      >
+                        {platform === 'spotify' && <Icons.Music className="w-3 h-3 text-green-500" />}
+                        {platform === 'soundcloud' && <Icons.Cloud className="w-3 h-3 text-orange-500" />}
+                        {platform === 'youtube' && <Icons.Video className="w-3 h-3 text-red-500" />}
+                        {platform === 'tidal' && <Icons.Waves className="w-3 h-3 text-blue-500" />}
+                        <span className="capitalize">{platform}:</span>
+                        <span className="font-medium truncate max-w-[120px]">{artist.artistName}</span>
+                      </div>
+                    ) : null;
+                  })}
                 </div>
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>
@@ -322,24 +439,75 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
           Add links manually
         </Typography>
 
-        <div className="space-y-2">
-          {supportedPlatforms.map((platform) => (
-            <ManualLinkInput
-              key={platform}
-              platform={platform}
-              value={manualLinks[platform] || ''}
-              onChange={(url) => handleManualLinkUpdate(platform, url)}
-            />
-          ))}
+        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            {supportedPlatforms.length > 0 && (
+              <div className="space-y-3">
+                <Typography variant="small" className="font-medium text-gray-600 dark:text-gray-400">
+                  Music Platforms
+                </Typography>
+                <div className="space-y-2">
+                  {supportedPlatforms.map((platform) => (
+                    <ManualLinkInput
+                      key={platform}
+                      platform={platform}
+                      value={manualLinks[platform] || ''}
+                      onChange={(url) => handleManualLinkUpdate(platform, url)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
 
-          {otherPlatforms.map((platform) => (
-            <ManualLinkInput
-              key={platform}
-              platform={platform}
-              value={manualLinks[platform] || ''}
-              onChange={(url) => handleManualLinkUpdate(platform, url)}
-            />
-          ))}
+            {otherPlatforms.length > 0 && (
+              <div className="space-y-3">
+                <Typography variant="small" className="font-medium text-gray-600 dark:text-gray-400">
+                  Other Platforms
+                </Typography>
+                <div className="space-y-2">
+                  {otherPlatforms.map((platform) => (
+                    <ManualLinkInput
+                      key={platform}
+                      platform={platform}
+                      value={manualLinks[platform] || ''}
+                      onChange={(url) => handleManualLinkUpdate(platform, url)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {Object.entries(manualLinks).filter(([, url]) => url).length > 0 && (
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <Typography variant="small" className="font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Added Links
+              </Typography>
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(manualLinks)
+                  .filter(([, url]) => url)
+                  .map(([platform, url]) => (
+                    <div
+                      key={platform}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white dark:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-600 text-xs"
+                    >
+                      {platform === 'spotify' && <Icons.Music className="w-3 h-3 text-green-500" />}
+                      {platform === 'soundcloud' && <Icons.Cloud className="w-3 h-3 text-orange-500" />}
+                      {platform === 'youtube' && <Icons.Video className="w-3 h-3 text-red-500" />}
+                      {platform === 'tidal' && <Icons.Waves className="w-3 h-3 text-blue-500" />}
+                      {platform === 'bandcamp' && <Icons.Radio className="w-3 h-3 text-teal-500" />}
+                      {platform === 'appleMusic' && <Icons.Music className="w-3 h-3 text-pink-500" />}
+                      {platform === 'instagram' && <Icons.Camera className="w-3 h-3 text-purple-500" />}
+                      {platform === 'twitter' && <Icons.MessageCircle className="w-3 h-3 text-blue-400" />}
+                      <span className="capitalize">{platform === 'appleMusic' ? 'Apple Music' : platform}</span>
+                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600">
+                        <Icons.ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
