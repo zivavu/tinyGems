@@ -7,6 +7,8 @@ const platformArtistUrlPatterns: Omit<Record<PlatformType, RegExp>, 'other'> = {
   tidal: /^https?:\/\/(?:listen\.)?tidal\.com\/(?:artist|browse\/artist)\/\d+(?:\?.*)?$/,
   bandcamp: /^https?:\/\/[a-zA-Z0-9-]+\.bandcamp\.com(?:\/)?(?:\?.*)?$/,
   appleMusic: /^https?:\/\/music\.apple\.com\/(?:[a-z]{2}\/)?artist\/[a-zA-Z0-9-]+\/\d+(?:\?.*)?$/,
+  instagram: /^https?:\/\/(?:www\.)?instagram\.com\/[a-zA-Z0-9._]+(?:\/)?(?:\?.*)?$/,
+  xTwitter: /^https?:\/\/(?:www\.)?(?:twitter\.com|x\.com)\/[a-zA-Z0-9_]+(?:\/)?(?:\?.*)?$/,
 };
 
 const artistValidationErrorMessages: Record<PlatformType | 'generic', string> = {
@@ -16,6 +18,8 @@ const artistValidationErrorMessages: Record<PlatformType | 'generic', string> = 
   tidal: "Invalid Tidal artist URL. Example: 'https://listen.tidal.com/artist/...'",
   bandcamp: "Invalid Bandcamp profile URL. Example: 'https://artist-name.bandcamp.com'",
   appleMusic: "Invalid Apple Music artist URL. Example: 'https://music.apple.com/artist/...'",
+  instagram: "Invalid Instagram profile URL. Example: 'https://instagram.com/username'",
+  xTwitter: "Invalid Twitter/X profile URL. Example: 'https://twitter.com/username' or 'https://x.com/username'",
   other: "Please enter a valid URL starting with 'http://' or 'https://'",
   generic: "Oops! That URL doesn't look right. Try pasting a link from Spotify, SoundCloud, YouTube, or Tidal.",
 };
@@ -57,6 +61,38 @@ export function validatePlatformArtistUrl(url: string) {
     return {
       isValid,
       error: isValid ? undefined : artistValidationErrorMessages[platform as PlatformType] || artistValidationErrorMessages.generic,
+    };
+  } catch {
+    return { isValid: false, error: "Please enter a valid URL starting with 'http://' or 'https://'" };
+  }
+}
+
+// Function to validate any platform URL without data fetching constraints
+export function validateAnyPlatformUrl(url: string, platform: PlatformType) {
+  if (!url) return { isValid: false, error: 'Please enter a URL' };
+
+  try {
+    // Basic URL validation
+    const urlObj = new URL(url);
+    if (!urlObj.protocol || !urlObj.hostname) {
+      return { isValid: false, error: "Please enter a valid URL starting with 'http://' or 'https://'" };
+    }
+
+    // If it's "other" platform type, just validate it's a proper URL
+    if (platform === 'other') {
+      return { isValid: true };
+    }
+
+    // For known platforms, check against the pattern
+    const pattern = platformArtistUrlPatterns[platform as keyof typeof platformArtistUrlPatterns];
+    if (!pattern) {
+      return { isValid: true }; // If we don't have a pattern, consider it valid
+    }
+
+    const isValid = pattern.test(url);
+    return {
+      isValid,
+      error: isValid ? undefined : artistValidationErrorMessages[platform] || artistValidationErrorMessages.generic,
     };
   } catch {
     return { isValid: false, error: "Please enter a valid URL starting with 'http://' or 'https://'" };

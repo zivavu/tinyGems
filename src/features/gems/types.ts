@@ -1,8 +1,18 @@
 import { ArtistSnapshot } from '@/features/artists/types';
 
 export type GemCategory = 'music';
-export type PlatformType = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'tidal' | 'appleMusic' | 'other';
-export const PLATFORM_NAMES: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal', 'bandcamp', 'appleMusic', 'other'];
+export type PlatformType = 'bandcamp' | 'spotify' | 'soundcloud' | 'youtube' | 'tidal' | 'appleMusic' | 'instagram' | 'xTwitter' | 'other';
+export const PLATFORM_NAMES: PlatformType[] = [
+  'spotify',
+  'soundcloud',
+  'youtube',
+  'tidal',
+  'bandcamp',
+  'appleMusic',
+  'instagram',
+  'xTwitter',
+  'other',
+];
 
 export type EngagementType = 'likes' | 'saves' | 'views';
 

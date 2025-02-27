@@ -1,7 +1,16 @@
-import { faLink, faMusic } from '@fortawesome/free-solid-svg-icons';
+import { faLink, faWaveSquare } from '@fortawesome/free-solid-svg-icons';
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faApple, faBandcamp, faGithub, faSoundcloud, faSpotify, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import {
+  faApple,
+  faBandcamp,
+  faGithub,
+  faInstagram,
+  faSoundcloud,
+  faSpotify,
+  faXTwitter,
+  faYoutube,
+} from '@fortawesome/free-brands-svg-icons';
 import { PlatformType } from '../types';
 
 export const platformIconsMap: Record<PlatformType | 'github', IconProp> = {
@@ -11,6 +20,8 @@ export const platformIconsMap: Record<PlatformType | 'github', IconProp> = {
   youtube: faYoutube,
   github: faGithub,
   appleMusic: faApple,
-  tidal: faMusic,
+  instagram: faInstagram,
+  xTwitter: faXTwitter,
+  tidal: faWaveSquare,
   other: faLink,
 } as const;

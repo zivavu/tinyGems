@@ -1,3 +1,5 @@
+import { validateAnyPlatformUrl } from '@/features/artists/utils/platformUrlValidators';
+import { PlatformType } from '@/features/gems/types';
 import { platformIconsMap } from '@/features/gems/utils/platformIconsMap';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
@@ -14,22 +16,37 @@ interface ManualLinkInputProps {
 export function ManualLinkInput({ platform, value, onChange }: ManualLinkInputProps) {
   const [url, setUrl] = useState(value);
   const [isEditing, setIsEditing] = useState(!value);
+  const [validationError, setValidationError] = useState<string | undefined>();
 
-  // Format display name of platform
   const displayName = platform.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
 
-  // Get platform icon if available
   const platformIcon = platformIconsMap[platform as keyof typeof platformIconsMap];
 
-  // Handle saving the url
-  function handleSave() {
-    onChange(url.trim());
-    setIsEditing(false);
+  function validateUrl(urlToValidate: string) {
+    if (!urlToValidate.trim()) {
+      setValidationError(undefined);
+      return false;
+    }
+
+    const validation = validateAnyPlatformUrl(urlToValidate, platform as PlatformType);
+    setValidationError(validation.error);
+    return validation.isValid;
   }
 
-  // Handle editing existing url
+  function handleSave() {
+    const trimmedUrl = url.trim();
+    const isValid = validateUrl(trimmedUrl);
+
+    if (isValid) {
+      onChange(trimmedUrl);
+      setIsEditing(false);
+      setValidationError(undefined);
+    }
+  }
+
   function handleEdit() {
     setIsEditing(true);
+    setValidationError(undefined);
   }
 
   // Handle clearing url
@@ -37,12 +54,23 @@ export function ManualLinkInput({ platform, value, onChange }: ManualLinkInputPr
     setUrl('');
     onChange('');
     setIsEditing(true);
+    setValidationError(undefined);
   }
 
   // Handle key press (enter to save)
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter') {
       handleSave();
+    }
+  }
+
+  function handleUrlChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newUrl = e.target.value;
+    setUrl(newUrl);
+    if (newUrl.trim()) {
+      validateUrl(newUrl);
+    } else {
+      setValidationError(undefined);
     }
   }
 
@@ -66,15 +94,26 @@ export function ManualLinkInput({ platform, value, onChange }: ManualLinkInputPr
                 {displayName}
               </Typography>
               <div className="flex gap-2">
-                <input
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder={`Enter ${displayName} URL`}
-                  className="flex-1 rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
-                />
-                <Button variant="default" size="sm" onClick={handleSave} disabled={!url.trim()}>
+                <div className="flex-1">
+                  <input
+                    type="url"
+                    value={url}
+                    onChange={handleUrlChange}
+                    onKeyDown={handleKeyDown}
+                    placeholder={`Enter ${displayName} URL`}
+                    className={`w-full rounded-md border ${
+                      validationError
+                        ? 'border-red-300 dark:border-red-700 focus:ring-red-500 dark:focus:ring-red-400'
+                        : 'border-gray-300 dark:border-gray-700 focus:ring-blue-500 dark:focus:ring-blue-400'
+                    } bg-white dark:bg-gray-800 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:border-transparent`}
+                  />
+                  {validationError && (
+                    <Typography variant="small" className="text-red-500 dark:text-red-400 mt-1 text-xs">
+                      {validationError}
+                    </Typography>
+                  )}
+                </div>
+                <Button variant="default" size="sm" onClick={handleSave} disabled={!url.trim() || !!validationError}>
                   Save
                 </Button>
               </div>

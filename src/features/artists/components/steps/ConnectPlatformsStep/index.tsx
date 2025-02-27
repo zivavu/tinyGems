@@ -1,4 +1,6 @@
 import { Match, MatchedArtist } from '@/features/artists/types';
+import { validateAnyPlatformUrl } from '@/features/artists/utils/platformUrlValidators';
+import { PlatformType } from '@/features/gems/types';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
@@ -19,14 +21,19 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
   const [isSearching, setIsSearching] = useState(false);
   const [selectedMatches, setSelectedMatches] = useState<Record<string, string>>({});
   const [manualLinks, setManualLinks] = useState<Record<string, string>>({});
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  const currentPlatform = Object.keys(artistData.links || {})[0];
+  const currentPlatform = Object.keys(artistData.links || {})[0] as PlatformType;
 
   const connectedPlatforms = new Set([currentPlatform]);
 
-  const supportedPlatforms = ['spotify', 'soundcloud', 'youtube', 'tidal'].filter((platform) => !connectedPlatforms.has(platform));
+  const supportedPlatforms: PlatformType[] = ['spotify', 'soundcloud', 'youtube', 'tidal'].filter(
+    (platform) => !connectedPlatforms.has(platform as PlatformType),
+  ) as PlatformType[];
 
-  const otherPlatforms = ['bandcamp', 'appleMusic', 'instagram', 'twitter'].filter((platform) => !manualLinks[platform]);
+  const otherPlatforms: PlatformType[] = ['bandcamp', 'appleMusic', 'instagram', 'xTwitter'].filter(
+    (platform) => !manualLinks[platform],
+  ) as PlatformType[];
 
   const validSkipPlatform = ['spotify', 'soundcloud', 'youtube', 'tidal'].includes(currentPlatform)
     ? (currentPlatform as 'spotify' | 'soundcloud' | 'youtube' | 'tidal')
@@ -81,6 +88,30 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
   }
 
   function handleManualLinkUpdate(platform: string, url: string) {
+    if (url) {
+      const validation = validateAnyPlatformUrl(url, platform as PlatformType);
+
+      if (!validation.isValid) {
+        setValidationErrors((prev) => ({
+          ...prev,
+          [platform]: validation.error || 'Invalid URL',
+        }));
+        return;
+      } else {
+        setValidationErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors[platform];
+          return newErrors;
+        });
+      }
+    } else {
+      setValidationErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[platform];
+        return newErrors;
+      });
+    }
+
     setManualLinks((prev) => ({
       ...prev,
       [platform]: url,
@@ -88,6 +119,25 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
   }
 
   function handleComplete() {
+    // Validate all manual links before completing
+    let hasErrors = false;
+    const newErrors: Record<string, string> = {};
+
+    Object.entries(manualLinks).forEach(([platform, url]) => {
+      if (url) {
+        const validation = validateAnyPlatformUrl(url, platform as PlatformType);
+        if (!validation.isValid) {
+          hasErrors = true;
+          newErrors[platform] = validation.error || 'Invalid URL';
+        }
+      }
+    });
+
+    if (hasErrors) {
+      setValidationErrors(newErrors);
+      return;
+    }
+
     const mergedData: ExternalPlatformArtistData = {
       ...artistData,
       links: { ...(artistData.links || {}) },
@@ -433,7 +483,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
         )}
       </div>
 
-      {/* Manual links */}
       <div className="space-y-3">
         <Typography variant="small" className="font-medium text-gray-700 dark:text-gray-300">
           Add links manually
@@ -444,7 +493,7 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
             {supportedPlatforms.length > 0 && (
               <div className="space-y-3">
                 <Typography variant="small" className="font-medium text-gray-600 dark:text-gray-400">
-                  Music Platforms
+                  Supported Platforms
                 </Typography>
                 <div className="space-y-2">
                   {supportedPlatforms.map((platform) => (
@@ -489,7 +538,11 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
                   .map(([platform, url]) => (
                     <div
                       key={platform}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white dark:bg-gray-700 rounded-full border border-gray-200 dark:border-gray-600 text-xs"
+                      className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border text-xs ${
+                        validationErrors[platform]
+                          ? 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50'
+                          : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600'
+                      }`}
                     >
                       {platform === 'spotify' && <Icons.Music className="w-3 h-3 text-green-500" />}
                       {platform === 'soundcloud' && <Icons.Cloud className="w-3 h-3 text-orange-500" />}
@@ -498,11 +551,15 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
                       {platform === 'bandcamp' && <Icons.Radio className="w-3 h-3 text-teal-500" />}
                       {platform === 'appleMusic' && <Icons.Music className="w-3 h-3 text-pink-500" />}
                       {platform === 'instagram' && <Icons.Camera className="w-3 h-3 text-purple-500" />}
-                      {platform === 'twitter' && <Icons.MessageCircle className="w-3 h-3 text-blue-400" />}
+                      {platform === 'xTwitter' && <Icons.MessageCircle className="w-3 h-3 text-blue-400" />}
                       <span className="capitalize">{platform === 'appleMusic' ? 'Apple Music' : platform}</span>
-                      <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600">
-                        <Icons.ExternalLink className="w-3 h-3" />
-                      </a>
+                      {validationErrors[platform] ? (
+                        <Icons.AlertCircle className="w-3 h-3 text-red-500" />
+                      ) : (
+                        <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600">
+                          <Icons.ExternalLink className="w-3 h-3" />
+                        </a>
+                      )}
                     </div>
                   ))}
               </div>
@@ -517,7 +574,9 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
           Back
         </Button>
 
-        <Button onClick={handleComplete}>Complete</Button>
+        <Button onClick={handleComplete} disabled={Object.keys(validationErrors).length > 0}>
+          Complete
+        </Button>
       </div>
     </div>
   );

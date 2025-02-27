@@ -1,3 +1,4 @@
+import { PlatformType } from '@/features/gems/types';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
@@ -11,7 +12,7 @@ interface ArtistMatchProps {
     thumbnailImageUrl?: string | null;
     confidence: number;
   };
-  platform: string; // Required for identification in parent component
+  platform: PlatformType;
   isSelected: boolean;
   onToggleSelect: () => void;
 }
