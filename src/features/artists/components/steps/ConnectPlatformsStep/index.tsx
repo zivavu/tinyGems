@@ -29,41 +29,33 @@ type ConnectPlatformsStepProps = {
 };
 
 export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: ConnectPlatformsStepProps) {
-  // Extract current platform from the artist's platform ID
   const currentPlatform = artistData.platformId.split('-')[0];
 
-  // State for platform matches
   const [matches, setMatches] = useState<PlatformMatch[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [selectedMatches, setSelectedMatches] = useState<Record<string, PlatformMatch>>({});
 
-  // State for manual links
   const [manualLinks, setManualLinks] = useState<Record<string, string>>({});
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  // Define supported platforms and filter out the current one
   const supportedPlatforms = ['spotify', 'soundcloud', 'youtube', 'tidal'].filter((p) => p !== currentPlatform);
   const otherPlatforms = ['bandcamp', 'appleMusic', 'instagram', 'xTwitter'].filter((p) => p !== currentPlatform);
   const allPlatforms = [...supportedPlatforms, ...otherPlatforms];
 
-  // Set up search query
   const findAcrossPlatformsQuery = trpcReact.externalArtistDataRouter.findAcrossPlatforms.useQuery(
     { artistName: artistData.name },
     { enabled: false },
   );
 
-  // Perform search on mount
   useEffect(() => {
     handleSearch();
   }, []);
 
-  // Handle search for matches
   function handleSearch() {
     setIsSearching(true);
     findAcrossPlatformsQuery.refetch().then((result) => {
       setIsSearching(false);
       if (result.data) {
-        // Transform match data into a flatter structure for easier use
         const flattenedMatches: PlatformMatch[] = [];
 
         result.data.matches.forEach((match) => {
@@ -88,13 +80,10 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
     });
   }
 
-  // Define functions for handling matches and form submission
   function handleManualLinkChange(platform: string, url: string) {
-    // update links and validate
     setManualLinks((prev) => ({ ...prev, [platform]: url }));
 
     if (!url) {
-      // Remove validation error if field is empty
       setValidationErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[platform];
@@ -103,7 +92,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
       return;
     }
 
-    // Validate URL
     const validation = validateAnyPlatformUrl(url, platform as PlatformType);
     if (validation.isValid) {
       setValidationErrors((prev) => {
@@ -124,10 +112,8 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
       const newMatches = { ...prev };
 
       if (prev[platform] && prev[platform].artistId === platformId) {
-        // Deselect if already selected
         delete newMatches[platform];
       } else {
-        // Select new match
         const match = matches.find((m) => m.platform === platform && m.artistId === platformId);
         if (match) {
           newMatches[platform] = match;
@@ -182,7 +168,6 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
         </div>
       ) : (
         <>
-          {/* Platform matches section */}
           <div className="space-y-4">
             {supportedPlatforms.length > 0 && (
               <div className="space-y-4">

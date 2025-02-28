@@ -51,19 +51,57 @@ type PlatformHandlerName = keyof typeof platformHandlers;
 
 export const externalArtistDataRouter = createTRPCRouter({
   fetchFromUrl: protectedProcedure.input(artistUrlSchema).query(async ({ input }) => {
-    const platform: PlatformHandlerName | undefined = Object.entries(platformHandlers).find(([, handler]) =>
-      handler.urlPattern.test(input.url),
-    )?.[0] as PlatformHandlerName | undefined;
+    try {
+      const url = input.url.trim();
+      const platform: PlatformHandlerName | undefined = Object.entries(platformHandlers).find(([, handler]) =>
+        handler.urlPattern.test(url),
+      )?.[0] as PlatformHandlerName | undefined;
 
-    if (!platform) {
+      if (!platform) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Please provide a valid link from Spotify, SoundCloud, YouTube, or Tidal',
+        });
+      }
+
+      try {
+        const artistData: ExternalPlatformArtistData = await platformHandlers[platform].fetch(url);
+        return { platform, artistData };
+      } catch {
+        let errorMessage = `We couldn't find an artist at this ${platform} URL.`;
+
+        switch (platform) {
+          case 'spotify':
+            errorMessage = "We couldn't find this Spotify artist. Make sure you're linking to an artist profile, not a track or playlist.";
+            break;
+          case 'soundcloud':
+            errorMessage =
+              "We couldn't find this SoundCloud artist. Make sure you're linking to an artist profile, not a track or playlist.";
+            break;
+          case 'youtube':
+            errorMessage = "We couldn't find this YouTube channel. Make sure you're linking to a channel, not a video or playlist.";
+            break;
+          case 'tidal':
+            errorMessage = "We couldn't find this Tidal artist. Make sure you're linking to an artist profile, not a track or album.";
+            break;
+        }
+
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: errorMessage,
+        });
+      }
+    } catch (error) {
+      if (error instanceof TRPCError) {
+        console.log(error);
+        throw error;
+      }
+
       throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'We only support Spotify, SoundCloud, YouTube, and Tidal links for now',
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Something went wrong. Please try again later.',
       });
     }
-
-    const artistData: ExternalPlatformArtistData = await platformHandlers[platform].fetch(input.url);
-    return { platform, artistData };
   }),
 
   fetchArtistTracks: protectedProcedure

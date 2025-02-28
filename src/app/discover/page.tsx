@@ -2,7 +2,7 @@
 
 import { AlbumCard } from '@/features/albums/components/AlbumCard/AlbumCard';
 import { Album } from '@/features/albums/types';
-import { ArtistCard } from '@/features/artists/ArtistCard/ArtistCard';
+import { ArtistCard } from '@/features/artists/components/ArtistCard/ArtistCard';
 import { Artist } from '@/features/artists/types';
 import { FiltersInputBar } from '@/features/gems/components/FiltersInputBar/FiltersInputBar';
 import { useParamFilters } from '@/features/gems/components/FiltersInputBar/hooks';

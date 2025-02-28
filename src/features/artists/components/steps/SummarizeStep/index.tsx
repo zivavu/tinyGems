@@ -3,7 +3,7 @@
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { Button } from '@/features/shared/components/buttons/Button';
-import { FormErrorTypography } from '@/features/shared/components/forms/FormErrorTypography';
+import { FormFieldErrorMessage } from '@/features/shared/components/forms/FormFieldErrorMessage';
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
@@ -183,7 +183,7 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
               className="w-full p-2 border border-gray-300 rounded-md"
               data-testid="artist-name-input"
             />
-            {errors.name && <FormErrorTypography message={errors.name.message} data-testid="name-error" />}
+            {errors.name && <FormFieldErrorMessage error={errors.name.message} data-testid="name-error" />}
           </div>
 
           <div className="space-y-2">
@@ -209,7 +209,7 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
               <option value="non-binary">Non-binary</option>
               <option value="group">Group</option>
             </select>
-            {errors.gender && <FormErrorTypography message={errors.gender.message} data-testid="gender-error" />}
+            {errors.gender && <FormFieldErrorMessage error={errors.gender.message} data-testid="gender-error" />}
           </div>
 
           <div className="space-y-2">
@@ -229,7 +229,7 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
               rows={4}
               className="w-full p-2 border border-gray-300 rounded-md resize-y"
             ></textarea>
-            <FormErrorTypography message={errors.description?.message} />
+            <FormFieldErrorMessage error={errors.description?.message} />
           </div>
         </div>
 

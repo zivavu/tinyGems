@@ -40,6 +40,6 @@ describe('Typography Component', () => {
 
     expect(element).toBeInTheDocument();
     expect(element).toHaveClass('custom-class');
-    expect(element).toHaveClass('text-base'); // Still has original classes
+    expect(element).toHaveClass('text-base');
   });
 });

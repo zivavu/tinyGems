@@ -2,7 +2,7 @@
 
 import { AlbumCard } from '@/features/albums/components/AlbumCard/AlbumCard';
 import { Album } from '@/features/albums/types';
-import { ArtistCard } from '@/features/artists/ArtistCard/ArtistCard';
+import { ArtistCard } from '@/features/artists/components/ArtistCard/ArtistCard';
 import { Artist } from '@/features/artists/types';
 import { GemCard } from '@/features/gems/components/GemCard/GemCard';
 import { MusicGem } from '@/features/gems/types';

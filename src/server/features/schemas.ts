@@ -5,7 +5,7 @@ export const artistUrlSchema = z.object({
   url: z
     .string()
     .min(1, 'Please enter a URL')
-    .url('Please enter a valid URL')
+    .url('Please enter a valid URL with http:// or https://')
     .refine(
       (url) => {
         try {
@@ -18,9 +18,10 @@ export const artistUrlSchema = z.object({
       (url) => {
         try {
           const validation = validatePlatformArtistUrl(url);
-          return { message: validation.error || 'Invalid artist URL' };
+          // Return the specific error message from the validator if available
+          return validation.error || 'Please enter a valid artist URL from a supported platform';
         } catch {
-          return { message: 'Failed to validate URL' };
+          return 'Failed to validate URL. Please try again.';
         }
       },
     ),

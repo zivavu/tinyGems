@@ -1,6 +1,6 @@
 import { platformIconsMap } from '@/features/gems/utils/platformIconsMap';
 import { Button } from '@/features/shared/components/buttons/Button';
-import { FormErrorTypography } from '@/features/shared/components/forms/FormErrorTypography';
+import { FormFieldErrorMessage } from '@/features/shared/components/forms/FormFieldErrorMessage';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { trpcReact } from '@/lib/trpcReact';
@@ -9,7 +9,6 @@ import { ArtistUrlFormData, artistUrlSchema } from '@/server/features/schemas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Input } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TRPCClientError } from '@trpc/client';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { UserProvidedURLArtistProfile } from './UserProvidedURLArtistProfile';
@@ -18,15 +17,15 @@ interface FindArtistStepProps {
   onContinue: (artistData: ExternalPlatformArtistData) => void;
 }
 
-export function FindArtistStep({}: FindArtistStepProps) {
+export function FindArtistStep({ onContinue }: FindArtistStepProps) {
   const [isValidationFailed, setIsValidationFailed] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isValid },
+    setError,
   } = useForm<ArtistUrlFormData>({
     resolver: zodResolver(artistUrlSchema),
     mode: 'onChange',
@@ -48,23 +47,21 @@ export function FindArtistStep({}: FindArtistStepProps) {
 
   async function onSubmit() {
     setIsValidationFailed(false);
-    setFormError(null);
 
     try {
       const result = await refetch();
-      if (result.error) {
-        setFormError(result.error.message);
+
+      if (result.data) {
+        onContinue(result.data.artistData);
       }
-    } catch (error) {
-      if (error instanceof TRPCClientError) {
-        setFormError(error.message);
-      } else {
-        setFormError('An unexpected error occurred');
-      }
+    } catch {
+      // Any unexpected errors
+      setError('url', { message: 'An unexpected error occurred' });
     }
   }
 
-  // If there's no data yet, show the URL input form
+  console.log(errors);
+
   if (!queryData) {
     return (
       <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto space-y-6">
@@ -89,12 +86,12 @@ export function FindArtistStep({}: FindArtistStepProps) {
                 id="url"
                 {...register('url')}
                 placeholder="Enter artist URL from any platform"
-                className="block w-full pl-10 rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:focus:border-primary-500"
-                data-testid="artist-url-input"
+                className={`w-full pl-9 pr-3 py-2.5 rounded-lg border ${
+                  errors.url ? 'border-red-500 dark:border-red-700' : 'border-gray-200 dark:border-gray-700'
+                } bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-amber-500 dark:focus:ring-amber-600`}
               />
             </div>
-            {errors.url && <FormErrorTypography message={errors.url.message} />}
-            {formError && <FormErrorTypography message={formError} />}
+            <FormFieldErrorMessage errors={errors} name="url" />
           </div>
 
           <div className="flex items-center space-x-2">
@@ -102,10 +99,10 @@ export function FindArtistStep({}: FindArtistStepProps) {
               Supported platforms:
             </Typography>
             <div className="flex space-x-2">
-              <FontAwesomeIcon icon={platformIconsMap.spotify} className="h-4 w-4" title="Spotify" />
-              <FontAwesomeIcon icon={platformIconsMap.soundcloud} className="h-4 w-4" title="SoundCloud" />
-              <FontAwesomeIcon icon={platformIconsMap.youtube} className="h-4 w-4" title="YouTube" />
-              <FontAwesomeIcon icon={platformIconsMap.bandcamp} className="h-4 w-4" title="Bandcamp" />
+              <FontAwesomeIcon icon={platformIconsMap.spotify} className="h-4 w-4" />
+              <FontAwesomeIcon icon={platformIconsMap.soundcloud} className="h-4 w-4" />
+              <FontAwesomeIcon icon={platformIconsMap.youtube} className="h-4 w-4" />
+              <FontAwesomeIcon icon={platformIconsMap.bandcamp} className="h-4 w-4" />
             </div>
           </div>
 
@@ -129,7 +126,6 @@ export function FindArtistStep({}: FindArtistStepProps) {
     );
   }
 
-  // If validation fails, show error and return to form
   if (isValidationFailed) {
     setIsValidationFailed(false);
     return (
@@ -143,9 +139,5 @@ export function FindArtistStep({}: FindArtistStepProps) {
     );
   }
 
-  if (!queryData) {
-    return null;
-  }
-
-  return <UserProvidedURLArtistProfile artistData={queryData.artistData} />;
+  return <UserProvidedURLArtistProfile artistData={queryData.artistData} onContinue={onContinue} />;
 }
