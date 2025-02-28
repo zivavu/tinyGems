@@ -7,9 +7,79 @@ This document outlines the test-driven development (TDD) approach for the tinyGe
 - **Unit/Integration Tests**: Vitest + React Testing Library
 - **E2E Tests**: Playwright
 - **API Mocking**: MSW (Mock Service Worker)
-- **Coverage**: C8
 
 ## Getting Started
+
+### Prerequisites
+
+Before you start writing and running tests, ensure you have:
+
+- Project dependencies installed: `bun install`
+- Playwright browsers installed: `bunx playwright install`
+
+### Setting Up New Tests
+
+#### Unit/Component Tests
+
+1. Create a test file next to the component or function you're testing with a `.test.ts` or `.test.tsx` extension:
+
+```typescript
+// src/features/shared/components/Button.test.tsx
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { Button } from './Button';
+
+describe('Button Component', () => {
+  it('renders with default variant', () => {
+    render(<Button>Click me</Button>);
+    const button = screen.getByText('Click me');
+    expect(button).toBeInTheDocument();
+  });
+});
+```
+
+#### API/tRPC Tests
+
+1. For testing tRPC endpoints, create mock contexts and callers:
+
+```typescript
+// src/server/api/routers/example.test.ts
+import { describe, it, expect, vi } from 'vitest';
+
+// Mock dependencies and setup test data
+vi.mock('@/server/db/db', () => ({
+  connectToDb: vi.fn().mockResolvedValue({
+    // Mock database methods
+  }),
+}));
+
+describe('Example Router', () => {
+  // Create mock router
+  const mockRouter = {
+    exampleMethod: vi.fn().mockResolvedValue({ data: 'test' }),
+  };
+
+  it('returns expected data', async () => {
+    const result = await mockRouter.exampleMethod();
+    expect(result.data).toBe('test');
+  });
+});
+```
+
+#### E2E Tests
+
+1. Create test files in the `tests/e2e` directory with a `.spec.ts` extension:
+
+```typescript
+// tests/e2e/home.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('homepage has the expected title', async ({ page }) => {
+  await page.goto('/');
+  await expect(page).toHaveTitle(/tinyGems/);
+  await expect(page.locator('h1')).toContainText('Discover');
+});
+```
 
 ### Running Tests
 
@@ -19,9 +89,6 @@ bun run test
 
 # Watch mode (for development)
 bun run test:watch
-
-# Run with coverage report
-bun run test:coverage
 
 # Run E2E tests
 bun run test:e2e
@@ -187,20 +254,3 @@ export const handlers = [
    - Use descriptive test names
    - Favor testing outputs over implementation details
    - Use proper assertions and matchers
-
-## Coverage Goals
-
-- **Components**: 90%+ coverage
-- **Hooks**: 95%+ coverage
-- **tRPC Routers**: 85%+ coverage
-- **Utility Functions**: 100% coverage
-- **E2E Critical Paths**: Full coverage of main user journeys
-
-## Working with the CI/CD Pipeline
-
-Tests run automatically on GitHub Actions when:
-
-- Opening a pull request
-- Pushing to main branch
-
-The pipeline will report test results and coverage metrics.
