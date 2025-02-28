@@ -1,6 +1,6 @@
 import { MediaStatus } from '../gems/types';
 
-export type ArtistGender = 'male' | 'female' | 'non-binary' | 'other' | 'group';
+export type ArtistGender = 'male' | 'female' | 'non-binary' | 'group';
 export type AudiencePerPlatform = {
   spotify?: {
     monthlyListeners?: number;

@@ -309,7 +309,6 @@ export const genderOptions: FilterOption[] = [
   { id: 'male', label: 'Male' },
   { id: 'female', label: 'Female' },
   { id: 'non-binary', label: 'Non-Binary' },
-  { id: 'other', label: 'Other' },
   { id: 'group', label: 'Group', description: 'A group of artists' },
 ] as const;
 

@@ -15,9 +15,10 @@ interface ArtistMatchProps {
   platform: PlatformType;
   isSelected: boolean;
   onToggleSelect: () => void;
+  'data-testid'?: string;
 }
 
-export function ArtistMatchCard({ artist, isSelected, onToggleSelect }: ArtistMatchProps) {
+export function ArtistMatchCard({ artist, isSelected, onToggleSelect, 'data-testid': dataTestId }: ArtistMatchProps) {
   // Format confidence score as percentage
   const confidencePercentage = Math.round(artist.confidence * 100);
 
@@ -30,7 +31,7 @@ export function ArtistMatchCard({ artist, isSelected, onToggleSelect }: ArtistMa
     confidenceColorClass = 'text-green-600 dark:text-green-400';
     confidenceBgClass = 'bg-green-50 dark:bg-green-900/20';
     confidenceBorderClass = 'border-green-200 dark:border-green-800/50';
-  } else if (confidencePercentage < 50) {
+  } else if (confidencePercentage < 60) {
     confidenceColorClass = 'text-red-600 dark:text-red-400';
     confidenceBgClass = 'bg-red-50 dark:bg-red-900/20';
     confidenceBorderClass = 'border-red-200 dark:border-red-800/50';
@@ -43,6 +44,7 @@ export function ArtistMatchCard({ artist, isSelected, onToggleSelect }: ArtistMa
           ? 'border-blue-500 dark:border-blue-400 bg-blue-50/50 dark:bg-blue-900/10 shadow-sm hover:border-blue-600 dark:hover:border-blue-500'
           : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
       }`}
+      data-testid={dataTestId}
     >
       {/* Artist image */}
       <div className="flex-shrink-0">

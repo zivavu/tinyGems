@@ -14,9 +14,10 @@ interface ManualLinkInputProps {
   onChange: (url: string) => void;
   disabled?: boolean;
   disabledMessage?: string;
+  'data-testid'?: string;
 }
 
-export function ManualLinkInput({ platform, value, onChange, disabled, disabledMessage }: ManualLinkInputProps) {
+export function ManualLinkInput({ platform, value, onChange, disabled, disabledMessage, 'data-testid': dataTestId }: ManualLinkInputProps) {
   const [url, setUrl] = useState(value);
   const [isEditing, setIsEditing] = useState(!value);
   const [validationError, setValidationError] = useState<string | undefined>();
@@ -94,15 +95,7 @@ export function ManualLinkInput({ platform, value, onChange, disabled, disabledM
   }
 
   return (
-    <div
-      className={`p-3 bg-white dark:bg-gray-800 rounded-lg border transition-all duration-200 ${
-        disabled
-          ? 'opacity-70 border-gray-200 dark:border-gray-700'
-          : !isEditing && isValid
-            ? 'border-green-200 dark:border-green-800 shadow-sm'
-            : 'border-gray-200 dark:border-gray-700'
-      }`}
-    >
+    <div className="w-full" data-testid={dataTestId}>
       <div className="flex items-center gap-2">
         {/* Platform icon */}
         <div
