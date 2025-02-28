@@ -118,7 +118,16 @@ export interface MatchedPlatformArtists {
   possibleArtists: MatchedArtist[] | null;
 }
 
-export interface Match {
+export interface ArtistMatch {
   platformName: string;
   platformMatches: MatchedPlatformArtists[];
 }
+
+// Simplify platform connections for UI components
+export interface ConnectedPlatform {
+  name: string;
+  platformId: string;
+  avatar?: string;
+}
+
+export type ConnectedPlatformsRecord = Record<string, ConnectedPlatform>;

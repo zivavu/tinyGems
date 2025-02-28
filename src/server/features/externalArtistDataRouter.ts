@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { createTRPCRouter, protectedProcedure } from '../trpc';
-import { findArtistAcrossPlatforms } from './platforms/externalArtistData/crossPlatformSearch';
+import { ExternalPlatformArtistData, findArtistAcrossPlatforms } from './platforms/externalArtistData/crossPlatformSearch';
 import {
   fetchSoundcloudArtistData,
   fetchSoundcloudArtistTracks,
@@ -62,7 +62,7 @@ export const externalArtistDataRouter = createTRPCRouter({
       });
     }
 
-    const artistData = await platformHandlers[platform].fetch(input.url);
+    const artistData: ExternalPlatformArtistData = await platformHandlers[platform].fetch(input.url);
     return { platform, artistData };
   }),
 

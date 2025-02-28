@@ -1,12 +1,14 @@
-import { MatchedArtist } from '@/features/artists/types';
-import { validateAnyPlatformUrl } from '@/features/artists/utils/platformUrlValidators';
-import { PlatformType } from '@/features/gems/types';
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
+
+import { ConnectedPlatformsRecord, MatchedArtist } from '@/features/artists/types';
+import { validateAnyPlatformUrl } from '@/features/artists/utils/platformUrlValidators';
+import { PlatformType } from '@/features/gems/types';
 import { trpcReact } from '@/lib/trpcReact';
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
-import { useEffect, useState } from 'react';
 import { ArtistMatchCard } from './ArtistMatchCard';
 import { ManualLinkInput } from './ManualLinkInput';
 
@@ -23,7 +25,7 @@ interface PlatformMatch {
 type ConnectPlatformsStepProps = {
   artistData: ExternalPlatformArtistData;
   onPrevious: () => void;
-  onComplete: (mergedArtistData: ExternalPlatformArtistData, platformLinks: Record<string, string>) => void;
+  onComplete: (mergedArtistData: ExternalPlatformArtistData, platformLinks: ConnectedPlatformsRecord) => void;
 };
 
 export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: ConnectPlatformsStepProps) {
@@ -33,7 +35,7 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
   // State for platform matches
   const [matches, setMatches] = useState<PlatformMatch[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
-  const [selectedMatches, setSelectedMatches] = useState<Record<string, string>>({});
+  const [selectedMatches, setSelectedMatches] = useState<Record<string, PlatformMatch>>({});
 
   // State for manual links
   const [manualLinks, setManualLinks] = useState<Record<string, string>>({});
@@ -121,40 +123,47 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
     setSelectedMatches((prev) => {
       const newMatches = { ...prev };
 
-      if (prev[platform] === platformId) {
+      if (prev[platform] && prev[platform].artistId === platformId) {
         // Deselect if already selected
         delete newMatches[platform];
       } else {
         // Select new match
-        newMatches[platform] = platformId;
+        const match = matches.find((m) => m.platform === platform && m.artistId === platformId);
+        if (match) {
+          newMatches[platform] = match;
+        }
       }
 
       return newMatches;
     });
   }
 
-  function handleComplete() {
-    // Process selected matches and manual links
-    const platformLinks: Record<string, string> = {};
+  const handleComplete = () => {
+    const platformLinks: ConnectedPlatformsRecord = {};
 
-    // Add selected matches
-    Object.entries(selectedMatches).forEach(([platform, artistId]) => {
-      const match = matches.find((m) => m.platform === platform && m.artistId === artistId);
+    // Process selected matches
+    Object.entries(selectedMatches).forEach(([platform, match]) => {
       if (match) {
-        platformLinks[platform] = match.url;
+        platformLinks[platform] = {
+          platformId: match.artistId,
+          name: match.name,
+          avatar: match.thumbnailUrl || undefined,
+        };
       }
     });
 
-    // Add valid manual links
+    // Process manual links
     Object.entries(manualLinks).forEach(([platform, url]) => {
-      if (url && !validationErrors[platform] && !platformLinks[platform]) {
-        platformLinks[platform] = url;
+      if (url && validateAnyPlatformUrl(url, platform as PlatformType).isValid && !validationErrors[platform]) {
+        platformLinks[platform] = {
+          platformId: url,
+          name: artistData.name || 'Unknown Artist',
+        };
       }
     });
 
-    // Call onComplete with the artistData and platform links
     onComplete(artistData, platformLinks);
-  }
+  };
 
   // Component rendering
   return (
@@ -216,7 +225,7 @@ export function ConnectPlatformsStep({ artistData, onPrevious, onComplete }: Con
                                   confidence: match.confidence || 0.75,
                                 }}
                                 platform={platform as PlatformType}
-                                isSelected={selectedMatches[platform] === match.artistId}
+                                isSelected={selectedMatches[platform] && selectedMatches[platform].artistId === match.artistId}
                                 onToggleSelect={() => toggleSelectMatch(platform, match.artistId)}
                                 data-testid={`match-card-${platform}-${match.artistId}`}
                               />

@@ -1,12 +1,10 @@
 'use client';
 
 import { Icons } from '@/features/shared/components/Icons';
-import { Select } from '@/features/shared/components/Select';
 import { Typography } from '@/features/shared/components/Typography';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { FormErrorTypography } from '@/features/shared/components/forms/FormErrorTypography';
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
-import { Label } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -59,8 +57,6 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
-    watch,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -71,9 +67,6 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
       description: artistData.metadata?.description || '',
     },
   });
-
-  // Watch gender field for display purposes
-  const selectedGender = watch('gender');
 
   // Calculate combined popularity on component mount
   useEffect(() => {
@@ -133,13 +126,6 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
       avatarUrl: platformData.avatar,
     }));
 
-  const genderOptions = [
-    { id: 'male', label: 'Male' },
-    { id: 'female', label: 'Female' },
-    { id: 'non-binary', label: 'Non-binary' },
-    { id: 'group', label: 'Group' },
-  ];
-
   return (
     <div className="space-y-6">
       <div className="text-center mb-6">
@@ -186,93 +172,63 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
 
         {/* Basic Information */}
         <div className="space-y-4">
-          <div>
-            <Label htmlFor="name" className="block text-sm font-medium mb-1">
-              Artist Name
-            </Label>
+          <div className="space-y-2">
+            <label htmlFor="name" className="block text-sm font-medium mb-1">
+              Artist Name*
+            </label>
             <input
-              id="name"
               {...register('name')}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800"
+              id="name"
+              type="text"
+              className="w-full p-2 border border-gray-300 rounded-md"
               data-testid="artist-name-input"
             />
-            <FormErrorTypography message={errors.name?.message} data-testid="name-error" />
+            {errors.name && <FormErrorTypography message={errors.name.message} data-testid="name-error" />}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="location" className="block text-sm font-medium mb-1">
-                Location
-              </Label>
-              <input
-                id="location"
-                {...register('location')}
-                placeholder="City, Country"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800"
-                data-testid="artist-location-input"
-              />
-              <FormErrorTypography message={errors.location?.message} />
-            </div>
-
-            <div>
-              <Label htmlFor="gender" className="block text-sm font-medium mb-1">
-                Gender / Group Type
-              </Label>
-
-              <Select
-                title={selectedGender ? genderOptions.find((opt) => opt.id === selectedGender)?.label || 'Select...' : 'Select...'}
-                className="w-full"
-                data-testid="gender-select"
-              >
-                <div className="p-2 space-y-1" data-testid="gender-option-group">
-                  {genderOptions.map((option) => (
-                    <button
-                      key={option.id}
-                      type="button"
-                      className={`w-full text-left px-3 py-2 rounded-md ${
-                        selectedGender === option.id
-                          ? 'bg-primary-50 text-primary-700 dark:bg-primary-500/10 dark:text-primary-200'
-                          : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-                      }`}
-                      onClick={() => setValue('gender', option.id as ArtistGender)}
-                      data-testid={`gender-option-${option.id}`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </Select>
-
-              <input type="hidden" {...register('gender')} />
-              <FormErrorTypography message={errors.gender?.message} />
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="location" className="block text-sm font-medium mb-1">
+              Location
+            </label>
+            <input {...register('location')} id="location" type="text" className="w-full p-2 border border-gray-300 rounded-md" />
           </div>
 
-          <div>
-            <Label htmlFor="genres" className="block text-sm font-medium mb-1">
-              Genres
-            </Label>
-            <input
-              id="genres"
-              {...register('genres')}
-              placeholder="Separate genres with commas (e.g. electronic, ambient)"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800"
-              data-testid="artist-genres-input"
-            />
-            <FormErrorTypography message={errors.genres?.message} />
+          <div className="space-y-2">
+            <label htmlFor="gender" className="block text-sm font-medium mb-1">
+              Artist Type*
+            </label>
+            <select
+              {...register('gender')}
+              id="gender"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              data-testid="artist-gender-select"
+            >
+              <option value="">Select artist type</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="non-binary">Non-binary</option>
+              <option value="group">Group</option>
+            </select>
+            {errors.gender && <FormErrorTypography message={errors.gender.message} data-testid="gender-error" />}
           </div>
 
-          <div>
-            <Label htmlFor="description" className="block text-sm font-medium mb-1">
+          <div className="space-y-2">
+            <label htmlFor="genres" className="block text-sm font-medium mb-1">
+              Genres (comma separated)
+            </label>
+            <input {...register('genres')} id="genres" type="text" className="w-full p-2 border border-gray-300 rounded-md" />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="description" className="block text-sm font-medium mb-1">
               Description
-            </Label>
+            </label>
             <textarea
-              id="description"
               {...register('description')}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800"
-              data-testid="artist-description-input"
-            />
+              id="description"
+              rows={4}
+              className="w-full p-2 border border-gray-300 rounded-md resize-y"
+            ></textarea>
             <FormErrorTypography message={errors.description?.message} />
           </div>
         </div>

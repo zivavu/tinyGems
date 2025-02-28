@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { ConnectPlatformsStep } from './steps/ConnectPlatformsStep';
 import { FindArtistStep } from './steps/FindArtistStep';
-import { SummarizeStep } from './steps/SummarizeStep/SummarizeStep';
+import { SummarizeStep } from './steps/SummarizeStep';
 
 enum FormStep {
   FIND_ARTIST = 'find_artist',
@@ -27,14 +27,14 @@ export function AddArtistForm() {
   const [artistData, setArtistData] = useState<ExternalPlatformArtistData | null>(null);
   const [connectedPlatforms, setConnectedPlatforms] = useState<ConnectedPlatformsRecord>({});
 
-  function handleInitialStepComplete(data: { platform: string; artistData: unknown }) {
-    setArtistData(data.artistData as ExternalPlatformArtistData);
+  function handleInitialStepComplete(data: ExternalPlatformArtistData) {
+    setArtistData(data);
     setFormStep(FormStep.CONNECT_PLATFORMS);
   }
 
-  function handleConnectComplete(mergedArtistData: ExternalPlatformArtistData, platforms: ConnectedPlatformsRecord) {
+  function handleConnectComplete(mergedArtistData: ExternalPlatformArtistData, platformLinks: ConnectedPlatformsRecord) {
     setArtistData(mergedArtistData);
-    setConnectedPlatforms(platforms);
+    setConnectedPlatforms(platformLinks);
     setFormStep(FormStep.SUMMARIZE);
   }
 

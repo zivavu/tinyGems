@@ -1,7 +1,7 @@
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { SummarizeStep } from './SummarizeStep';
+import { SummarizeStep } from '.';
 describe('SummarizeStep Component', () => {
   const mockArtistData: ExternalPlatformArtistData = {
     name: 'Test Artist',

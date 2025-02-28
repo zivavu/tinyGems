@@ -4,9 +4,10 @@ import { FormErrorTypography } from '@/features/shared/components/forms/FormErro
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { trpcReact } from '@/lib/trpcReact';
+import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
 import { ArtistUrlFormData, artistUrlSchema } from '@/server/features/schemas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Label } from '@headlessui/react';
+import { Input } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TRPCClientError } from '@trpc/client';
 import { useState } from 'react';
@@ -14,10 +15,10 @@ import { useForm } from 'react-hook-form';
 import { UserProvidedURLArtistProfile } from './UserProvidedURLArtistProfile';
 
 interface FindArtistStepProps {
-  onContinue: (artistData: { platform: string; artistData: unknown }) => void;
+  onContinue: (artistData: ExternalPlatformArtistData) => void;
 }
 
-export function FindArtistStep({ onContinue }: FindArtistStepProps) {
+export function FindArtistStep({}: FindArtistStepProps) {
   const [isValidationFailed, setIsValidationFailed] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -37,7 +38,7 @@ export function FindArtistStep({ onContinue }: FindArtistStepProps) {
   const urlValue = watch('url');
 
   const {
-    data: artistData,
+    data: queryData,
     isLoading,
     refetch,
   } = trpcReact.externalArtistDataRouter.fetchFromUrl.useQuery(
@@ -64,7 +65,7 @@ export function FindArtistStep({ onContinue }: FindArtistStepProps) {
   }
 
   // If there's no data yet, show the URL input form
-  if (!artistData) {
+  if (!queryData) {
     return (
       <div className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto space-y-6">
         <div className="text-center space-y-2 mb-4">
@@ -76,14 +77,14 @@ export function FindArtistStep({ onContinue }: FindArtistStepProps) {
 
         <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
           <div>
-            <Label htmlFor="url" className="block text-sm font-medium mb-1">
+            <label htmlFor="url" className="block text-sm font-medium mb-1">
               Artist URL
-            </Label>
+            </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <Icons.Link className="h-5 w-5 text-gray-400" />
               </div>
-              <input
+              <Input
                 type="text"
                 id="url"
                 {...register('url')}
@@ -142,11 +143,9 @@ export function FindArtistStep({ onContinue }: FindArtistStepProps) {
     );
   }
 
-  if (!artistData) {
+  if (!queryData) {
     return null;
   }
 
-  return (
-    <UserProvidedURLArtistProfile artistData={artistData} onValidationFailed={() => setIsValidationFailed(true)} onContinue={onContinue} />
-  );
+  return <UserProvidedURLArtistProfile artistData={queryData.artistData} />;
 }

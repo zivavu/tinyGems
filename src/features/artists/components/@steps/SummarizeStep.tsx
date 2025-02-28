@@ -6,7 +6,6 @@ import { Typography } from '@/features/shared/components/Typography';
 import { Button } from '@/features/shared/components/buttons/Button';
 import { FormErrorTypography } from '@/features/shared/components/forms/FormErrorTypography';
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
-import { Label } from '@headlessui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -187,9 +186,9 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
         {/* Basic Information */}
         <div className="space-y-4">
           <div>
-            <Label htmlFor="name" className="block text-sm font-medium mb-1">
+            <label htmlFor="name" className="block text-sm font-medium mb-1">
               Artist Name
-            </Label>
+            </label>
             <input
               id="name"
               {...register('name')}
@@ -201,9 +200,9 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="location" className="block text-sm font-medium mb-1">
+              <label htmlFor="location" className="block text-sm font-medium mb-1">
                 Location
-              </Label>
+              </label>
               <input
                 id="location"
                 {...register('location')}
@@ -215,9 +214,9 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
             </div>
 
             <div>
-              <Label htmlFor="gender" className="block text-sm font-medium mb-1">
+              <label htmlFor="gender" className="block text-sm font-medium mb-1">
                 Gender / Group Type
-              </Label>
+              </label>
 
               <Select
                 title={selectedGender ? genderOptions.find((opt) => opt.id === selectedGender)?.label || 'Select...' : 'Select...'}
@@ -249,9 +248,9 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
           </div>
 
           <div>
-            <Label htmlFor="genres" className="block text-sm font-medium mb-1">
+            <label htmlFor="genres" className="block text-sm font-medium mb-1">
               Genres
-            </Label>
+            </label>
             <input
               id="genres"
               {...register('genres')}
@@ -263,9 +262,9 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
           </div>
 
           <div>
-            <Label htmlFor="description" className="block text-sm font-medium mb-1">
+            <label htmlFor="description" className="block text-sm font-medium mb-1">
               Description
-            </Label>
+            </label>
             <textarea
               id="description"
               {...register('description')}

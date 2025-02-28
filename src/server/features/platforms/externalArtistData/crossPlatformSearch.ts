@@ -1,3 +1,4 @@
+import { ArtistMatch, MatchedArtist } from '@/features/artists/types';
 import { PlatformType } from '@/features/gems/types';
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { searchSoundcloudArtist } from './getArtistData/soundcloudArtistData';
@@ -105,29 +106,11 @@ const matchingSchema = {
   },
 };
 
-type MathedArtist = {
-  artistId: string;
-  artistUrl: string;
-  artistName: string;
-  thumbnailImageUrl?: string | null;
-  confidence: number;
-};
-
-type MatchedPlatformArtists = {
-  platform: PlatformType;
-  possibleArtists: MathedArtist[] | null;
-};
-
-type Match = {
-  platformName: string;
-  platformMatches: MatchedPlatformArtists[];
-};
-
 type MatchingSchema = {
-  matches: Match[];
+  matches: ArtistMatch[];
 };
 
-export async function findArtistAcrossPlatforms(artistName: string, skipPlatform?: PlatformType) {
+export async function findArtistAcrossPlatforms(artistName: string, skipPlatform?: PlatformType): Promise<ArtistMatch[] | null> {
   const platformSearches = {
     spotify: () => searchSpotifyArtist(artistName),
     soundcloud: () => searchSoundcloudArtist(artistName),
@@ -213,13 +196,13 @@ export async function findArtistAcrossPlatforms(artistName: string, skipPlatform
 
 // Helper function to deduplicate artists with the same ID from the same platform,
 // keeping only the highest confidence version of each
-function deduplicateArtists(matches: Match[]): Match[] {
+function deduplicateArtists(matches: ArtistMatch[]): ArtistMatch[] {
   return matches.map((match) => {
     const dedupedPlatformMatches = match.platformMatches.map((platformMatch) => {
       if (!platformMatch.possibleArtists?.length) return platformMatch;
 
       // Deduplicate by artist ID
-      const artistIdMap = new Map<string, MathedArtist>();
+      const artistIdMap = new Map<string, MatchedArtist>();
 
       platformMatch.possibleArtists.forEach((artist) => {
         const existingArtist = artistIdMap.get(artist.artistId);
