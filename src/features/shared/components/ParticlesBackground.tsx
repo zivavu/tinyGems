@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { cn } from '../utils/cn';
 
 function debounce<T extends (...args: unknown[]) => void>(func: T, wait: number): (...args: Parameters<T>) => void {
@@ -14,111 +14,127 @@ function debounce<T extends (...args: unknown[]) => void>(func: T, wait: number)
   };
 }
 
+// Helper functions moved outside component to prevent recreation on each render
+const getRandomDistance = (maxDistance: number) => Math.random() * maxDistance - maxDistance / 2;
+const getRandomSize = (min: number, max: number) => Math.random() * (max - min) + min;
+const getRandomPosition = (max: number) => Math.random() * max;
+
 export default function ParticlesBackground({ className, particleCount = 300 }: { className?: string; particleCount?: number }) {
   const particlesPerGroup = 15;
   const groupCount = Math.ceil(particleCount / particlesPerGroup);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [particles, setParticles] = useState<React.ReactNode>(null);
+  const particlesRef = useRef<HTMLDivElement>(null);
+  const initializedRef = useRef(false);
+  
+  // Constants
+  const MIN_SIZE = 7;
+  const MAX_SIZE = 20;
+  const MAX_DISTANCE = 50;
 
-  const maxDistance = 50;
-  const getRandomDistance = () => Math.random() * maxDistance - maxDistance / 2;
-  const getTransform = () => `translate(${getRandomDistance()}px, ${getRandomDistance()}px)`;
-  function generateKeyframes() {
-    let keyframesRules = '';
+  // Pre-generate transform values for keyframes to make them consistent
+  const keyframeTransforms = useMemo(() => {
+    const transforms = [];
     for (let i = 0; i < groupCount; i++) {
+      transforms.push([
+        `translate(0, 0)`, // 0%, 100%
+        `translate(${getRandomDistance(MAX_DISTANCE)}px, ${getRandomDistance(MAX_DISTANCE)}px)`, // 25%
+        `translate(${getRandomDistance(MAX_DISTANCE)}px, ${getRandomDistance(MAX_DISTANCE)}px)`, // 50%
+        `translate(${getRandomDistance(MAX_DISTANCE)}px, ${getRandomDistance(MAX_DISTANCE)}px)`, // 75%
+        `translate(${getRandomDistance(MAX_DISTANCE)}px, ${getRandomDistance(MAX_DISTANCE)}px)`, // 90%
+      ]);
+    }
+    return transforms;
+  }, [groupCount, MAX_DISTANCE]);
+
+  // Memoize keyframes generation
+  const keyframesStyles = useMemo(() => {
+    let keyframesRules = `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 0.7; }
+      }
+    `;
+    
+    for (let i = 0; i < groupCount; i++) {
+      const [transform0, transform25, transform50, transform75, transform90] = keyframeTransforms[i];
       keyframesRules += `
         @keyframes float-${i} {
-          0%, 100% { transform: translate(0, 0); }
-          25% { transform: ${getTransform()}; }
-          50% { transform: ${getTransform()}; }
-          75% { transform: ${getTransform()}; }
-          90% { transform: ${getTransform()}; }
+          0%, 100% { transform: ${transform0}; }
+          25% { transform: ${transform25}; }
+          50% { transform: ${transform50}; }
+          75% { transform: ${transform75}; }
+          90% { transform: ${transform90}; }
         }
       `;
     }
     return keyframesRules;
-  }
+  }, [groupCount, keyframeTransforms]);
 
-  function getRandomSize() {
-    const MIN_SIZE = 7;
-    const MAX_SIZE = 20;
-    return Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
-  }
-
-  function createParticles() {
-    if (!containerRef.current) return null;
-
+  const createParticles = useCallback(() => {
+    if (!containerRef.current || !particlesRef.current) return;
+    
     const width = containerRef.current.clientWidth;
     const height = containerRef.current.clientHeight;
+    
+    if (width === 0 || height === 0) return;
 
-    if (width === 0 || height === 0) return null;
+    // Remove any existing particles
+    while (particlesRef.current.firstChild) {
+      particlesRef.current.removeChild(particlesRef.current.firstChild);
+    }
 
-    return [...Array(groupCount)].map((_, groupIndex) => {
-      const groupParticles = [];
+    // Create group containers first
+    const groupContainers = [];
+    for (let groupIndex = 0; groupIndex < groupCount; groupIndex++) {
+      const groupContainer = document.createElement('div');
+      groupContainer.className = 'absolute h-full w-full';
+      groupContainer.style.animation = `float-${groupIndex} 12s infinite`;
+      groupContainer.style.animationDelay = `${groupIndex * 0.1}s`;
+      groupContainer.style.animationTimingFunction = 'ease-in-out';
+      groupContainers.push(groupContainer);
+      particlesRef.current.appendChild(groupContainer);
+    }
+
+    // Create particles within each group
+    for (let groupIndex = 0; groupIndex < groupCount; groupIndex++) {
       for (let i = 0; i < particlesPerGroup; i++) {
         const particleIndex = groupIndex * particlesPerGroup + i;
         if (particleIndex >= particleCount) break;
 
-        const originX = Math.random() * width;
-        const originY = Math.random() * height;
-        const size = getRandomSize();
-
-        groupParticles.push(
-          <div
-            key={particleIndex}
-            className="fixed rounded-full bg-accent-600 "
-            style={{
-              filter: 'blur(6px)',
-              width: size,
-              height: size,
-              left: originX,
-              top: originY,
-              opacity: 0,
-              animation: 'fadeIn 0.5s ease-out forwards',
-            }}
-          />,
-        );
+        const particle = document.createElement('div');
+        particle.className = 'fixed rounded-full bg-accent-600';
+        
+        const size = getRandomSize(MIN_SIZE, MAX_SIZE);
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${getRandomPosition(width)}px`;
+        particle.style.top = `${getRandomPosition(height)}px`;
+        particle.style.opacity = '0';
+        particle.style.filter = 'blur(6px)';
+        particle.style.animation = 'fadeIn 0.5s ease-out forwards';
+        
+        groupContainers[groupIndex].appendChild(particle);
       }
-
-      return (
-        <div
-          key={groupIndex}
-          className="absolute h-full w-full"
-          style={{
-            animation: `float-${groupIndex} 12s infinite`,
-            animationDelay: `${groupIndex * 0.1}s`,
-            animationTimingFunction: 'ease-in-out',
-          }}
-        >
-          {groupParticles}
-        </div>
-      );
-    });
-  }
+    }
+  }, [groupCount, particleCount, particlesPerGroup, MIN_SIZE, MAX_SIZE]);
 
   useEffect(() => {
-    const handleResize = debounce(() => {
-      setParticles(createParticles());
-    }, 30);
-
-    setParticles(createParticles());
-
+    if (initializedRef.current) return;
+    initializedRef.current = true;
+    
+    const handleResize = debounce(createParticles, 100);
+    
+    // Initial creation
+    createParticles();
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [createParticles]);
 
   return (
     <div ref={containerRef} className={cn('absolute inset-0 h-full overflow-hidden', className)}>
-      {particles}
-      <style>
-        {`
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.7; }
-          }
-          ${generateKeyframes()}
-        `}
-      </style>
+      <div ref={particlesRef} className="h-full w-full" />
+      <style dangerouslySetInnerHTML={{ __html: keyframesStyles }} />
     </div>
   );
 }
