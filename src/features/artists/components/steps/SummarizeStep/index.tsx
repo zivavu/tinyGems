@@ -183,7 +183,7 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
               className="w-full p-2 border border-gray-300 rounded-md"
               data-testid="artist-name-input"
             />
-            {errors.name && <FormFieldErrorMessage error={errors.name.message} data-testid="name-error" />}
+            {errors.name && <FormFieldErrorMessage errors={errors} name="name" testid="name-error" />}
           </div>
 
           <div className="space-y-2">
@@ -209,7 +209,7 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
               <option value="non-binary">Non-binary</option>
               <option value="group">Group</option>
             </select>
-            {errors.gender && <FormFieldErrorMessage error={errors.gender.message} data-testid="gender-error" />}
+            {errors.gender && <FormFieldErrorMessage errors={errors} name="gender" testid="gender-error" />}
           </div>
 
           <div className="space-y-2">
@@ -229,7 +229,7 @@ export function SummarizeStep({ artistData, connectedPlatforms, onPrevious, onCo
               rows={4}
               className="w-full p-2 border border-gray-300 rounded-md resize-y"
             ></textarea>
-            <FormFieldErrorMessage error={errors.description?.message} />
+            <FormFieldErrorMessage errors={errors} name="description" testid="description-error" />
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 'use client';
+import { PlatformType } from '@/features/gems/types';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { ExternalPlatformArtistData } from '@/server/features/platforms/externalArtistData/crossPlatformSearch';
@@ -26,9 +27,11 @@ export function AddArtistForm() {
   const [formStep, setFormStep] = useState<FormStep>(FormStep.FIND_ARTIST);
   const [artistData, setArtistData] = useState<ExternalPlatformArtistData | null>(null);
   const [connectedPlatforms, setConnectedPlatforms] = useState<ConnectedPlatformsRecord>({});
+  const [sourcePlatform, setSourcePlatform] = useState<PlatformType | null>(null);
 
-  function handleInitialStepComplete(data: ExternalPlatformArtistData) {
-    setArtistData(data);
+  function handleInitialStepComplete(data: { platform: string; artistData: ExternalPlatformArtistData }) {
+    setArtistData(data.artistData);
+    setSourcePlatform(data.platform as PlatformType);
     setFormStep(FormStep.CONNECT_PLATFORMS);
   }
 
@@ -47,6 +50,7 @@ export function AddArtistForm() {
     setFormStep(FormStep.FIND_ARTIST);
     setArtistData(null);
     setConnectedPlatforms({});
+    setSourcePlatform(null);
   }
 
   function handleGoBackToFind() {
@@ -133,7 +137,12 @@ export function AddArtistForm() {
             }`}
           >
             {artistData && (
-              <ConnectPlatformsStep artistData={artistData} onPrevious={handleGoBackToFind} onComplete={handleConnectComplete} />
+              <ConnectPlatformsStep
+                artistData={artistData}
+                onPrevious={handleGoBackToFind}
+                onComplete={handleConnectComplete}
+                sourcePlatform={sourcePlatform}
+              />
             )}
           </div>
 

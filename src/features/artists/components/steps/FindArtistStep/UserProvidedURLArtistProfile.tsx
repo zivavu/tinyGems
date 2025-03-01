@@ -1,6 +1,5 @@
 import { ArtistTrack } from '@/features/artists/types';
 import { platformIconsMap } from '@/features/gems/utils/platformIconsMap';
-import { Button } from '@/features/shared/components/buttons/Button';
 import { Icons } from '@/features/shared/components/Icons';
 import { Typography } from '@/features/shared/components/Typography';
 import { trpcReact } from '@/lib/trpcReact';
@@ -60,13 +59,7 @@ const formatPlatformName = (name: string): string => {
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
 
-export function UserProvidedURLArtistProfile({
-  artistData,
-  onContinue,
-}: {
-  artistData: ExternalPlatformArtistData;
-  onContinue: (artistData: ExternalPlatformArtistData) => void;
-}) {
+export function UserProvidedURLArtistProfile({ artistData }: { artistData: ExternalPlatformArtistData }) {
   const [tracks, setTracks] = useState<ArtistTrack[]>([]);
   const [isLoadingTracks, setIsLoadingTracks] = useState(false);
 
@@ -292,12 +285,6 @@ export function UserProvidedURLArtistProfile({
               ))}
             </div>
           )}
-        </div>
-
-        <div className="mt-6 flex justify-end">
-          <Button onClick={() => onContinue(artistData)} className="px-4">
-            Continue
-          </Button>
         </div>
       </div>
     </div>
