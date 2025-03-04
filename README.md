@@ -27,13 +27,13 @@ tinyGems addresses three core needs:
 
 ## 💻 Tech Stack
 
-- **Frontend**: React 19, Next.js 15
-- **Styling**: TailwindCSS, HeadlessUI 2.2
+- **Frontend**: React, Next.js
+- **Styling**: TailwindCSS, HeadlessUI
 - **Backend**: Next.js, MongoDB
-- **State Management**: Zustand (minimal usage)
+- **State Management**: Zustand
 - **API**: tRPC, Tanstack Query
 - **Authentication**: BetterAuth
-- **Testing**: Vitest, React Testing Library, Playwright
+- **Testing**: Vitest, React Testing Library, Playwright, Cypress
 - **Others**: TypeScript, Zod, Lucide icons, Sonner
 
 ## 🛠️ Getting Started
@@ -43,6 +43,7 @@ tinyGems addresses three core needs:
 - Node.js 20+
 - Bun package manager
 - Docker (for MongoDB)
+- Git
 
 ### Development Setup
 
@@ -53,48 +54,57 @@ tinyGems addresses three core needs:
    cd tinygems
    ```
 
-2. Install dependencies
+2. Set up environment variables
+
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+3. Install dependencies
 
    ```bash
    bun install
    ```
 
-3. Start the development environment (includes MongoDB in Docker)
+4. Start the development environment (includes MongoDB in Docker)
 
    ```bash
    bun run dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser
+5. Open [http://localhost:3000](http://localhost:3000) with your browser
 
 ### Running Tests
 
 ```bash
 # Unit and integration tests
-bun run test
-bun run test:watch
+bun run test          # Run all tests
+bun run test:watch    # Watch mode
+bun run test:coverage # Coverage report
 
 # E2E tests
-bun run test:e2e
-bun run test:e2e:ui
+bun run test:e2e      # Run Playwright tests
+bun run test:e2e:ui   # Run in UI mode
+bun run test:e2e:report # View test report
 ```
 
 ## 🔍 Project Structure
 
 ```
 src/
-├── app/                # Next.js pages and routing
-├── features/           # Feature modules
-│   ├── artists/        # Artist-related components
-│   ├── gems/           # Gem (artist discovery) components
-│   ├── global/         # App-wide components
-│   └── shared/         # Reusable components, hooks, utilities
-├── server/             # Server-side code
-│   ├── api/            # API routes
-│   ├── db/             # Database connection and models
-│   ├── features/       # Server-side feature implementations
-│   └── fetching/       # External API integrations
-└── styles/             # Global styles
+├── app/              # Next.js app router pages and layouts
+├── features/         # Feature modules
+├── lib/             # Shared utilities and configurations
+├── mocks/           # Test mocks and fixtures
+└── server/          # Server-side code
+    ├── api/         # API routes
+    └── db/          # Database connection and models
+
+Additional directories:
+├── tests/           # E2E and integration tests
+├── scripts/         # Utility scripts
+└── cypress/         # Cypress E2E tests
 ```
 
 ## 🤝 Contributing
